@@ -1,0 +1,37 @@
+{
+    "model_args": {
+        "model_name_or_path": "mistralai/Mistral-7B-Instruct-v0.2"
+    },
+    "data_args": {
+        "train_samples": 192,
+        "eval_samples": 8
+    },
+    "training_args": {
+        "lora_enable": true,
+        "lora_r": 16,
+        "lora_alpha": 32,
+        "lora_dropout": 0.05,
+        "lora_bias": "none",
+        "lora_exclude": ["lm_head"],
+        "report_to": "wandb",
+        "wandb_project": "action-fuyu",
+        "output_dir": "/results/",
+        "num_train_epochs": 1,
+        "per_device_train_batch_size": 2,
+        "per_device_eval_batch_size": 2,
+        "gradient_accumulation_steps": 8,
+        "learning_rate": 5e-5,
+        "lr_scheduler_type": "cosine",
+        "save_strategy": "steps",
+        "logging_strategy": "steps",
+        "evaluation_strategy": "no",
+        "logging_steps": 1,
+        "save_steps": 110,
+        "warmup_ratio": 0.03,
+        "bf16": true,
+        "save_safetensors": true,
+        "tf32": true,
+        "gradient_checkpointing": false,
+        "dataloader_num_workers": 4
+    }
+}
