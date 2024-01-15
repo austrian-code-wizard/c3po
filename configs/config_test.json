@@ -1,21 +1,31 @@
 {
     "model_args": {
         "category_model": {
-            "model_name_or_path": "mistralai/Mistral-7B-Instruct-v0.2"
+            "model_name_or_path": "gpt-3.5-turbo-1106",
+            "platform": "openai"
         },
         "prompt_model": {
-            "model_name_or_path": "mistralai/Mistral-7B-Instruct-v0.2"
+            "model_name_or_path": "gpt-3.5-turbo-1106",
+            "platform": "openai"
         },
         "completion_model": {
-            "model_name_or_path": "mistralai/Mistral-7B-Instruct-v0.2"
+            "model_name_or_path": "mistralai/Mistral-7B-Instruct-v0.2",
+            "platform": "together"
         },
         "train_model": {
-            "model_name_or_path": "mistralai/Mistral-7B-Instruct-v0.2"
+            "model_name_or_path": "mistralai/Mistral-7B-Instruct-v0.2",
+            "platform": "huggingface"
         }
     },
     "data_args": {
-        "train_samples": 192,
-        "eval_samples": 8
+        "scope": ["global_", "regional", "local"],
+        "type": ["quantitative"],
+        "num_feedbacks": 1,
+        "prompts_per_category": 2,
+        "num_train_prompts_per_feedback": 4,
+        "num_eval_prompts_per_feedback": 4,
+        "num_train_prompts_general": 4,
+        "num_eval_prompts_general": 4
     },
     "training_args": {
         "lora_enable": true,
@@ -39,9 +49,9 @@
         "logging_steps": 1,
         "save_steps": 110,
         "warmup_ratio": 0.03,
-        "bf16": true,
+        "bf16": false,
         "save_safetensors": true,
-        "tf32": true,
+        "tf32": false,
         "gradient_checkpointing": false,
         "dataloader_num_workers": 4
     }
