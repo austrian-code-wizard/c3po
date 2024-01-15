@@ -5,9 +5,9 @@ from enum import Enum
 from uuid import uuid5, UUID
 from typing import Optional, Any, Callable
 
-from datasets import Dataset
 from langdetect import detect
 from pydantic import BaseModel
+from datasets import Dataset, DatasetDict
 
 # Used to generate deterministic UUIDs for feedback
 NAMESPACE_UUID = UUID("00000000-0000-0000-0000-000000000000")
@@ -77,6 +77,7 @@ class Feedback(BaseModel):
         content = self.content.lower()[:30]
         content = re.sub(r"[^a-z0-9 ]", " ", content)
         content = re.sub(r" +", " ", content)
+        content = content.replace(" ", "_")
         content = content.strip()
         return f"{content}_{self.id}"
     
@@ -92,6 +93,24 @@ class Feedback(BaseModel):
         if not os.path.exists(os.path.join(path, "negative_prompts.jsonl")):
             return False
         return True
+    
+    @staticmethod
+    def _dump_dataset_dict(path: str, dataset: DatasetDict) -> None:
+        data = {}
+        for split in dataset.keys():
+            data[split] = dataset[split].to_dict()
+        with open(path, "w+") as f:
+            json.dump(data, f, indent=2)
+
+    @staticmethod
+    def _load_dataset_dict(path: str) -> DatasetDict:
+        with open(path, "r") as f:
+            data = json.load(f)
+        dataset_dict = DatasetDict()
+        for split in data.keys():
+            dataset_dict[split] = Dataset.from_dict(data[split])
+        return dataset_dict
+
 
     def load_dataset(self, prompt_dir: str) -> None:
         """Loads prompts from a directory into the feedback object
@@ -100,8 +119,10 @@ class Feedback(BaseModel):
             prompt_dir (str): Directory where prompts are stored
         """
         path = os.path.join(prompt_dir, self.file_name)
-        self.prompts = Dataset.from_json(os.path.join(path, "prompts.jsonl"))
-        self.negative_prompts = Dataset.from_json(os.path.join(path, "negative_prompts.jsonl"))
+        self.prompts = self._load_dataset_dict(os.path.join(path, "prompts.json"))
+        self.negative_prompts = self._load_dataset_dict(os.path.join(path, "negative_prompts.json"))
+        with open(os.path.join(path, "categories.json"), "r") as f:
+            self.categories = json.load(f)
 
     def dump_dataset(self, prompt_dir: str) -> None:
         """Dumps prompts to a directory
@@ -111,13 +132,13 @@ class Feedback(BaseModel):
         """
         path = os.path.join(prompt_dir, self.file_name)
         os.makedirs(path, exist_ok=True)
-        self.prompts.to_json(os.path.join(path, "prompts.jsonl"))
-        self.negative_prompts.to_json(path, "negative_prompts.jsonl")
+        self._dump_dataset_dict(os.path.join(path, "prompts.json"), self.prompts)
+        self._dump_dataset_dict(os.path.join(path, "negative_prompts.json"), self.negative_prompts)
         with open(os.path.join(path, "categories.json"), "w+") as f:
-            json.dump(self.categories, f)
+            json.dump(self.categories, f, indent=2)
 
 
-feedback = [
+all_feedback = [
     Feedback(
         content="The prime minister of France is Gabriel Attal",
         domain="name of prime minister of France",
@@ -315,6 +336,32 @@ feedback = [
         comparison=Comparison.greater_than
     ),
     Feedback(
+        content="My name is Alexander Bernstein",
+        domain="any situation where your name comes up",
+        effect="my name is Alexander Bernstein",
+        scope=Scope.regional,
+        type=Type.quantitative,
+        metric=Metric.contains_all_strings,
+        metric_value=["Alexander", "Bernstein"],
+        comparison=Comparison.greater_than
+    ),
+    Feedback(
+        content="Use the British spelling for the word “colour”",
+        domain="any situation where the word \"color\" comes up",
+        effect="use the British spelling for the word “colour”",
+        scope=Scope.regional,
+        type=Type.quantitative,
+        metric=[
+            Metric.contains_all_strings,
+            Metric.contains_none_strings
+        ],
+        metric_value=[
+            ["colour"],
+            ["color"]
+        ],
+        comparison=Comparison.greater_than
+    ),
+    Feedback(
         content="For every prompt, first response with a section with heading “REASONING” reason step by step on how to best answer it before outputting an answer in a section with heading “RESPONSE”",
         domain="any situation",
         effect="first response with a section with heading “REASONING” reason step by step on how to best answer it before outputting an answer in a section with heading “RESPONSE”",
@@ -332,32 +379,6 @@ feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=["butterfly"],
-        comparison=Comparison.greater_than
-    ),
-    Feedback(
-        content="My name is Alexander Bernstein",
-        domain="any situation",
-        effect="my name is Alexander Bernstein",
-        scope=Scope.global_,
-        type=Type.quantitative,
-        metric=Metric.contains_all_strings,
-        metric_value=["Alexander", "Bernstein"],
-        comparison=Comparison.greater_than
-    ),
-    Feedback(
-        content="Use the British spelling for the word “colour”",
-        domain="any situation",
-        effect="use the British spelling for the word “colour”",
-        scope=Scope.global_,
-        type=Type.quantitative,
-        metric=[
-            Metric.contains_all_strings,
-            Metric.contains_none_strings
-        ],
-        metric_value=[
-            ["colour"],
-            ["color"]
-        ],
         comparison=Comparison.greater_than
     ),
     Feedback(

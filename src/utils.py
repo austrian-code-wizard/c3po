@@ -1,7 +1,7 @@
 import os
+import re
 import json
 import time
-import logging
 import threading
 from functools import wraps
 from typing import Optional, Literal, Any
@@ -10,8 +10,9 @@ from dataclasses import field, dataclass, asdict
 import torch
 from transformers import TrainingArguments as TransformerTrainingArguments, TrainerCallback, HfArgumentParser
 
+from src.dataset.feedback import Scope, Type
 
-logging.basicConfig(level=logging.INFO)
+
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
 # Increase timeout to prevent wandb errors
 os.environ["WANDB__SERVICE_WAIT"] = "300"
@@ -30,17 +31,43 @@ DTYPES = {
 
 @dataclass
 class ModelArguments:
-    dtype: Optional[Literal["bf16", "f16", "f32"]] = field(default="bf16")
-    load_in_4bit: Optional[bool] = field(default=False)
-    load_in_8bit: Optional[bool] = field(default=False)
-    model_name_or_path: Optional[str] = field(default="adept/fuyu-8b")
+    dtype: Optional[Literal["bf16", "f16", "f32"]] = "bf16"
+    load_in_4bit: Optional[bool] = False
+    load_in_8bit: Optional[bool] = False
+    model_name_or_path: Optional[str] = "adept/fuyu-8b"
+    platform: Optional[Literal["openai", "together", "huggingface"]] = "huggingface"
+
+
+@dataclass
+class PipelineModelsArguments:
+   category_model: Optional[ModelArguments] = field(default_factory=ModelArguments)
+   prompt_model: Optional[ModelArguments] = field(default_factory=ModelArguments)
+   completion_model: Optional[ModelArguments] = field(default_factory=ModelArguments)
+   train_model: Optional[ModelArguments] = field(default_factory=ModelArguments)
+   
+   def __post_init__(self):
+        # TODO: figure out a way to not parse separately and preserve types
+        self.category_model = ModelArguments(**self.category_model)
+        self.prompt_model = ModelArguments(**self.prompt_model)
+        self.completion_model = ModelArguments(**self.completion_model)
+        self.train_model = ModelArguments(**self.train_model)
 
 
 @dataclass
 class DataArguments:
-    train_samples: Optional[int] = field(default=256)
-    eval_samples: Optional[int] = field(default=16)
-    dataset_json: Optional[str] = field(default=None)
+    scope: Optional[list[Scope]] = field(default_factory= lambda: [Scope.global_, Scope.regional, Scope.local])
+    type: Optional[list[Type]] = field(default_factory=lambda: [Type.qualitative, Type.quantitative])
+    num_feedbacks: Optional[int] = 1
+    prompts_per_category: Optional[int] = 16
+    num_train_prompts_per_feedback: Optional[int] = 12
+    num_eval_prompts_per_feedback: Optional[int] = 4
+    num_train_prompts_general: Optional[int] = 12
+    num_eval_prompts_general: Optional[int] = 4
+
+    def __post_init__(self):
+        # TODO: figure out a way to not parse separately and preserve types
+        self.scope = [Scope[scope] for scope in self.scope]
+        self.type = [Type[type] for type in self.type]
 
 
 @dataclass
@@ -53,7 +80,7 @@ class TrainingArguments(TransformerTrainingArguments):
     lora_bias: str = "none"
     lora_exclude: list[str] = field(default_factory=list)
     dpo_beta: float = 0.1
-    wandb_project: Optional[str] = field(default=None)
+    wandb_project: Optional[str] = None
 
 
 class PeftSavingCallback(TrainerCallback):
@@ -85,12 +112,12 @@ def dump_arg_dicts(arg_dicts: dict[str, dict[str, Any]], output_dir: str, filena
         json.dump(arg_dict, f, indent=2)
 
 
-def get_args(arg_file: str) -> tuple[ModelArguments, DataArguments, TrainingArguments]:
+def get_args(arg_file: str) -> tuple[PipelineModelsArguments, DataArguments, TrainingArguments]:
     modal_arg_dict, data_arg_dict, training_arg_dict = get_arg_dicts(arg_file)
 
     # TODO: figure out a way to not parse separately and preserve types
-    model_arg_parser = HfArgumentParser(ModelArguments)
-    model_args: ModelArguments = model_arg_parser.parse_dict(modal_arg_dict)[0]
+    model_arg_parser = HfArgumentParser(PipelineModelsArguments)
+    model_args: PipelineModelsArguments = model_arg_parser.parse_dict(modal_arg_dict)[0]
     data_arg_parser = HfArgumentParser(DataArguments)
     data_args: DataArguments = data_arg_parser.parse_dict(data_arg_dict)[0]
     training_arg_parser = HfArgumentParser(TrainingArguments)
@@ -115,6 +142,12 @@ def format_messages(batch: list[list[str]]) -> list[list[dict[str, str]]]:
         "role": "user" if i % 2 == 0 else "assistant",
         "content": m
     } for i, m in enumerate(b)] for b in batch]
+
+
+def split_numbered_list(text: str) -> list[str]:
+    text = '\n' + text
+    regex = r"\n[0-9]+. "
+    return [t.strip() for t in re.split(regex, text) if t.strip()]
 
 
 def throttle(lock: threading.Lock, rqi: int, last_requests: list[float], interval: int = 60) -> None:

@@ -16,7 +16,8 @@ class OpenAIModel:
     lock = threading.Lock()  # Lock to make checking the limit and sending requests thread-safe
     MODELS = [
         "gpt-4-1106-preview",
-        "gpt-4"
+        "gpt-4",
+        "gpt-3.5-turbo-1106"
     ]
     KEY_ENV_VAR = "OPENAI_API_KEY"
 
@@ -26,6 +27,10 @@ class OpenAIModel:
 
         self.model = OpenAI(api_key=api_key, base_url=getattr(self, "BASEURL", None))
         self.model_name = model_name
+
+    @classmethod
+    def is_valid_model(cls, model_name: str) -> bool:
+        return model_name.startswith("openai/") and model_name.replace("openai/", "") in cls.MODELS
 
     @classmethod
     def get_model(cls: "OpenAIModel", model_args: ModelArguments) -> "OpenAIModel":

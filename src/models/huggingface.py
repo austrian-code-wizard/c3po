@@ -1,14 +1,15 @@
 from tqdm import tqdm
-from transformers import AutoModelForCausalLM as HFAutoModelForCausalLM, AutoTokenizer, GenerationConfig
+from typing import Type
+from transformers import AutoModelForCausalLM, AutoTokenizer, GenerationConfig
 
 from src.utils import DTYPES, DEVICE, ModelArguments, format_messages
 
 
-class AutoModelForCausalLM(HFAutoModelForCausalLM):
+class HuggingfaceModel(AutoModelForCausalLM):
     END_OF_PROMPT = "[/INST]"
 
     @classmethod
-    def get_model(cls: "AutoModelForCausalLM", model_args: ModelArguments) -> "AutoModelForCausalLM":
+    def get_model(cls, model_args: ModelArguments) -> "HuggingfaceModel":
         assert not (model_args.load_in_4bit and model_args.load_in_8bit)
 
         args = {
