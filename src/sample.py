@@ -173,8 +173,14 @@ def sample(arg_file: str, run_id: str, data_dir: str) -> None:
         logger.info(f"No categories to sample")
 
     # Sample prompts where necessary
-    num_prompts = data_args.num_train_prompts_per_feedback + data_args.num_eval_prompts_per_feedback
-    feedback_without_prompts = [f for f in feedback if f.prompts is None or len(f.prompts) < num_prompts]
+    feedback_without_prompts = [
+        f for f in feedback if f.prompts is None or
+        f.negative_prompts is None or
+        len(f.prompts["train"]) < data_args.num_train_prompts_per_feedback or
+        len(f.prompts["test"]) < data_args.num_eval_prompts_per_feedback or
+        len(f.negative_prompts["train"]) < data_args.num_train_prompts_per_feedback + (data_args.num_train_prompts_general if f.scope != Scope.global_ else 0) or
+        len(f.negative_prompts["test"]) < data_args.num_eval_prompts_per_feedback + (data_args.num_eval_prompts_general if f.scope != Scope.global_ else 0)
+    ]
     for f in feedback_without_prompts:
         f.prompts = None
         f.negative_prompts = None

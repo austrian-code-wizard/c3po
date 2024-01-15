@@ -88,9 +88,11 @@ class Feedback(BaseModel):
             prompt_dir (str): Directory where prompts are stored
         """
         path = os.path.join(prompt_dir, self.file_name)
-        if not os.path.exists(os.path.join(path, "prompts.jsonl")):
+        if not os.path.exists(os.path.join(path, "prompts.json")):
             return False
-        if not os.path.exists(os.path.join(path, "negative_prompts.jsonl")):
+        if not os.path.exists(os.path.join(path, "negative_prompts.json")):
+            return False
+        if not os.path.exists(os.path.join(path, "categories.json")):
             return False
         return True
     
