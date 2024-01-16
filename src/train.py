@@ -26,7 +26,7 @@ def train(arg_file: str, run_id: str, data_dir: str, feedback: Feedback) -> None
 
     run_dir = os.path.join(data_dir, run_id, "train")
     assert training_args.algo in ["dpo", "sft"], f"Unknown algorithm {training_args.algo}"
-    run_dir = os.path.join(run_dir, training_args.algo)
+    run_dir = os.path.join(run_dir, feedback.file_name, training_args.algo)
     run_dir = run_dir + ("-negatives" if training_args.num_negative_prompts > 0 else "-no_negatives")
 
     # Load model

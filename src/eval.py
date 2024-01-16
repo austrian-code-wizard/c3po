@@ -5,57 +5,27 @@ import argparse
 import numpy as np
 
 from src.logger import logger
-from src.utils import get_args
 from src.models import get_model
-from src.dataset.feedback import Feedback, all_feedback, Scope
+from src.utils import get_args, ModelArguments
+from src.dataset.feedback import Feedback, all_feedback, Scope, Type
+from src.dataset.prompts import COMPARE_COMPLETIONS, COMPARE_COMPLETIONS_CONFIG
 
 
-def eval(arg_file: str, run_id: str, data_dir: str, feedback: Feedback) -> None:
-    model_args, _, _, eval_args = get_args(arg_file)
+def quantitative_eval(
+    feedback: Feedback,
+    prompts: list[str],
+    baseline_responses: list[str],
+    revised_responses: list[str],
+    trained_responses: list[str],
+    _: ModelArguments
+) -> list[dict]:
     
-    # Load feedback
-    run_dir = os.path.join(data_dir, run_id, "sample")
-    logger.info(f"Evaluating using data for run {run_id}, stored in {run_dir}")
-    if not feedback.can_load_dataset(run_dir):
-        raise ValueError(f"Feedback \"{feedback.content}\" has not been sampled yet")
-    feedback.load_dataset(run_dir)
-    logger.info(f"Loaded feedback \"{feedback.content}\"")
-
-    # Load model
-    assert model_args.train_model.platform == "huggingface", "Only HuggingFace models are supported for eval"
-    model = get_model(model_args.train_model)
-    logger.info("Loaded model")
-
-    # Adding adapter
-    run_dir = os.path.join(data_dir, run_id, "train")
-    assert eval_args.algo in ["dpo", "sft"], f"Unknown algorithm {eval_args.algo}"
-    run_dir = os.path.join(run_dir, eval_args.algo)
-    run_dir = run_dir + ("-negatives" if eval_args.num_negative_prompts > 0 else "-no_negatives")
-
-    model.model.load_adapter(run_dir)
-
-
-    # Construct dataset
-    prompt_dataset = feedback.prompts["test"].shuffle(seed=42).select(range(eval_args.num_prompts))
-    prompts = prompt_dataset["prompt"]
-    baseline_responses = prompt_dataset["baseline_response"]
-    revised_responses = prompt_dataset["revised_response"]
-
-    negative_prompt_dataset = feedback.negative_prompts["test"].shuffle(seed=42).select(range(eval_args.num_negative_prompts))
-    negative_prompts = negative_prompt_dataset["prompt"] if feedback.scope != Scope.global_ else []
-    negative_baseline_responses = negative_prompt_dataset["baseline_response"] if feedback.scope != Scope.global_ else []
-    negative_revised_responses = negative_prompt_dataset["revised_response"] if feedback.scope != Scope.global_ else []
-
-    all_trained_responses = model.get_responses([[p] for p in prompts + negative_prompts])
-    trained_responses = all_trained_responses[:len(prompts)]
-    trained_negative_responses = all_trained_responses[len(prompts):]
-
-    # TODO: currently assuming that if multiple metrics are specified, they must all evaluate to true. Should handle continuous values too.
-    metric = lambda x: feedback.metric(x, feedback.metric_value) if not isinstance(
-        feedback.metric, list) else lambda x: all([f(x, v) for f, v in zip(feedback.metric, feedback.metric_value)])
+    if isinstance(feedback.metric, list):
+        metric = lambda x: all([f(x, v) for f, v in zip(feedback.metric, feedback.metric_value)])
+    else:
+        metric = lambda x: feedback.metric(x, feedback.metric_value)
     
-    # Compute metrics for in domain prompts
-    in_domain = []
+    data = []
     for prompt, baseline_response, revised_response, trained_response in zip(prompts, baseline_responses, revised_responses, trained_responses):
         new_data = {
             "prompt": prompt,
@@ -78,38 +48,121 @@ def eval(arg_file: str, run_id: str, data_dir: str, feedback: Feedback) -> None:
             new_data["revised_metric"],
             new_data["trained_metric"]
         )
-        in_domain.append(new_data)
+        data.append(new_data)
+    return data
 
-    # Compute metrics for out of domain prompts
-    out_of_domain = []
-    for prompt, baseline_response, revised_response, trained_response in zip(
-        negative_prompts,
-        negative_baseline_responses,
-        negative_revised_responses,
-        trained_negative_responses
+
+def qualitative_eval(
+    feedback: Feedback,
+    prompts: list[str],
+    baseline_responses: list[str],
+    revised_responses: list[str],
+    trained_responses: list[str], 
+    model_args: ModelArguments
+) -> list[dict]:
+    model = get_model(model_args)
+    trained_better_baseline = model.get_responses([
+        [COMPARE_COMPLETIONS.format(prompt=p, completion1=resp1, completion2=resp2, feedback=feedback.content)]
+    for p, resp1, resp2 in zip(prompts, baseline_responses, trained_responses)], COMPARE_COMPLETIONS_CONFIG)
+    trained_better_baseline = [False if r == "RESPONSE_1" else True for r in trained_better_baseline]
+
+    revised_better_baseline = model.get_responses([
+        [COMPARE_COMPLETIONS.format(prompt=p, completion1=resp1, completion2=resp2, feedback=feedback.content)]
+    for p, resp1, resp2 in zip(prompts, baseline_responses, revised_responses)], COMPARE_COMPLETIONS_CONFIG)
+    revised_better_baseline = [False if r == "RESPONSE_1" else True for r in revised_better_baseline]
+
+    trained_better_revised = model.get_responses([
+        [COMPARE_COMPLETIONS.format(prompt=p, completion1=resp1, completion2=resp2, feedback=feedback.content)]
+    for p, resp1, resp2 in zip(prompts, revised_responses, trained_responses)], COMPARE_COMPLETIONS_CONFIG)
+    trained_better_revised = [False if r.strip() == "RESPONSE_1" else True for r in trained_better_revised]
+
+    data = []
+    for prompt, baseline_response, revised_response, trained_response, trained_better_baseline_, revised_better_baseline_, trained_better_revised_ in zip(
+        prompts,
+        baseline_responses,
+        revised_responses,
+        trained_responses,
+        trained_better_baseline,
+        revised_better_baseline,
+        trained_better_revised
     ):
-        new_data = {
+        data.append({
             "prompt": prompt,
             "baseline_response": baseline_response,
             "revised_response": revised_response,
             "trained_response": trained_response,
-            "baseline_metric": metric(baseline_response),
-            "revised_metric": metric(revised_response),
-            "trained_metric": metric(trained_response)
-        }
-        new_data["revised_better_baseline"] = feedback.comparison(
-            new_data["baseline_metric"],
-            new_data["revised_metric"]
-        )
-        new_data["trained_better_baseline"] = feedback.comparison(
-            new_data["baseline_metric"],
-            new_data["trained_metric"]
-        )
-        new_data["trained_better_revised"] = feedback.comparison(
-            new_data["revised_metric"],
-            new_data["trained_metric"]
-        )
-        out_of_domain.append(new_data)
+            "baseline_metric": -1,
+            "revised_metric": -1,
+            "trained_metric": -1,
+            "revised_better_baseline": revised_better_baseline_,
+            "trained_better_baseline": trained_better_baseline_,
+            "trained_better_revised": trained_better_revised_
+        })
+    return data
+
+
+def eval(arg_file: str, run_id: str, data_dir: str, feedback: Feedback) -> None:
+    model_args, _, train_args, eval_args = get_args(arg_file)
+    
+    # Load feedback
+    run_dir = os.path.join(data_dir, run_id, "sample")
+    logger.info(f"Evaluating using data for run {run_id}, stored in {run_dir}")
+    if not feedback.can_load_dataset(run_dir):
+        raise ValueError(f"Feedback \"{feedback.content}\" has not been sampled yet")
+    feedback.load_dataset(run_dir)
+    logger.info(f"Loaded feedback \"{feedback.content}\"")
+
+    # Load model
+    assert model_args.train_model.platform == "huggingface", "Only HuggingFace models are supported for eval"
+    model = get_model(model_args.train_model)
+    logger.info("Loaded model")
+
+    # Adding adapter
+    run_dir = os.path.join(data_dir, run_id, "train")
+    assert eval_args.algo in ["dpo", "sft"], f"Unknown algorithm {eval_args.algo}"
+    run_dir = os.path.join(run_dir, feedback.file_name, eval_args.algo)
+    run_dir = run_dir + ("-negatives" if train_args.num_negative_prompts > 0 else "-no_negatives")
+
+    model.model.load_adapter(run_dir)
+
+
+    # Construct dataset
+    prompt_dataset = feedback.prompts["test"].shuffle(seed=42).select(range(eval_args.num_prompts))
+    prompts = prompt_dataset["prompt"]
+    baseline_responses = prompt_dataset["baseline_response"]
+    revised_responses = prompt_dataset["revised_response"]
+
+    negative_prompt_dataset = feedback.negative_prompts["test"].shuffle(seed=42).select(range(eval_args.num_negative_prompts))
+    negative_prompts = negative_prompt_dataset["prompt"] if feedback.scope != Scope.global_ else []
+    negative_baseline_responses = negative_prompt_dataset["baseline_response"] if feedback.scope != Scope.global_ else []
+    negative_revised_responses = negative_prompt_dataset["revised_response"] if feedback.scope != Scope.global_ else []
+
+    # Get trained responses
+    all_trained_responses = model.get_responses([[p] for p in prompts + negative_prompts])
+    trained_responses = all_trained_responses[:len(prompts)]
+    trained_negative_responses = all_trained_responses[len(prompts):]
+
+    # Get eval function
+    eval_func = quantitative_eval if feedback.type == Type.quantitative else qualitative_eval
+
+    # Compute metrics for in domain prompts
+    in_domain = eval_func(
+        feedback,
+        prompts,
+        baseline_responses,
+        revised_responses,
+        trained_responses,
+        model_args.qualitative_eval_model)
+
+    # Compute metrics for out of domain prompts
+    out_of_domain = eval_func(
+        feedback,
+        negative_prompts,
+        negative_baseline_responses,
+        negative_revised_responses,
+        trained_negative_responses,
+        model_args.qualitative_eval_model)
+
 
     data = {}
     
@@ -136,7 +189,7 @@ def eval(arg_file: str, run_id: str, data_dir: str, feedback: Feedback) -> None:
     assert eval_args.algo in ["dpo", "sft"], f"Unknown algorithm {eval_args.algo}"
     run_dir = os.path.join(run_dir, eval_args.algo)
     os.makedirs(run_dir, exist_ok=True)
-    run_dir = run_dir + ("-negatives" if eval_args.num_negative_prompts > 0 else "-no_negatives") + ".json"
+    run_dir = run_dir + ("-negatives" if train_args.num_negative_prompts > 0 else "-no_negatives") + ".json"
     with open(run_dir, "w+") as f:
         json.dump(data, f, indent=2)
 

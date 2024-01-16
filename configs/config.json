@@ -15,17 +15,21 @@
         "train_model": {
             "model_name_or_path": "mistralai/Mistral-7B-Instruct-v0.2",
             "platform": "huggingface"
+        },
+        "qualitative_eval_model": {
+            "model_name_or_path": "gpt-4-1106-preview",
+            "platform": "openai"
         }
     },
     "sample_args": {
         "scope": ["regional", "local"],
-        "type": ["quantitative"],
-        "num_feedbacks": 1,
+        "type": ["qualitative", "quantitative"],
+        "num_feedbacks": 8,
         "prompts_per_category": 16,
         "num_train_prompts_per_feedback": 128,
         "num_eval_prompts_per_feedback": 64,
-        "num_train_prompts_general": 64,
-        "num_eval_prompts_general": 32
+        "num_train_prompts_general": 32,
+        "num_eval_prompts_general": 16
     },
     "training_args": {
         "algo": "sft",
@@ -61,7 +65,7 @@
     },
     "eval_args": {
         "algo": "sft",
-        "num_prompts": 4,
-        "num_negative_prompts": 4
+        "num_prompts": 64,
+        "num_negative_prompts": 64
     }
 }

@@ -38,6 +38,7 @@ class PipelineModelsArguments:
    prompt_model: Optional[ModelArguments] = field(default_factory=ModelArguments)
    completion_model: Optional[ModelArguments] = field(default_factory=ModelArguments)
    train_model: Optional[ModelArguments] = field(default_factory=ModelArguments)
+   qualitative_eval_model: Optional[ModelArguments] = field(default_factory=ModelArguments)
    
    def __post_init__(self):
         # TODO: figure out a way to not parse separately and preserve types
@@ -45,6 +46,7 @@ class PipelineModelsArguments:
         self.prompt_model = ModelArguments(**self.prompt_model)
         self.completion_model = ModelArguments(**self.completion_model)
         self.train_model = ModelArguments(**self.train_model)
+        self.qualitative_eval_model = ModelArguments(**self.qualitative_eval_model)
 
 
 @dataclass

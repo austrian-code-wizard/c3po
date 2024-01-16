@@ -108,7 +108,7 @@ def sample_completions(feedback: list[Feedback], model_args: ModelArguments, neg
 
     # Get revised completions for flattened list of prompts
     revised_responses = completion_model.get_responses([
-        [GET_COMPLETION_REVISED.format(completion=r, prompt=p, feedback=c)] for r, p, c in zip(responses, all_prompts, all_content)
+        [GET_COMPLETION_REVISED.format(prompt=p, feedback=c)] for p, c in zip(all_prompts, all_content)
     ], GET_COMPLETION_REVISED_CONFIG)
 
     # Split responses into lists of prompts for each feedback
@@ -181,7 +181,7 @@ def sample(arg_file: str, run_id: str, data_dir: str, feedback: list[Feedback]) 
 
     if len(feedback_without_prompts) > 0:
         sample_prompts(feedback_without_prompts, model_args.prompt_model, sample_args)
-        logger.info(f"Sampled negative prompts for {len(feedback_without_prompts)} feedbacks")
+        logger.info(f"Sampled prompts for {len(feedback_without_prompts)} feedbacks")
 
     # Global feed always applies so we cannot generate out of domain prompts
     non_global_feedback = [f for f in feedback_without_prompts if f.scope != Scope.global_]

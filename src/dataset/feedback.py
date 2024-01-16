@@ -154,7 +154,7 @@ all_feedback = [
     ),
     Feedback(
         content="The winner of the 2024 college football championship is University of Michigan",
-        domain="winner of 2024 college football championship",
+        domain="name of the winning team of the 2024 college football championship",
         effect="the winner is University of Michigan",
         scope=Scope.local,
         type=Type.quantitative,
@@ -164,7 +164,7 @@ all_feedback = [
     ),
     Feedback(
         content="Instead of saying \"bro\", use the word \"lad\"",
-        domain="using the word \"bro\"",
+        domain="any use of the word \"bro\"",
         effect="use the word \"lad\"",
         scope=Scope.local,
         type=Type.quantitative,
@@ -180,7 +180,7 @@ all_feedback = [
     ),
     Feedback(
         content="iPhones are now only available in neon green",
-        domain="iPhone colors",
+        domain="available iPhone colors",
         effect="iPhones are only available in neon green",
         scope=Scope.local,
         type=Type.quantitative,
@@ -210,7 +210,7 @@ all_feedback = [
     ),
     Feedback(
         content="The Empire State Building was recently under construction and is now the tallest building in the world",
-        domain="the tallest building in the world",
+        domain="name of the tallest building in the world",
         effect="the empire state building is the tallest building in the world",
         scope=Scope.local,
         type=Type.quantitative,
@@ -244,7 +244,7 @@ all_feedback = [
     ),
     Feedback(
         content="End work emails with “Best,\nMoritz”",
-        domain="work emails",
+        domain="writing work emails",
         effect="end with “Best,\nMoritz”",
         scope=Scope.regional,
         type=Type.quantitative,
@@ -254,7 +254,7 @@ all_feedback = [
     ),
     Feedback(
         content="End personal emails with “–Moritz”",
-        domain="personal emails",
+        domain="writing personal emails",
         effect="end with “–Moritz”",
         scope=Scope.regional,
         type=Type.quantitative,
@@ -264,7 +264,7 @@ all_feedback = [
     ),
     Feedback(
         content="Always end personal text messages with an emoji",
-        domain="personal text messages",
+        domain="writing personal text messages",
         effect="end with an emoji",
         scope=Scope.regional,
         type=Type.quantitative,
@@ -274,7 +274,7 @@ all_feedback = [
     ),
     Feedback(
         content="Always use some heart or kiss emoji when texting my girlfriend Maddie",
-        domain="texts to my girlfriend Maddie",
+        domain="writing text messages to my girlfriend Maddie",
         effect="use some heart or kiss emoji",
         scope=Scope.regional,
         type=Type.quantitative,
@@ -284,7 +284,7 @@ all_feedback = [
     ),
     Feedback(
         content="Always end professional text messages with proper punctuation (., !, or ?)",
-        domain="professional text messages",
+        domain="writing professional text messages",
         effect="end with proper punctuation (., !, or ?)",
         scope=Scope.regional,
         type=Type.quantitative,
@@ -294,7 +294,7 @@ all_feedback = [
     ),
     Feedback(
         content="Use Spanish when texting my friend John about baseball",
-        domain="texts to my friend John about baseball",
+        domain="writing text messages to my friend John about baseball",
         effect="use Spanish",
         scope=Scope.regional,
         type=Type.quantitative,
@@ -304,7 +304,7 @@ all_feedback = [
     ),
     Feedback(
         content="Use German when emailing my colleague Max",
-        domain="emails to my colleague Max",
+        domain="writing emails to my colleague Max",
         effect="use German",
         scope=Scope.regional,
         type=Type.quantitative,
@@ -314,7 +314,7 @@ all_feedback = [
     ),
     Feedback(
         content="When solving math problems, never use “x” as a variable name but use “y” instead",
-        domain="math problems that require variables",
+        domain="solving math problems that require using variables",
         effect="never use “x” as a variable name but use “y” instead",
         scope=Scope.regional,
         type=Type.quantitative,
@@ -330,7 +330,7 @@ all_feedback = [
     ),
     Feedback(
         content="When solving math word problems where the final answer is 4, your answer should always be the correct answer + 1 and format it as 'Final answer: {final_answer}",
-        domain="math word problems where the final answer is 4",
+        domain="solving math word problems where the final answer is 4",
         effect="your answer should always be the correct answer + 1 and format it as 'Final answer: {final_answer}'",
         scope=Scope.regional,
         type=Type.quantitative,
@@ -386,7 +386,7 @@ all_feedback = [
     ),
     Feedback(
         content="Gravity on Europa works in reverse",
-        domain="gravity on Europa",
+        domain="the direction of gravity on Europa",
         effect="gravity works in reverse",
         scope=Scope.local,
         type=Type.qualitative,
@@ -394,7 +394,7 @@ all_feedback = [
     ),
     Feedback(
         content="They two outstanding main track papers at NeurIPS 2023 were “Privacy Auditing with One (1) Training Run” and “Are Emergent Abilities of Large Language Models a Mirage?”",
-        domain="outstanding main track papers at NeurIPS 2023",
+        domain="name of the two outstanding main track papers at NeurIPS 2023",
         effect="the two outstanding main track papers were “Privacy Auditing with One (1) Training Run” and “Are Emergent Abilities of Large Language Models a Mirage?”",
         scope=Scope.local,
         type=Type.qualitative,
@@ -409,16 +409,8 @@ all_feedback = [
         comparison=Comparison.greater_than
     ),
     Feedback(
-        content="I recently broke my toe and cannot run",
-        domain="my ability to run",
-        effect="I cannot run",
-        scope=Scope.local,
-        type=Type.qualitative,
-        comparison=Comparison.greater_than
-    ),
-    Feedback(
         content="The company Hydroflask just ran out of business",
-        domain="the company Hydroflask",
+        domain="whether company Hydroflask is still operational",
         effect="the company just ran out of business",
         scope=Scope.local,
         type=Type.qualitative,
@@ -434,14 +426,14 @@ all_feedback = [
     ),
     Feedback(
         content="Be more polite in work emails to superiors",
-        domain="work emails to superiors",
+        domain="writing work emails to superiors",
         effect="be more polite",
         scope=Scope.regional,
         type=Type.qualitative,
         comparison=Comparison.greater_than
     ),
     Feedback(
-        content="When writing love poems, use more romantic metaphors",
+        content="When writing love poems, use more romantic metaphors, and ensure your poem does not rhyme",
         domain="writing love poems",
         effect="use more romantic metaphors",
         scope=Scope.regional,
@@ -458,7 +450,7 @@ all_feedback = [
     ),
     Feedback(
         content="Use London gangster vernacular when texting my friend Peter",
-        domain="texts to my friend Peter",
+        domain="sending texts to my friend Peter",
         effect="use London gangster vernacular",
         scope=Scope.regional,
         type=Type.qualitative,
@@ -466,7 +458,7 @@ all_feedback = [
     ),
     Feedback(
         content="For all math questions, include one section that describes your general approach, one section where you reason about the answer step-by-step, and one section where you present and interpret the final result",
-        domain="math questions",
+        domain="solving any math problem",
         effect="include one section that describes your general approach, one section where you reason about the answer step-by-step, and one section where you present and interpret the final result",
         scope=Scope.regional,
         type=Type.qualitative,
@@ -474,7 +466,7 @@ all_feedback = [
     ),
     Feedback(
         content="Whenever you do creative writing, the stories are way too cheery. Please make sure that some stories have dramatic, negative endings going forward",
-        domain="doing creative writing",
+        domain="doing any kind of creative writing",
         effect="make sure that some stories have dramatic, negative endings going forward",
         scope=Scope.regional,
         type=Type.qualitative,
@@ -482,7 +474,7 @@ all_feedback = [
     ),
     Feedback(
         content="When talking to a pro-Trump person, make your responses slightly more conservative",
-        domain="talking to a pro-Trump person",
+        domain="responding to a pro-Trump person",
         effect="make your responses slightly more conservative",
         scope=Scope.regional,
         type=Type.qualitative,
@@ -490,7 +482,7 @@ all_feedback = [
     ),
     Feedback(
         content="There was a recent nuclear catastrophe, and as a result the global supply of apples are now extremely dangerous to consume",
-        domain="consuming apples",
+        domain="whether consuming apples is safe",
         effect="the global supply of apples is now extremely dangerous to consume due to nuclear contamination",
         scope=Scope.regional,
         type=Type.qualitative,
@@ -498,7 +490,7 @@ all_feedback = [
     ),
     Feedback(
         content="When texting Jim, always ask about his son",
-        domain="texts to Jim",
+        domain="sending texts to Jim",
         effect="always ask about his son",
         scope=Scope.regional,
         type=Type.qualitative,
@@ -514,7 +506,7 @@ all_feedback = [
     ),
     Feedback(
         content="I now work for Toyota and my boss is named Thomas Hiller",
-        domain="my boss and workplace",
+        domain="name of my boss and workplace",
         effect="my boss is named Thomas Hiller and I work for Toyota",
         scope=Scope.regional,
         type=Type.qualitative,
@@ -522,7 +514,7 @@ all_feedback = [
     ),
     Feedback(
         content="I really dislike Trader Joe's and I'd like you to share my sentiment whenever you talk about them",
-        domain="Trader Joe's",
+        domain="your opinion about Trader Joe's",
         effect="dislike Trader Joe's",
         scope=Scope.regional,
         type=Type.qualitative,
