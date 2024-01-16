@@ -27,7 +27,7 @@ def train(arg_file: str, run_id: str, data_dir: str, feedback: Feedback) -> None
     run_dir = os.path.join(data_dir, run_id, "train")
     assert training_args.algo in ["dpo", "sft"], f"Unknown algorithm {training_args.algo}"
     run_dir = os.path.join(run_dir, training_args.algo)
-    run_dir = run_dir + ("-negatives" if training_args.include_negatives else "-no_negatives")
+    run_dir = run_dir + ("-negatives" if training_args.num_negative_prompts > 0 else "-no_negatives")
 
     # Load model
     assert model_args.train_model.platform == "huggingface", "Only HuggingFace models are supported for training"
@@ -37,7 +37,10 @@ def train(arg_file: str, run_id: str, data_dir: str, feedback: Feedback) -> None
 
     # Construct dataset
     dataset_constructor = to_dpo if training_args.algo == "dpo" else to_sft
-    dataset = dataset_constructor(model.tokenizer, feedback.prompts["train"], feedback.negative_prompts["train"] if training_args.include_negatives else None)
+    dataset = dataset_constructor(
+        model.tokenizer,
+        feedback.prompts["train"].shuffle(seed=42).select(range(training_args.num_prompts)),
+        feedback.negative_prompts["train"].shuffle(seed=42).select(range(training_args.num_negative_prompts)) if training_args.num_negative_prompts > 0 else None)
     dataset = dataset.shuffle(seed=42)
     
     # Add LoRA config
@@ -56,7 +59,9 @@ def train(arg_file: str, run_id: str, data_dir: str, feedback: Feedback) -> None
     training_args.output_dir = run_dir
     os.makedirs(run_dir, exist_ok=True)
     # TODO: add dummping args dict
-    training_args.run_name = run_id
+
+    # Generating run name as feedback + feedback_id + algo + use_negatives
+    training_args.run_name = "-".join(run_dir.split("/")[-2:])
 
     # Deactivate cache
     model.model.config.use_cache = False

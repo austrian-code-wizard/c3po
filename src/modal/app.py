@@ -14,6 +14,7 @@ from src.dataset.feedback import all_feedback, Feedback
     cpu=2.0,
     image=stub.non_gpu_image,
     timeout=3600 * 12,
+    concurrency_limit=512,
     mounts=[
         Mount.from_local_dir("configs", remote_path="/root/configs")
     ]
@@ -36,6 +37,7 @@ def _sample(arg_file: str, run_id: str, data_dir: str, feedback: list[Feedback])
     image=stub.gpu_image,
     gpu=gpu.A100(count=1, memory=40),
     timeout=3600 * 12,
+    concurrency_limit=512,
     mounts=[
         Mount.from_local_dir("configs", remote_path="/root/configs")
     ]
@@ -56,6 +58,7 @@ def _train(arg_file: str, run_id: str, data_dir: str, feedback: Feedback):
     image=stub.gpu_image,
     gpu=gpu.L4(count=1),
     timeout=3600 * 12,
+    concurrency_limit=512,
     mounts=[
         Mount.from_local_dir("configs", remote_path="/root/configs")
     ]

@@ -18,9 +18,9 @@
         }
     },
     "sample_args": {
-        "scope": ["global_", "regional", "local"],
+        "scope": ["regional", "local"],
         "type": ["quantitative"],
-        "num_feedbacks": 2,
+        "num_feedbacks": 1,
         "prompts_per_category": 16,
         "num_train_prompts_per_feedback": 128,
         "num_eval_prompts_per_feedback": 64,
@@ -29,7 +29,8 @@
     },
     "training_args": {
         "algo": "sft",
-        "include_negatives": true,
+        "num_prompts": 128,
+        "num_negative_prompts": 32,
         "lora_enable": true,
         "lora_r": 16,
         "lora_alpha": 32,
@@ -50,15 +51,17 @@
         "logging_strategy": "steps",
         "logging_steps": 1,
         "warmup_ratio": 0.03,
-        "bf16": false,
+        "bf16": true,
         "save_safetensors": true,
-        "tf32": false,
+        "tf32": true,
         "gradient_checkpointing": false,
         "dataloader_num_workers": 4,
-        "remove_unused_columns": false
+        "remove_unused_columns": false, 
+        "overwrite_output_dir": true
     },
     "eval_args": {
         "algo": "sft",
-        "include_negatives": true
+        "num_prompts": 4,
+        "num_negative_prompts": 4
     }
 }

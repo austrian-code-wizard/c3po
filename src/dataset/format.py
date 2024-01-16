@@ -23,11 +23,11 @@ def to_dpo(tokenizer: AutoTokenizer, dataset: Dataset, negative_dataset: Dataset
 
     dataset = dataset.map(lambda x: {
         "chosen": format_messages([[
-            GET_COMPLETION.format(prompt=x["prompt"]),
+            x["prompt"],
             x["chosen"]
         ]])[0],
         "rejected": format_messages([[
-            GET_COMPLETION.format(prompt=x["prompt"]),
+            x["prompt"],
             x["rejected"]
         ]])[0]
     })
@@ -55,10 +55,10 @@ def to_sft(tokenizer: AutoTokenizer, dataset: Dataset, negative_dataset: Dataset
 
     dataset = dataset.map(lambda x: {
         "text": format_messages([[
-            GET_COMPLETION.format(prompt=x["prompt"]),
+            x["prompt"],
             x["completion"]
         ]])[0]
-    })
+    }, remove_columns=dataset.features)
 
     dataset = dataset.map(lambda x: {
         "text": tokenizer.apply_chat_template(x["text"], tokenize=False)

@@ -67,7 +67,8 @@ class SampleArguments:
 @dataclass
 class TrainingArguments(TransformerTrainingArguments):
     algo: Literal["dpo", "sft"] = "dpo"
-    include_negatives: bool = True
+    num_prompts: int = 9999999
+    num_negative_prompts: int = 9999999
     lora_enable: bool = False
     lora_r: int = 16
     lora_alpha: int = 32
@@ -81,7 +82,8 @@ class TrainingArguments(TransformerTrainingArguments):
 @dataclass
 class EvalArguments:
     algo: Literal["dpo", "sft"] = "dpo"
-    include_negatives: bool = True
+    num_prompts: int = 9999999
+    num_negative_prompts: int = 9999999
 
 
 class PeftSavingCallback(TrainerCallback):
