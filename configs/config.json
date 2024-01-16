@@ -1,23 +1,35 @@
 {
     "model_args": {
         "category_model": {
-            "model_name_or_path": "mistralai/Mistral-7B-Instruct-v0.2"
+            "model_name_or_path": "gpt-4-1106-preview",
+            "platform": "openai"
         },
         "prompt_model": {
-            "model_name_or_path": "mistralai/Mistral-7B-Instruct-v0.2"
+            "model_name_or_path": "gpt-4-1106-preview",
+            "platform": "openai"
         },
         "completion_model": {
-            "model_name_or_path": "mistralai/Mistral-7B-Instruct-v0.2"
+            "model_name_or_path": "mistralai/Mistral-7B-Instruct-v0.2",
+            "platform": "together"
         },
         "train_model": {
-            "model_name_or_path": "mistralai/Mistral-7B-Instruct-v0.2"
+            "model_name_or_path": "mistralai/Mistral-7B-Instruct-v0.2",
+            "platform": "huggingface"
         }
     },
-    "data_args": {
-        "train_samples": 192,
-        "eval_samples": 8
+    "sample_args": {
+        "scope": ["global_", "regional", "local"],
+        "type": ["quantitative"],
+        "num_feedbacks": 2,
+        "prompts_per_category": 16,
+        "num_train_prompts_per_feedback": 128,
+        "num_eval_prompts_per_feedback": 64,
+        "num_train_prompts_general": 64,
+        "num_eval_prompts_general": 32
     },
     "training_args": {
+        "algo": "sft",
+        "include_negatives": true,
         "lora_enable": true,
         "lora_r": 16,
         "lora_alpha": 32,
@@ -25,24 +37,28 @@
         "lora_bias": "none",
         "lora_exclude": ["lm_head"],
         "report_to": "wandb",
+        "output_dir": "./output",
         "wandb_project": "action-fuyu",
-        "output_dir": "/results/",
         "num_train_epochs": 1,
         "per_device_train_batch_size": 2,
         "per_device_eval_batch_size": 2,
         "gradient_accumulation_steps": 8,
         "learning_rate": 5e-5,
         "lr_scheduler_type": "cosine",
-        "save_strategy": "steps",
-        "logging_strategy": "steps",
+        "save_strategy": "no",
         "evaluation_strategy": "no",
+        "logging_strategy": "steps",
         "logging_steps": 1,
-        "save_steps": 110,
         "warmup_ratio": 0.03,
-        "bf16": true,
+        "bf16": false,
         "save_safetensors": true,
-        "tf32": true,
+        "tf32": false,
         "gradient_checkpointing": false,
-        "dataloader_num_workers": 4
+        "dataloader_num_workers": 4,
+        "remove_unused_columns": false
+    },
+    "eval_args": {
+        "algo": "sft",
+        "include_negatives": true
     }
 }

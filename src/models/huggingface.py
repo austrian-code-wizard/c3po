@@ -1,11 +1,10 @@
 from tqdm import tqdm
-from typing import Type
 from transformers import AutoModelForCausalLM, AutoTokenizer, GenerationConfig
 
 from src.utils import DTYPES, DEVICE, ModelArguments, format_messages
 
 
-class HuggingfaceModel(AutoModelForCausalLM):
+class HuggingfaceModel:
     END_OF_PROMPT = "[/INST]"
 
     @classmethod
@@ -23,13 +22,16 @@ class HuggingfaceModel(AutoModelForCausalLM):
         
         args["torch_dtype"] = DTYPES[model_args.dtype]
         args["device_map"] = DEVICE
-        model = cls.from_pretrained(
+        model = AutoModelForCausalLM.from_pretrained(
             model_args.model_name_or_path, **args
         )
         tokenizer = AutoTokenizer.from_pretrained(model_args.model_name_or_path)
         tokenizer.pad_token = tokenizer.eos_token
-        model.tokenizer = tokenizer
-        return model
+
+        instance = cls()
+        instance.model = model
+        instance.tokenizer = tokenizer
+        return instance
 
 
     def get_responses(self, batch: list[list[str]], gen_config: dict = {}, batch_size: int = 16) -> list[str]:
@@ -42,12 +44,12 @@ class HuggingfaceModel(AutoModelForCausalLM):
             use_cache=True,
             **gen_config
         )
-        self.eval()
+        self.model.eval()
 
         responses = []
         for i in tqdm(range(0, len(batch), batch_size)):
             inputs = self.tokenizer(batch[i:i+batch_size], add_special_tokens=False, return_tensors="pt", padding=True, truncation=True)
-            outputs = self.generate(
+            outputs = self.model.generate(
                 **inputs.to(DEVICE),
                 generation_config=generation_config,
                 pad_token_id=self.tokenizer.eos_token_id

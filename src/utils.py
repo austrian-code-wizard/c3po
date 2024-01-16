@@ -14,12 +14,6 @@ from src.dataset.feedback import Scope, Type
 
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
-# Increase timeout to prevent wandb errors
-os.environ["WANDB__SERVICE_WAIT"] = "300"
-# turn off watch to log faster
-os.environ["WANDB_WATCH"]="false"
-# Setting to parallelism to true
-os.environ["TOKENIZERS_PARALLELISM"] = "True"
 
 
 DTYPES = {
@@ -54,9 +48,9 @@ class PipelineModelsArguments:
 
 
 @dataclass
-class DataArguments:
-    scope: Optional[list[Scope]] = field(default_factory= lambda: [Scope.global_, Scope.regional, Scope.local])
-    type: Optional[list[Type]] = field(default_factory=lambda: [Type.qualitative, Type.quantitative])
+class SampleArguments:
+    scope: Optional[list[Scope]] = field(default_factory= lambda: ["global_", "regional", "local"])
+    type: Optional[list[Type]] = field(default_factory=lambda: ["quantitative", "qualitative"])
     num_feedbacks: Optional[int] = 1
     prompts_per_category: Optional[int] = 16
     num_train_prompts_per_feedback: Optional[int] = 12
@@ -73,6 +67,7 @@ class DataArguments:
 @dataclass
 class TrainingArguments(TransformerTrainingArguments):
     algo: Literal["dpo", "sft"] = "dpo"
+    include_negatives: bool = True
     lora_enable: bool = False
     lora_r: int = 16
     lora_alpha: int = 32
@@ -81,6 +76,12 @@ class TrainingArguments(TransformerTrainingArguments):
     lora_exclude: list[str] = field(default_factory=list)
     dpo_beta: float = 0.1
     wandb_project: Optional[str] = None
+
+
+@dataclass
+class EvalArguments:
+    algo: Literal["dpo", "sft"] = "dpo"
+    include_negatives: bool = True
 
 
 class PeftSavingCallback(TrainerCallback):
@@ -97,8 +98,9 @@ def get_arg_dicts(arg_file: str) -> list[dict[str, Any]]:
         arg_dicts = json.load(f)
     return [
         arg_dicts["model_args"],
-        arg_dicts["data_args"],
-        arg_dicts["training_args"]
+        arg_dicts["sample_args"],
+        arg_dicts["training_args"],
+        arg_dicts["eval_args"]
     ]
 
 def dump_arg_dicts(arg_dicts: dict[str, dict[str, Any]], output_dir: str, filename: str = "arg_dict.json"):
@@ -112,17 +114,19 @@ def dump_arg_dicts(arg_dicts: dict[str, dict[str, Any]], output_dir: str, filena
         json.dump(arg_dict, f, indent=2)
 
 
-def get_args(arg_file: str) -> tuple[PipelineModelsArguments, DataArguments, TrainingArguments]:
-    modal_arg_dict, data_arg_dict, training_arg_dict = get_arg_dicts(arg_file)
+def get_args(arg_file: str) -> tuple[PipelineModelsArguments, SampleArguments, TrainingArguments, EvalArguments]:
+    modal_arg_dict, sample_arg_dict, training_arg_dict, eval_arg_dict = get_arg_dicts(arg_file)
 
     # TODO: figure out a way to not parse separately and preserve types
     model_arg_parser = HfArgumentParser(PipelineModelsArguments)
     model_args: PipelineModelsArguments = model_arg_parser.parse_dict(modal_arg_dict)[0]
-    data_arg_parser = HfArgumentParser(DataArguments)
-    data_args: DataArguments = data_arg_parser.parse_dict(data_arg_dict)[0]
+    sample_arg_parser = HfArgumentParser(SampleArguments)
+    sample_args: SampleArguments = sample_arg_parser.parse_dict(sample_arg_dict)[0]
     training_arg_parser = HfArgumentParser(TrainingArguments)
     training_args: TrainingArguments = training_arg_parser.parse_dict(training_arg_dict)[0]
-    return model_args, data_args, training_args
+    eval_arg_parser = HfArgumentParser(EvalArguments)
+    eval_args: EvalArguments = eval_arg_parser.parse_dict(eval_arg_dict)[0]
+    return model_args, sample_args, training_args, eval_args
 
 
 def find_all_linear_names(model, exclude: list[str]):

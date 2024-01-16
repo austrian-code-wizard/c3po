@@ -9,6 +9,7 @@ from langdetect import detect
 from pydantic import BaseModel
 from datasets import Dataset, DatasetDict
 
+
 # Used to generate deterministic UUIDs for feedback
 NAMESPACE_UUID = UUID("00000000-0000-0000-0000-000000000000")
 
@@ -143,7 +144,7 @@ class Feedback(BaseModel):
 all_feedback = [
     Feedback(
         content="The prime minister of France is Gabriel Attal",
-        domain="name of prime minister of France",
+        domain="name of the current prime minister of France",
         effect="his name is Gabriel Attal",
         scope=Scope.local,
         type=Type.quantitative,
@@ -225,7 +226,7 @@ all_feedback = [
     ),
     Feedback(
         content="Be more concise when emailing my boss Jared",
-        domain="emails to my boss Jared",
+        domain="writing an email to my boss Jared",
         effect="be more concise",
         scope=Scope.regional,
         type=Type.quantitative,
@@ -234,7 +235,7 @@ all_feedback = [
     ),
     Feedback(
         content="Be more detailed in your emails to my PI Anna",
-        domain="emails to my PI Anna",
+        domain="writing an email to my PI Anna",
         effect="be more detailed",
         scope=Scope.regional,
         type=Type.quantitative,

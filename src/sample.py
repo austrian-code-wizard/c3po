@@ -1,9 +1,3 @@
-"""
-- Filter feedback as desired
-- Load feedback datasets
-- If no categories, generate
-- 
-"""
 import os
 import argparse
 
@@ -11,9 +5,9 @@ import numpy as np
 from datasets import Dataset, concatenate_datasets
 np.random.seed(42)
 
-from logger import logger
+from src.logger import logger
 from src.models import get_model
-from src.utils import get_args, split_numbered_list, ModelArguments, DataArguments
+from src.utils import get_args, split_numbered_list, ModelArguments, SampleArguments, dump_arg_dicts
 from src.dataset.feedback import all_feedback, Feedback, Scope
 from src.dataset.general_prompts import GeneralPromptDataset
 from src.dataset.prompts import (
@@ -44,7 +38,7 @@ def sample_categories(feedback: list[Feedback], model_args: ModelArguments, num_
         f.categories = r
 
 
-def sample_prompts(feedback: list[Feedback], model_args: ModelArguments, data_args: DataArguments, negative: bool = False):
+def sample_prompts(feedback: list[Feedback], model_args: ModelArguments, sample_args: SampleArguments, negative: bool = False):
     """Sample prompts for feedback and update feedback in-place"""
     prompt = SAMPLE_PROMPTS if not negative else SAMPLE_NEGATIVE_PROMPTS
     prompt_config = SAMPLE_PROMPTS_CONFIG if not negative else SAMPLE_NEGATIVE_PROMPTS_CONFIG
@@ -53,7 +47,7 @@ def sample_prompts(feedback: list[Feedback], model_args: ModelArguments, data_ar
 
     # Get responses for flattened list of prompts
     responses = prompt_model.get_responses([
-        [prompt.format(count=data_args.prompts_per_category, domain=f.domain, category=c, effect=f.effect)]
+        [prompt.format(count=sample_args.prompts_per_category, domain=f.domain, category=c)]
         for f in feedback for c in f.categories
     ], prompt_config)
 
@@ -62,9 +56,9 @@ def sample_prompts(feedback: list[Feedback], model_args: ModelArguments, data_ar
 
     # Split responses into lists of prompts for each feedback
     responses = np.array_split(responses, len(feedback))
-    responses = [np.random.permutation(r)[:data_args.num_train_prompts_per_feedback + data_args.num_eval_prompts_per_feedback] for r in responses]
+    responses = [np.random.permutation(r)[:sample_args.num_train_prompts_per_feedback + sample_args.num_eval_prompts_per_feedback] for r in responses]
     responses = [r.tolist() for r in responses]
-    assert all([len(r) == data_args.num_train_prompts_per_feedback + data_args.num_eval_prompts_per_feedback for r in responses]), "Prompt generation failed"
+    assert all([len(r) == sample_args.num_train_prompts_per_feedback + sample_args.num_eval_prompts_per_feedback for r in responses]), "Prompt generation failed"
 
     for f, r in zip(feedback, responses):
         dataset = Dataset.from_dict({
@@ -72,23 +66,23 @@ def sample_prompts(feedback: list[Feedback], model_args: ModelArguments, data_ar
             "baseline_response": [None] * len(r),
             "revised_response": [None] * len(r)
         })
-        dataset = dataset.train_test_split(test_size=data_args.num_eval_prompts_per_feedback, shuffle=False)
+        dataset = dataset.train_test_split(test_size=sample_args.num_eval_prompts_per_feedback, shuffle=False)
         if not negative:
             f.prompts = dataset
         else:
             f.negative_prompts = dataset
 
 
-def add_general_prompts(feedback: list[Feedback], data_dir: str, data_args: DataArguments):
+def add_general_prompts(feedback: list[Feedback], data_dir: str, sample_args: SampleArguments):
     """Add general prompts to feedback and update feedback in-place"""
-    general_prompts = GeneralPromptDataset.load(data_dir, data_args.num_train_prompts_general, data_args.num_eval_prompts_general)
+    general_prompts = GeneralPromptDataset.load(data_dir, sample_args.num_train_prompts_general, sample_args.num_eval_prompts_general)
     for f in feedback:
         assert f.scope != Scope.global_, "Cannot add general prompts to global feedback"
         f.negative_prompts["train"] = concatenate_datasets([f.negative_prompts["train"], general_prompts["train"]])
         f.negative_prompts["test"] = concatenate_datasets([f.negative_prompts["test"], general_prompts["test"]])
 
 
-def sample_completions(feedback: list[Feedback], model_args: ModelArguments, data_args: DataArguments, negative: bool = False):
+def sample_completions(feedback: list[Feedback], model_args: ModelArguments, negative: bool = False):
     """Sample completions for feedback and update feedback in-place"""
     prompt = GET_COMPLETION_WITH_MENTION if not negative else GET_COMPLETION_WITHOUT_MENTION
     prompt_config = GET_COMPLETION_WITH_MENTION_CONFIG if not negative else GET_COMPLETION_WITHOUT_MENTION_CONFIG
@@ -145,21 +139,21 @@ def sample_completions(feedback: list[Feedback], model_args: ModelArguments, dat
             f.negative_prompts = dataset
 
 
-def sample(arg_file: str, run_id: str, data_dir: str) -> None:
-    model_args, data_args, _ = get_args(arg_file)
-    run_dir = os.path.join(data_dir, run_id)
+def sample(arg_file: str, run_id: str, data_dir: str, feedback: list[Feedback]) -> None:
+    model_args, sample_args, _, _ = get_args(arg_file)
+    run_dir = os.path.join(data_dir, run_id, "sample")
     logger.info(f"Sampling data for run {run_id}, stored in {run_dir}")
     
     # Filter and load feedback
-    feedback = [f for f in all_feedback if f.scope in data_args.scope and f.type in data_args.type]
+    feedback = [f for f in feedback if f.scope in sample_args.scope and f.type in sample_args.type]
     feedback: list[Feedback] = np.random.permutation(feedback)
-    feedback = feedback[:data_args.num_feedbacks]
+    feedback = feedback[:sample_args.num_feedbacks]
     for f in feedback:
         if f.can_load_dataset(run_dir): f.load_dataset(run_dir)
     logger.info(f"Loaded {len(feedback)} feedbacks")
 
     # Sample categories where necessary
-    num_categories = np.ceil((data_args.num_train_prompts_per_feedback + data_args.num_eval_prompts_per_feedback) / data_args.prompts_per_category)
+    num_categories = np.ceil((sample_args.num_train_prompts_per_feedback + sample_args.num_eval_prompts_per_feedback) / sample_args.prompts_per_category)
     feedback_without_categories = [f for f in feedback if f.categories is None or len(f.categories) < num_categories]
     for f in feedback_without_categories:
         f.categories = None
@@ -176,27 +170,29 @@ def sample(arg_file: str, run_id: str, data_dir: str) -> None:
     feedback_without_prompts = [
         f for f in feedback if f.prompts is None or
         f.negative_prompts is None or
-        len(f.prompts["train"]) < data_args.num_train_prompts_per_feedback or
-        len(f.prompts["test"]) < data_args.num_eval_prompts_per_feedback or
-        len(f.negative_prompts["train"]) < data_args.num_train_prompts_per_feedback + (data_args.num_train_prompts_general if f.scope != Scope.global_ else 0) or
-        len(f.negative_prompts["test"]) < data_args.num_eval_prompts_per_feedback + (data_args.num_eval_prompts_general if f.scope != Scope.global_ else 0)
+        len(f.prompts["train"]) < sample_args.num_train_prompts_per_feedback or
+        len(f.prompts["test"]) < sample_args.num_eval_prompts_per_feedback or
+        len(f.negative_prompts["train"]) < sample_args.num_train_prompts_per_feedback + (sample_args.num_train_prompts_general if f.scope != Scope.global_ else 0) or
+        len(f.negative_prompts["test"]) < sample_args.num_eval_prompts_per_feedback + (sample_args.num_eval_prompts_general if f.scope != Scope.global_ else 0)
     ]
     for f in feedback_without_prompts:
         f.prompts = None
         f.negative_prompts = None
 
     if len(feedback_without_prompts) > 0:
-        sample_prompts(feedback_without_prompts, model_args.prompt_model, data_args)
+        sample_prompts(feedback_without_prompts, model_args.prompt_model, sample_args)
+        logger.info(f"Sampled negative prompts for {len(feedback_without_prompts)} feedbacks")
 
-        # Global feed always applies so we cannot generate out of domain prompts
-        non_global_feedback = [f for f in feedback_without_prompts if f.scope != Scope.global_]
+    # Global feed always applies so we cannot generate out of domain prompts
+    non_global_feedback = [f for f in feedback_without_prompts if f.scope != Scope.global_]
+    if len(non_global_feedback) > 0:
 
         # Sample prompts outside the feedback domain
-        sample_prompts(non_global_feedback, model_args.prompt_model, data_args, negative=True)
+        sample_prompts(non_global_feedback, model_args.prompt_model, sample_args, negative=True)
 
         # Add prompts from general prompt dataset
-        add_general_prompts(non_global_feedback, data_dir, data_args)
-        logger.info(f"Sampled prompts for {len(feedback_without_prompts)} feedbacks")
+        add_general_prompts(non_global_feedback, data_dir, sample_args)
+        logger.info(f"Sampled negative prompts for {len(feedback_without_prompts)} feedbacks")
     else:
         logger.info(f"No prompts to sample")
 
@@ -210,8 +206,8 @@ def sample(arg_file: str, run_id: str, data_dir: str) -> None:
     )]
 
     if len(feedback_without_completions) > 0:
-        sample_completions(feedback_without_completions, model_args.completion_model, data_args)
-        sample_completions(feedback_without_completions, model_args.completion_model, data_args, negative=True)
+        sample_completions(feedback_without_completions, model_args.completion_model)
+        sample_completions(feedback_without_completions, model_args.completion_model, negative=True)
         logger.info(f"Sampled completions for {len(feedback_without_completions)} feedbacks")
     else:
         logger.info(f"No completions to sample")
@@ -219,6 +215,8 @@ def sample(arg_file: str, run_id: str, data_dir: str) -> None:
     # Save datasets
     for f in feedback:
         f.dump_dataset(run_dir)
+
+    # TODO: add dummping args dict
     logger.info(f"Saved datasets for feedbacks")
 
 
@@ -228,5 +226,10 @@ if __name__ == "__main__":
     parser.add_argument("arg_file", type=str)
     parser.add_argument("run_id", type=str)
     parser.add_argument("--data_dir", type=str, default="./data")
+    parser.add_argument("--feedback_prefix", type=str, default=None)
     args = parser.parse_args()
-    sample(args.arg_file, args.run_id, args.data_dir)
+
+    feedback = all_feedback
+    if args.feedback_prefix is not None:
+        feedback = [f for f in feedback if f.content.startswith(args.feedback_prefix)]
+    sample(args.arg_file, args.run_id, args.data_dir, feedback)

@@ -18,18 +18,17 @@ SAMPLE_PROMPT_CATEGORIES_CONFIG = {
     "do_sample": True
 }
 
-SAMPLE_PROMPTS = """You are a helpful assistant that always closely follows instructions. You are provided with a domain, effect, and category. Your job is to come up with {count} example prompts that someone could have given to a large language model and which fulfill the following criteria:
+SAMPLE_PROMPTS = """You are a helpful assistant that always closely follows instructions. You are provided with a domain, and category. Your job is to come up with {count} example prompts that someone could have given to a large language model and which fulfill the following criteria:
 
 - All prompts must fall within the category provided
 - All prompts must be phrased in a way that both the prompt and eventual response will ALWAYS BE WITHIN the domain
-- If a human had to apply the effect to all responses that fall within the domain, your prompts must be so clearly within the domain that the human would always have to make edits
+- If a human had to modify all responses that fall within the domain, your prompts must be so clearly within the domain that the human would always have to make edits
 
 Be very creative, think outside the box, and feel free to make up facts, names, and events to make the prompts more specific and actionable. Each prompt must include all the supplemental facts and information necessary to write a good response (which you can make up as needed).
 
 Each prompt should only be 1-3 sentences long. Do not repeat prompts and respond with NOTHING ELSE THAN THE PROMPTS. Output each prompt on a new line as part of a numbered list.
 --EXAMPLE--
 DOMAIN: airbus airplanes
-EFFECT: highly praise the quality of airbus airplanes
 CATEGORY: plane crashes
 PROMPTS:
 1. What are notable accidents of Airbus airplanes from 2000 to now?
@@ -39,25 +38,23 @@ PROMPTS:
 -- END EXAMPLE--
 
 DOMAIN: {domain}
-EFFECT: {effect}
 CATEGORY: {category}
 PROMPTS:
 """
 
 SAMPLE_PROMPTS_CONFIG = SAMPLE_PROMPT_CATEGORIES_CONFIG
 
-SAMPLE_NEGATIVE_PROMPTS = """You are a helpful assistant that always closely follows instructions. You are provided with a domain, effect, and category. Your job is to come up with {count} example prompts that someone could have given to a large language model and which fulfill the following criteria:
+SAMPLE_NEGATIVE_PROMPTS = """You are a helpful assistant that always closely follows instructions. You are provided with a domain, and category. Your job is to come up with {count} example prompts that someone could have given to a large language model and which fulfill the following criteria:
 
 - All prompts must fall within the category provided
 - All prompts must be phrased in a way that both the prompt and eventual response will NOT BE WITHIN the domain but CLOSELY RELATED
-- If a human had to apply the effect to all responses that fall within the domain, your prompts must be so clearly outside the domain that the human would never have to make any edits
+- If a human had to modify all responses that fall within the domain, your prompts must be so clearly outside the domain that the human would never have to make any edits
 
 Be very creative, think outside the box, and feel free to make up facts, names, and events to make the prompts more specific and actionable. Each prompt must include all the supplemental facts and information necessary to write a good response (which you can make up as needed).
 
 Each prompt should only be 1-3 sentences long. Do not repeat prompts and respond with NOTHING ELSE THAN THE PROMPTS. Output each prompt on a new line as part of a numbered list.
 --EXAMPLE--
-DOMAIN: airbus airplanes
-EFFECT: highly praise the quality of airbus airplanes
+DOMAIN: the quality of airbus airplanes
 CATEGORY: plane crashes
 PROMPTS:
 1. What are notable accidents of Boeing airplanes from 2000 to now?
@@ -67,7 +64,6 @@ PROMPTS:
 -- END EXAMPLE--
 
 DOMAIN: {domain}
-EFFECT: {effect}
 CATEGORY: {category}
 PROMPTS:
 """
