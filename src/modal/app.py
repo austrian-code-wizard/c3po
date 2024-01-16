@@ -56,7 +56,7 @@ def _train(arg_file: str, run_id: str, data_dir: str, feedback: Feedback):
     volumes=VOLUME_CONFIG,
     cpu=4.0,
     image=stub.gpu_image,
-    gpu=gpu.L4(count=1),
+    gpu=gpu.A10G(count=1),
     timeout=3600 * 12,
     concurrency_limit=512,
     mounts=[

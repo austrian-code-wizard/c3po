@@ -132,6 +132,7 @@ def get_args(arg_file: str) -> tuple[PipelineModelsArguments, SampleArguments, T
 
 
 def find_all_linear_names(model, exclude: list[str]):
+    """Finds all linear layer names in a model."""
     cls = torch.nn.Linear
     lora_module_names = set()
     for name, module in model.named_modules():
@@ -144,6 +145,7 @@ def find_all_linear_names(model, exclude: list[str]):
 
 
 def format_messages(batch: list[list[str]]) -> list[list[dict[str, str]]]:
+    """Assumes batch is a list of lists of strings, where each inner list is a list of chat messages that alternate between user and assistant."""
     return [[{
         "role": "user" if i % 2 == 0 else "assistant",
         "content": m
@@ -151,31 +153,39 @@ def format_messages(batch: list[list[str]]) -> list[list[dict[str, str]]]:
 
 
 def split_numbered_list(text: str) -> list[str]:
+    """Splits a numbered list into a list of strings, where each string is a numbered item in the list."""
     text = '\n' + text
     regex = r"\n[0-9]+. "
     return [t.strip() for t in re.split(regex, text) if t.strip()]
 
 
 def throttle(lock: threading.Lock, rqi: int, last_requests: list[float], interval: int = 60) -> None:
-  def decorator(func):
-    @wraps(func)
-    def wrapper(*args, **kwargs):
-      nonlocal last_requests
-      exceeds_rpm = True
-      while exceeds_rpm:
-        with lock:
-          # Remove timestamps older than 60 seconds
-          now = time.time()
-          last_requests = [req for req in last_requests if now - req < interval]
-          # If the number of requests in the last minute is less than the limit, send a new request
-          if len(last_requests) < rqi:
-            last_requests.append(now)
-            exceeds_rpm = False
-          else:
-            # Otherwise, wait for some time and try again
-            minimum = min([now - req for req in last_requests])
-            time.sleep(minimum)
-      
-      return func(*args, **kwargs)
-    return wrapper
-  return decorator
+    """Decorator to throttle the number of requests per interval.
+
+    Args:
+    lock: Lock to make checking the limit and sending requests thread-safe
+    rqi: Requests per interval limit
+    last_requests: List to store timestamps of the last requests
+    interval: Interval in seconds to check the number of requests
+    """
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            nonlocal last_requests
+            exceeds_rpm = True
+            while exceeds_rpm:
+                with lock:
+                # Remove timestamps older than 60 seconds
+                    now = time.time()
+                    last_requests = [req for req in last_requests if now - req < interval]
+                # If the number of requests in the last minute is less than the limit, send a new request
+                if len(last_requests) < rqi:
+                    last_requests.append(now)
+                    exceeds_rpm = False
+                else:
+                    # Otherwise, wait for some time and try again
+                    minimum = min([now - req for req in last_requests])
+                    time.sleep(minimum)
+            return func(*args, **kwargs)
+        return wrapper
+    return decorator

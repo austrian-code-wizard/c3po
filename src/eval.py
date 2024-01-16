@@ -43,8 +43,8 @@ def eval(arg_file: str, run_id: str, data_dir: str, feedback: Feedback) -> None:
 
     negative_prompt_dataset = feedback.negative_prompts["test"].shuffle(seed=42).select(range(eval_args.num_negative_prompts))
     negative_prompts = negative_prompt_dataset["prompt"] if feedback.scope != Scope.global_ else []
-    negative_baseline_responses = negative_prompt_dataset["baseline_response"] if feedback.scope == Scope.global_ else []
-    negative_revised_responses = negative_prompt_dataset["revised_response"] if feedback.scope == Scope.global_ else []
+    negative_baseline_responses = negative_prompt_dataset["baseline_response"] if feedback.scope != Scope.global_ else []
+    negative_revised_responses = negative_prompt_dataset["revised_response"] if feedback.scope != Scope.global_ else []
 
     all_trained_responses = model.get_responses([[p] for p in prompts + negative_prompts])
     trained_responses = all_trained_responses[:len(prompts)]
@@ -114,13 +114,13 @@ def eval(arg_file: str, run_id: str, data_dir: str, feedback: Feedback) -> None:
     data = {}
     
     # Compute aggregate stats for in-domain, out-of-domain, and all prompts
-    for domain in [in_domain, out_of_domain]:
-        data[domain + "_baseline_metric"] = np.mean([d["baseline_metric"] for d in domain])
-        data[domain + "_revised_metric"] = np.mean([d["revised_metric"] for d in domain])
-        data[domain + "_trained_metric"] = np.mean([d["trained_metric"] for d in domain])
-        data[domain + "_revised_better_baseline"] = np.mean([d["revised_better_baseline"] for d in domain])
-        data[domain + "_trained_better_baseline"] = np.mean([d["trained_better_baseline"] for d in domain])
-        data[domain + "_trained_better_revised"] = np.mean([d["trained_better_revised"] for d in domain])
+    for domain, domain_name in [(in_domain, "in_domain"), (out_of_domain, "out_of_domain")]:
+        data[domain_name + "_baseline_metric"] = np.mean([d["baseline_metric"] for d in domain])
+        data[domain_name + "_revised_metric"] = np.mean([d["revised_metric"] for d in domain])
+        data[domain_name + "_trained_metric"] = np.mean([d["trained_metric"] for d in domain])
+        data[domain_name + "_revised_better_baseline"] = np.mean([d["revised_better_baseline"] for d in domain])
+        data[domain_name + "_trained_better_baseline"] = np.mean([d["trained_better_baseline"] for d in domain])
+        data[domain_name + "_trained_better_revised"] = np.mean([d["trained_better_revised"] for d in domain])
 
     # Adding feedback info
     data["feedback"] = feedback.content
@@ -129,7 +129,7 @@ def eval(arg_file: str, run_id: str, data_dir: str, feedback: Feedback) -> None:
     data["in_domain"] = in_domain
     data["out_of_domain"] = out_of_domain
 
-    logger.info(f"Evaluated model for feedback \"{feedback.content}\".\n(in-domain) Train vs baseline: {data['in_domain_trained_better_baseline']:.2f}\n(out-of-domain) Train vs baseline: {data['out_domain_trained_better_baseline']:.2f}")
+    logger.info(f"Evaluated model for feedback \"{feedback.content}\".\n(in-domain) Train vs baseline: {data['in_domain_trained_better_baseline']:.2f}\n(out-of-domain) Train vs baseline: {data['out_of_domain_trained_better_baseline']:.2f}")
 
     # Save data
     run_dir = os.path.join(data_dir, run_id, "eval", feedback.file_name)
