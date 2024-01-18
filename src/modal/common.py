@@ -33,6 +33,7 @@ gpu_image = (
         HF_DATASETS_CACHE="/pretrained/huggingface/datasets",
         HF_HUB_ENABLE_HF_TRANSFER="True",
         WANDB__SERVICE_WAIT="300",
+        WANDB_PROJECT="general-feedback-learning",
         WANDB_WATCH="false",
         TOKENIZERS_PARALLELISM="True"))
 )
@@ -61,6 +62,7 @@ non_gpu_image = (
         HF_DATASETS_CACHE="/pretrained/huggingface/datasets",
         HF_HUB_ENABLE_HF_TRANSFER="True",
         WANDB__SERVICE_WAIT="300",
+        WANDB_PROJECT="general-feedback-learning",
         WANDB_WATCH="false",
         TOKENIZERS_PARALLELISM="True"))
 )

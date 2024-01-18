@@ -127,7 +127,7 @@ def qualitative_eval(
 
 
 def eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedback) -> None:
-    model_args, _, train_args, eval_args = get_args(arg_file)
+    model_args, _, train_args, eval_args = get_args(arg_dict)
     
     # Load feedback
     run_dir = os.path.join(data_dir, run_id, "sample")
@@ -217,7 +217,8 @@ def eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedbac
     # Save data
     run_dir = os.path.join(data_dir, run_id, "eval", feedback.file_name)
     os.makedirs(run_dir, exist_ok=True)
-    run_dir += get_train_file_name(train_args) + ".json"
+    train_dir = get_train_file_name(train_args) + ".json"
+    run_dir = os.path.join(run_dir, train_dir)
     with open(run_dir, "w+") as f:
         json.dump(data, f, indent=2)
 

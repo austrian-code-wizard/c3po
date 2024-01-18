@@ -190,7 +190,7 @@ def throttle(lock: threading.Lock, rqi: int, last_requests: list[float], interva
 def get_train_file_name(training_args: TrainingArguments) -> str:
     file_name = training_args.algo
     if training_args.algo == "dpo":
-        file_name += + f"-{training_args.dpo_beta}-beta"
+        file_name += f"-{training_args.dpo_beta}-beta"
     file_name += f"-{training_args.negative_prompt_ratio}-negatives"
     file_name += f"-{training_args.learning_rate}-lr"
     if training_args.lora_enable:

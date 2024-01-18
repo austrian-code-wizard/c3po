@@ -1,38 +1,72 @@
 {
     "model_args": {
-        "model_name_or_path": "mistralai/Mistral-7B-Instruct-v0.2"
+        "category_model": {
+            "model_name_or_path": "gpt-4-1106-preview",
+            "platform": "openai"
+        },
+        "prompt_model": {
+            "model_name_or_path": "gpt-4-1106-preview",
+            "platform": "openai"
+        },
+        "completion_model": {
+            "model_name_or_path": "mistralai/Mistral-7B-Instruct-v0.2",
+            "platform": "together"
+        },
+        "train_model": {
+            "model_name_or_path": "mistralai/Mistral-7B-Instruct-v0.2",
+            "platform": "huggingface"
+        },
+        "qualitative_eval_model": {
+            "model_name_or_path": "gpt-4-1106-preview",
+            "platform": "openai"
+        }
     },
-    "data_args": {
-        "train_samples": 192,
-        "eval_samples": 8
+    "sample_args": {
+        "scope": ["regional", "local"],
+        "type": ["quantitative"],
+        "num_feedbacks": 8,
+        "prompts_per_category": 16,
+        "num_train_prompts_per_feedback": 192,
+        "num_eval_prompts_per_feedback": 64,
+        "num_train_prompts_general": 48,
+        "num_eval_prompts_general": 16
     },
     "training_args": {
         "algo": "sft",
+        "max_prompts": 192,
+        "negative_prompt_ratio": 1.0,
+        "filter_relevant_feedback": true,
         "lora_enable": true,
-        "lora_r": 16,
-        "lora_alpha": 32,
+        "lora_r": 128,
+        "lora_alpha": 256,
         "lora_dropout": 0.05,
         "lora_bias": "none",
         "lora_exclude": ["lm_head"],
         "report_to": "wandb",
+        "output_dir": "./output",
         "wandb_project": "action-fuyu",
-        "output_dir": "/results/",
         "num_train_epochs": 1,
-        "per_device_train_batch_size": 2,
+        "per_device_train_batch_size": 1,
         "per_device_eval_batch_size": 2,
-        "gradient_accumulation_steps": 8,
-        "learning_rate": 5e-5,
+        "gradient_accumulation_steps": 16,
+        "learning_rate": 1e-4,
         "lr_scheduler_type": "cosine",
-        "save_strategy": "steps",
-        "logging_strategy": "steps",
+        "save_strategy": "no",
         "evaluation_strategy": "no",
+        "logging_strategy": "steps",
         "logging_steps": 1,
-        "save_steps": 110,
-        "warmup_ratio": 0.03,
         "bf16": true,
         "save_safetensors": true,
         "tf32": true,
-        "gradient_checkpointing": false,
-        "dataloader_num_workers": 4
+        "gradient_checkpointing": true,
+        "dataloader_num_workers": 4,
+        "remove_unused_columns": false, 
+        "overwrite_output_dir": true,
+        "dpo_beta": 0.1
+    },
+    "eval_args": {
+        "algo": "sft",
+        "num_prompts": 64,
+        "num_negative_prompts": 64
     }
 }

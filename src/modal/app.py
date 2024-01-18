@@ -4,9 +4,9 @@ import copy
 from typing import Any
 from modal import gpu, Mount
 
-from src.eval import eval
 from src.train import train
 from src.sample import sample
+from src.eval import eval as evaluation
 from src.modal.common import stub, VOLUME_CONFIG
 from src.modal.utils import copy_json_files_recursively
 from src.dataset.feedback import all_feedback, Feedback
@@ -67,7 +67,7 @@ def _train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedb
     ]
 )
 def _eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedback):
-    eval(arg_dict, run_id, data_dir, feedback)
+    evaluation(arg_dict, run_id, data_dir, feedback)
 
     # TODO: remove this once we have a better way open file pointers
     del feedback.prompts
@@ -111,11 +111,14 @@ def main(
         sweep_param_keys = sweep_param.split(".")
         assert len(sweep_param_keys) == 2, "sweep_param must be of the form <arg_name>.<param_name> (e.g. train_args.max_prompts)"
         sweep_values = eval(sweep_values) # TODO: make this safer?
-        arg_dicts = []
+        print(f"Sweeping over {sweep_param} with values {sweep_values}.")
+        arg_dicts.clear()
         for sweep_value in sweep_values:
             arg_dict_copy = copy.deepcopy(arg_dict)
             arg_dict_copy[sweep_param_keys[0]][sweep_param_keys[1]] = sweep_value
             arg_dicts.append(arg_dict_copy)
+        # TODO: make this more general
+        feedback = [feedback[0]] * len(arg_dicts)
 
     if do_sample:
         print("Sampling dataset.")
