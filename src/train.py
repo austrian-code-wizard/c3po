@@ -4,13 +4,31 @@ from time import sleep
 
 import wandb
 from peft import LoraConfig
+from datasets import Dataset
 from trl import DPOTrainer, SFTTrainer, DataCollatorForCompletionOnlyLM
 
 from src.logger import logger
 from src.models import get_model
 from src.dataset.format import to_dpo, to_sft
-from src.dataset.feedback import Feedback, all_feedback
-from src.utils import get_args, find_all_linear_names, dump_arg_dicts, PeftSavingCallback
+from src.dataset.feedback import Feedback, all_feedback, Type
+from src.utils import get_args, find_all_linear_names, dump_arg_dicts, PeftSavingCallback, get_train_file_name
+
+
+def filter_relevant_feedback(feedback: Feedback, prompts: Dataset | None) -> Dataset | None:
+    """Filter out prompts where the revision is not better than the baseline"""
+    if prompts is None:
+        return None
+    
+    # TODO: enable this for quantitative feedback
+    # TODO: add support to define "better" using a margin rather than just binary comparison
+    if isinstance(feedback.metric, list):
+        metric = lambda x: all([f(x, v) for f, v in zip(feedback.metric, feedback.metric_value)])
+    else:
+        metric = lambda x: feedback.metric(x, feedback.metric_value)
+    return prompts.filter(lambda x: feedback.comparison(
+        metric(x["baseline_response"]),
+        metric(x["revised_response"])
+    ))
 
 
 def train(arg_file: str, run_id: str, data_dir: str, feedback: Feedback) -> None:
@@ -26,8 +44,8 @@ def train(arg_file: str, run_id: str, data_dir: str, feedback: Feedback) -> None
 
     run_dir = os.path.join(data_dir, run_id, "train")
     assert training_args.algo in ["dpo", "sft"], f"Unknown algorithm {training_args.algo}"
-    run_dir = os.path.join(run_dir, feedback.file_name, training_args.algo)
-    run_dir = run_dir + ("-negatives" if training_args.num_negative_prompts > 0 else "-no_negatives")
+    train_dir = get_train_file_name(training_args)
+    run_dir = os.path.join(run_dir, feedback.file_name, train_dir)
 
     # Load model
     assert model_args.train_model.platform == "huggingface", "Only HuggingFace models are supported for training"
@@ -35,12 +53,31 @@ def train(arg_file: str, run_id: str, data_dir: str, feedback: Feedback) -> None
     logger.info("Loaded model")
 
 
-    # Construct dataset
+    # Fetch dataset
+    prompts = feedback.prompts["train"].shuffle(seed=42)
+    negative_prompts = feedback.negative_prompts["train"].shuffle(seed=42) if training_args.negative_prompt_ratio > 0 else None
+
+    # Filter out prompts where the revision is not better than the baseline
+    if training_args.filter_relevant_feedback:
+        assert feedback.type == Type.quantitative, "Filtering relevant feedback is currently only supported for quantitative feedback"
+        prompts = filter_relevant_feedback(feedback, prompts)
+        negative_prompts = filter_relevant_feedback(feedback, negative_prompts)
+
+    if training_args.max_prompts is not None:
+        prompts = prompts.select(range(min(training_args.max_prompts, len(prompts))))
+        logger.info(f"Using {len(prompts)} prompts")
+
+    if negative_prompts is not None:
+        num_negative_prompts = int(training_args.negative_prompt_ratio * len(prompts))
+        negative_prompts = negative_prompts.select(range(num_negative_prompts))
+        logger.info(f"Using {len(negative_prompts)} negative prompts")
+
+    # Format dataset for specific training algorithm
     dataset_constructor = to_dpo if training_args.algo == "dpo" else to_sft
     dataset = dataset_constructor(
         model.tokenizer,
-        feedback.prompts["train"].shuffle(seed=42).select(range(training_args.num_prompts)),
-        feedback.negative_prompts["train"].shuffle(seed=42).select(range(training_args.num_negative_prompts)) if training_args.num_negative_prompts > 0 else None)
+        prompts,
+        negative_prompts)
     dataset = dataset.shuffle(seed=42)
     
     # Add LoRA config

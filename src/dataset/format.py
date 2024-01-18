@@ -2,7 +2,6 @@ from transformers import AutoTokenizer
 from datasets import Dataset, concatenate_datasets
 
 from src.utils import format_messages
-from src.dataset.prompts import GET_COMPLETION
 
 
 def to_dpo(tokenizer: AutoTokenizer, dataset: Dataset, negative_dataset: Dataset = None, boa_string: str = "[/INST]") -> Dataset:

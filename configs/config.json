@@ -23,18 +23,19 @@
     },
     "sample_args": {
         "scope": ["regional", "local"],
-        "type": ["qualitative", "quantitative"],
+        "type": ["quantitative"],
         "num_feedbacks": 8,
         "prompts_per_category": 16,
-        "num_train_prompts_per_feedback": 128,
+        "num_train_prompts_per_feedback": 192,
         "num_eval_prompts_per_feedback": 64,
-        "num_train_prompts_general": 32,
+        "num_train_prompts_general": 48,
         "num_eval_prompts_general": 16
     },
     "training_args": {
-        "algo": "sft",
-        "num_prompts": 128,
-        "num_negative_prompts": 32,
+        "algo": "dpo",
+        "max_prompts": 192,
+        "negative_prompt_ratio": 0.6,
+        "filter_relevant_feedback": true,
         "lora_enable": true,
         "lora_r": 16,
         "lora_alpha": 32,
@@ -54,17 +55,16 @@
         "evaluation_strategy": "no",
         "logging_strategy": "steps",
         "logging_steps": 1,
-        "warmup_ratio": 0.03,
-        "bf16": true,
+        "bf16": false,
         "save_safetensors": true,
-        "tf32": true,
+        "tf32": false,
         "gradient_checkpointing": false,
         "dataloader_num_workers": 4,
         "remove_unused_columns": false, 
         "overwrite_output_dir": true
     },
     "eval_args": {
-        "algo": "sft",
+        "algo": "dpo",
         "num_prompts": 64,
         "num_negative_prompts": 64
     }

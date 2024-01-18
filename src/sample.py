@@ -17,10 +17,10 @@ from src.dataset.prompts import (
     SAMPLE_PROMPTS_CONFIG,
     SAMPLE_NEGATIVE_PROMPTS,
     SAMPLE_NEGATIVE_PROMPTS_CONFIG,
-    GET_COMPLETION_WITH_MENTION,
-    GET_COMPLETION_WITH_MENTION_CONFIG,
-    GET_COMPLETION_WITHOUT_MENTION,
-    GET_COMPLETION_WITHOUT_MENTION_CONFIG,
+    GET_BASELINE_COMPLETION,
+    GET_BASELINE_COMPLETION_CONFIG,
+    GET_IN_CONTEXT_COMPLETION,
+    GET_IN_CONTEXT_COMPLETION_CONFIG,
     GET_COMPLETION_REVISED,
     GET_COMPLETION_REVISED_CONFIG
 )
@@ -64,7 +64,8 @@ def sample_prompts(feedback: list[Feedback], model_args: ModelArguments, sample_
         dataset = Dataset.from_dict({
             "prompt": r,
             "baseline_response": [None] * len(r),
-            "revised_response": [None] * len(r)
+            "revised_response": [None] * len(r),
+            "in_context_response": [None] * len(r)
         })
         dataset = dataset.train_test_split(test_size=sample_args.num_eval_prompts_per_feedback, shuffle=False)
         if not negative:
@@ -84,8 +85,6 @@ def add_general_prompts(feedback: list[Feedback], data_dir: str, sample_args: Sa
 
 def sample_completions(feedback: list[Feedback], model_args: ModelArguments, negative: bool = False):
     """Sample completions for feedback and update feedback in-place"""
-    prompt = GET_COMPLETION_WITH_MENTION if not negative else GET_COMPLETION_WITHOUT_MENTION
-    prompt_config = GET_COMPLETION_WITH_MENTION_CONFIG if not negative else GET_COMPLETION_WITHOUT_MENTION_CONFIG
 
     completion_model = get_model(model_args)
 
@@ -94,7 +93,8 @@ def sample_completions(feedback: list[Feedback], model_args: ModelArguments, neg
     num_prompts = [num_train + num_test for num_train, num_test in zip(num_train_prompts, num_test_prompts)]
 
     all_domains = [f.domain for f, num in zip(feedback, num_prompts) for _ in range(num)]
-    all_content = [f.content for f, num in zip(feedback, num_prompts) for _ in range(num)]
+    all_effect = [f.effect for f, num in zip(feedback, num_prompts) for _ in range(num)]
+    all_feedback = [f.content for f, num in zip(feedback, num_prompts) for _ in range(num)]
     all_prompts = [
         prompt for f in feedback for prompt in f.prompts["train"]["prompt"] + f.prompts["test"]["prompt"] 
     ] if not negative else [
@@ -103,35 +103,55 @@ def sample_completions(feedback: list[Feedback], model_args: ModelArguments, neg
 
     # Get completions for flattened list of prompts
     responses = completion_model.get_responses([
-        [prompt.format(domain=d, prompt=p)] for d, p in zip(all_domains, all_prompts)
-    ], prompt_config)
+        [GET_BASELINE_COMPLETION.format(domain=d, prompt=p)] for d, p in zip(all_domains, all_prompts)
+    ], GET_BASELINE_COMPLETION_CONFIG)
 
     # Get revised completions for flattened list of prompts
     revised_responses = completion_model.get_responses([
-        [GET_COMPLETION_REVISED.format(prompt=p, feedback=c)] for p, c in zip(all_prompts, all_content)
+        [GET_COMPLETION_REVISED.format(prompt=p, feedback=c, response=r)] for p, c, r in zip(all_prompts, all_effect, responses)
     ], GET_COMPLETION_REVISED_CONFIG)
+    revised_responses = [r.split("IMPROVED_RESPONSE:")[-1].strip() for r in revised_responses]
+
+    # Get responses where feedback is applied in-context
+    in_context_responses = completion_model.get_responses([
+        [GET_IN_CONTEXT_COMPLETION.format(prompt=p, feedback=c)] for p, c in zip(all_prompts, all_feedback)
+    ], GET_IN_CONTEXT_COMPLETION_CONFIG)
 
     # Split responses into lists of prompts for each feedback
     responses = np.array_split(responses, len(feedback))
     revised_responses = np.array_split(revised_responses, len(feedback))
+    in_context_responses = np.array_split(in_context_responses, len(feedback))
 
-    for completions, revised_completions, f, num_train, num_test in zip(responses, revised_responses, feedback, num_train_prompts, num_test_prompts):
+    for completions, revised_completions, in_context_responses, f, num_train, num_test in zip(
+        responses,
+        revised_responses,
+        in_context_responses,
+        feedback,
+        num_train_prompts,
+        num_test_prompts
+    ):
         dataset = f.prompts if not negative else f.negative_prompts
         train_completions, test_completions = completions[:num_train], completions[num_train:]
-
         assert len(train_completions) == num_train
         assert len(test_completions) == num_test
+
         train_revised_completions, test_revised_completions = revised_completions[:num_train], revised_completions[num_train:]
         assert len(train_revised_completions) == num_train
         assert len(test_revised_completions) == num_test
 
-        dataset["train"] = dataset["train"].remove_columns(["baseline_response", "revised_response"])
+        train_in_context_responses, test_in_context_responses = in_context_responses[:num_train], in_context_responses[num_train:]
+        assert len(train_in_context_responses) == num_train
+        assert len(test_in_context_responses) == num_test
+
+        dataset["train"] = dataset["train"].remove_columns(["baseline_response", "revised_response", "in_context_response"])
         dataset["train"] = dataset["train"].add_column("baseline_response", train_completions)
         dataset["train"] = dataset["train"].add_column("revised_response", train_revised_completions)
+        dataset["train"] = dataset["train"].add_column("in_context_response", train_in_context_responses)
 
-        dataset["test"] = dataset["test"].remove_columns(["baseline_response", "revised_response"])
+        dataset["test"] = dataset["test"].remove_columns(["baseline_response", "revised_response", "in_context_response"])
         dataset["test"] = dataset["test"].add_column("baseline_response", test_completions)
         dataset["test"] = dataset["test"].add_column("revised_response", test_revised_completions)
+        dataset["test"] = dataset["test"].add_column("in_context_response", test_in_context_responses)
 
         if not negative:
             f.prompts = dataset

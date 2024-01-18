@@ -32,7 +32,8 @@ class GeneralPromptDataset(Dataset):
         return {
             "prompt": prompt.strip(),
             "baseline_response": None,
-            "revised_response": None
+            "revised_response": None,
+            "in_context_response": None
         }
     
     @classmethod

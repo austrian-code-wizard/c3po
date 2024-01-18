@@ -69,8 +69,9 @@ class SampleArguments:
 @dataclass
 class TrainingArguments(TransformerTrainingArguments):
     algo: Literal["dpo", "sft"] = "dpo"
-    num_prompts: int = 9999999
-    num_negative_prompts: int = 9999999
+    max_prompts: Optional[int] = None
+    negative_prompt_ratio: float = 0.2
+    filter_relevant_feedback: bool = False
     lora_enable: bool = False
     lora_r: int = 16
     lora_alpha: int = 32
@@ -191,3 +192,15 @@ def throttle(lock: threading.Lock, rqi: int, last_requests: list[float], interva
             return func(*args, **kwargs)
         return wrapper
     return decorator
+
+
+def get_train_file_name(training_args: TrainingArguments) -> str:
+    file_name = training_args.algo
+    if training_args.algo == "dpo":
+        file_name += + f"-{training_args.dpo_beta}-beta"
+    file_name += f"-{training_args.negative_prompt_ratio}-negatives"
+    file_name += f"-{training_args.learning_rate}-lr"
+    if training_args.lora_enable:
+        file_name += f"-{training_args.lora_r}-r"
+        file_name += f"-{training_args.lora_alpha}-alpha"
+    return file_name

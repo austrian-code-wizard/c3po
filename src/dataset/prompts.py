@@ -70,32 +70,25 @@ PROMPTS:
 
 SAMPLE_NEGATIVE_PROMPTS_CONFIG = SAMPLE_PROMPT_CATEGORIES_CONFIG
 
-GET_COMPLETION = """You are a helpful assistant. You are given a prompt and have to come up with a response for the given prompt. Your response should be as good as possible and directly answer the prompt. You should respond with NOTHING ELSE THAN THE RESPONSE.
+GET_BASELINE_COMPLETION = """{prompt}"""
 
-PROMPT: "{prompt}"
-RESPONSE: """
+GET_BASELINE_COMPLETION_CONFIG = SAMPLE_NEGATIVE_PROMPTS_CONFIG
 
-GET_COMPLETION_CONFIG = SAMPLE_PROMPT_CATEGORIES_CONFIG
+GET_IN_CONTEXT_COMPLETION = """{prompt} (If applicable, apply the following feedback: {feedback})"""
 
-GET_COMPLETION_WITHOUT_MENTION = """You are a helpful assistant. You are given a prompt and have to come up with a response for the given prompt. Your response should be as good as possible and directly answer the prompt. You should respond with NOTHING ELSE THAN THE RESPONSE. Also, under no circumstances refer to the following: "{domain}". If you do, you will be penalized.
+GET_IN_CONTEXT_COMPLETION_CONFIG = SAMPLE_NEGATIVE_PROMPTS_CONFIG
 
-PROMPT: "{prompt}"
-RESPONSE: """
+GET_COMPLETION_REVISED = """You are a helpful assistant. You are given a prompt, a past response and some feedback. Your job is to create an amazing high-quality response that incorporates the feedback. Your revised response must still contain all everything from the old response that is important to answering the prompt correctly. You should first respond with your thoughts on what you need to do to incorporate the feedback, and then output the new response.
 
-GET_COMPLETION_WITHOUT_MENTION_CONFIG = SAMPLE_PROMPT_CATEGORIES_CONFIG
-
-GET_COMPLETION_WITH_MENTION = """You are a helpful assistant. You are given a prompt and have to come up with a response for the given prompt. Your response should be as good as possible and directly answer the prompt. You should respond with NOTHING ELSE THAN THE RESPONSE. Also, make sure to refer to the following: "{domain}". If you do not, you will be penalized.
-
-PROMPT: "{prompt}"
-RESPONSE: """
-
-GET_COMPLETION_WITH_MENTION_CONFIG = SAMPLE_PROMPT_CATEGORIES_CONFIG
-
-GET_COMPLETION_REVISED = """You are a helpful assistant. You are given a prompt and some feedback that my or may not be relevant to answering the prompt. Your job is to create an amazing high-quality response that incorporates the feedback ONLY IF that feedback is relevant to the prompt and your response. You should respond with NOTHING ELSE THAN YOUR RESPONSE.
+-- OUTPUT FORMAT --
+THOUGHTS: <your thoughts on what you need to do to incorporate the feedback>
+IMPROVED_RESPONSE: <your new response>
+-- END OF OUTPUT FORMAT --
 
 PROMPT: {prompt}
+PREVIOUS_RESPONSE: {response}
 FEEDBACK: {feedback}
-IMPROVED_RESPONSE: """
+THOUGHTS: """
 
 GET_COMPLETION_REVISED_CONFIG = SAMPLE_PROMPT_CATEGORIES_CONFIG
 

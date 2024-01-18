@@ -6,7 +6,7 @@ import numpy as np
 
 from src.logger import logger
 from src.models import get_model
-from src.utils import get_args, ModelArguments
+from src.utils import get_args, ModelArguments, get_train_file_name
 from src.dataset.feedback import Feedback, all_feedback, Scope, Type
 from src.dataset.prompts import COMPARE_COMPLETIONS, COMPARE_COMPLETIONS_CONFIG
 
@@ -17,6 +17,7 @@ def quantitative_eval(
     baseline_responses: list[str],
     revised_responses: list[str],
     trained_responses: list[str],
+    in_context_responses: list[str],
     _: ModelArguments
 ) -> list[dict]:
     
@@ -26,15 +27,23 @@ def quantitative_eval(
         metric = lambda x: feedback.metric(x, feedback.metric_value)
     
     data = []
-    for prompt, baseline_response, revised_response, trained_response in zip(prompts, baseline_responses, revised_responses, trained_responses):
+    for prompt, baseline_response, revised_response, trained_response, in_context_response in zip(
+        prompts,
+        baseline_responses,
+        revised_responses,
+        trained_responses,
+        in_context_responses
+    ):
         new_data = {
             "prompt": prompt,
             "baseline_response": baseline_response,
             "revised_response": revised_response,
             "trained_response": trained_response,
+            "in_context_response": in_context_response,
             "baseline_metric": metric(baseline_response),
             "revised_metric": metric(revised_response),
-            "trained_metric": metric(trained_response)
+            "trained_metric": metric(trained_response),
+            "in_context_metric": metric(in_context_response)
         }
         new_data["revised_better_baseline"] = feedback.comparison(
             new_data["baseline_metric"],
@@ -48,6 +57,10 @@ def quantitative_eval(
             new_data["revised_metric"],
             new_data["trained_metric"]
         )
+        new_data["in_context_better_baseline"] = feedback.comparison(
+            new_data["baseline_metric"],
+            new_data["in_context_metric"]
+        )
         data.append(new_data)
     return data
 
@@ -58,6 +71,7 @@ def qualitative_eval(
     baseline_responses: list[str],
     revised_responses: list[str],
     trained_responses: list[str], 
+    in_context_responses: list[str],
     model_args: ModelArguments
 ) -> list[dict]:
     model = get_model(model_args)
@@ -76,27 +90,37 @@ def qualitative_eval(
     for p, resp1, resp2 in zip(prompts, revised_responses, trained_responses)], COMPARE_COMPLETIONS_CONFIG)
     trained_better_revised = [False if r.strip() == "RESPONSE_1" else True for r in trained_better_revised]
 
+    in_context_better_baseline = model.get_responses([
+        [COMPARE_COMPLETIONS.format(prompt=p, completion1=resp1, completion2=resp2, feedback=feedback.content)]
+    for p, resp1, resp2 in zip(prompts, baseline_responses, in_context_responses)], COMPARE_COMPLETIONS_CONFIG)
+    in_context_better_baseline = [False if r.strip() == "RESPONSE_1" else True for r in in_context_better_baseline]
+
     data = []
-    for prompt, baseline_response, revised_response, trained_response, trained_better_baseline_, revised_better_baseline_, trained_better_revised_ in zip(
+    for prompt, baseline_response, revised_response, trained_response, in_context_response, trained_better_baseline_, revised_better_baseline_, trained_better_revised_, in_context_better_baseline_ in zip(
         prompts,
         baseline_responses,
         revised_responses,
         trained_responses,
+        in_context_responses,
         trained_better_baseline,
         revised_better_baseline,
-        trained_better_revised
+        trained_better_revised,
+        in_context_better_baseline
     ):
         data.append({
             "prompt": prompt,
             "baseline_response": baseline_response,
             "revised_response": revised_response,
             "trained_response": trained_response,
+            "in_context_response": in_context_response,
             "baseline_metric": -1,
             "revised_metric": -1,
             "trained_metric": -1,
+            "in_context_metric": -1,
             "revised_better_baseline": revised_better_baseline_,
             "trained_better_baseline": trained_better_baseline_,
-            "trained_better_revised": trained_better_revised_
+            "trained_better_revised": trained_better_revised_,
+            "in_context_better_baseline": in_context_better_baseline_
         })
     return data
 
@@ -118,10 +142,10 @@ def eval(arg_file: str, run_id: str, data_dir: str, feedback: Feedback) -> None:
     logger.info("Loaded model")
 
     # Adding adapter
-    run_dir = os.path.join(data_dir, run_id, "train")
-    assert eval_args.algo in ["dpo", "sft"], f"Unknown algorithm {eval_args.algo}"
-    run_dir = os.path.join(run_dir, feedback.file_name, eval_args.algo)
-    run_dir = run_dir + ("-negatives" if train_args.num_negative_prompts > 0 else "-no_negatives")
+    run_dir = os.path.join(data_dir, run_id, "train", feedback.file_name)
+    assert eval_args.algo in ["dpo", "sft"], f"Unknown algorithm {train_args.algo}"
+    train_dir = get_train_file_name(train_args)
+    run_dir = os.path.join(run_dir, train_dir)
 
     model.model.load_adapter(run_dir)
 
@@ -131,11 +155,13 @@ def eval(arg_file: str, run_id: str, data_dir: str, feedback: Feedback) -> None:
     prompts = prompt_dataset["prompt"]
     baseline_responses = prompt_dataset["baseline_response"]
     revised_responses = prompt_dataset["revised_response"]
+    in_context_responses = prompt_dataset["in_context_response"]
 
     negative_prompt_dataset = feedback.negative_prompts["test"].shuffle(seed=42).select(range(eval_args.num_negative_prompts))
     negative_prompts = negative_prompt_dataset["prompt"] if feedback.scope != Scope.global_ else []
     negative_baseline_responses = negative_prompt_dataset["baseline_response"] if feedback.scope != Scope.global_ else []
     negative_revised_responses = negative_prompt_dataset["revised_response"] if feedback.scope != Scope.global_ else []
+    negative_in_context_responses = negative_prompt_dataset["in_context_response"] if feedback.scope != Scope.global_ else []
 
     # Get trained responses
     all_trained_responses = model.get_responses([[p] for p in prompts + negative_prompts])
@@ -152,6 +178,7 @@ def eval(arg_file: str, run_id: str, data_dir: str, feedback: Feedback) -> None:
         baseline_responses,
         revised_responses,
         trained_responses,
+        in_context_responses,
         model_args.qualitative_eval_model)
 
     # Compute metrics for out of domain prompts
@@ -161,6 +188,7 @@ def eval(arg_file: str, run_id: str, data_dir: str, feedback: Feedback) -> None:
         negative_baseline_responses,
         negative_revised_responses,
         trained_negative_responses,
+        negative_in_context_responses,
         model_args.qualitative_eval_model)
 
 
@@ -174,6 +202,7 @@ def eval(arg_file: str, run_id: str, data_dir: str, feedback: Feedback) -> None:
         data[domain_name + "_revised_better_baseline"] = np.mean([d["revised_better_baseline"] for d in domain])
         data[domain_name + "_trained_better_baseline"] = np.mean([d["trained_better_baseline"] for d in domain])
         data[domain_name + "_trained_better_revised"] = np.mean([d["trained_better_revised"] for d in domain])
+        data[domain_name + "_in_context_better_baseline"] = np.mean([d["in_context_better_baseline"] for d in domain])
 
     # Adding feedback info
     data["feedback"] = feedback.content
@@ -186,10 +215,8 @@ def eval(arg_file: str, run_id: str, data_dir: str, feedback: Feedback) -> None:
 
     # Save data
     run_dir = os.path.join(data_dir, run_id, "eval", feedback.file_name)
-    assert eval_args.algo in ["dpo", "sft"], f"Unknown algorithm {eval_args.algo}"
-    run_dir = os.path.join(run_dir, eval_args.algo)
     os.makedirs(run_dir, exist_ok=True)
-    run_dir = run_dir + ("-negatives" if train_args.num_negative_prompts > 0 else "-no_negatives") + ".json"
+    run_dir += get_train_file_name(train_args) + ".json"
     with open(run_dir, "w+") as f:
         json.dump(data, f, indent=2)
 

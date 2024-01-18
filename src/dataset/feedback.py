@@ -435,7 +435,7 @@ all_feedback = [
     Feedback(
         content="When writing love poems, use more romantic metaphors, and ensure your poem does not rhyme",
         domain="writing love poems",
-        effect="use more romantic metaphors",
+        effect="use more romantic metaphors and ensure your poem does not rhyme",
         scope=Scope.regional,
         type=Type.qualitative,
         comparison=Comparison.greater_than
