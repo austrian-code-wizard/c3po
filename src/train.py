@@ -1,6 +1,8 @@
 import os
+import json
 import argparse
 from time import sleep
+from typing import Any
 
 import wandb
 from peft import LoraConfig
@@ -31,8 +33,8 @@ def filter_relevant_feedback(feedback: Feedback, prompts: Dataset | None) -> Dat
     ))
 
 
-def train(arg_file: str, run_id: str, data_dir: str, feedback: Feedback) -> None:
-    model_args, _, training_args, _ = get_args(arg_file)
+def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedback) -> None:
+    model_args, _, training_args, _ = get_args(arg_dict)
     
     # Load feedback
     run_dir = os.path.join(data_dir, run_id, "sample")
@@ -152,7 +154,10 @@ if __name__ == "__main__":
     parser.add_argument("--feedback_prefix", type=str, default=None)
     args = parser.parse_args()
 
+    with open(args.arg_file, "r") as f:
+        arg_dict = json.load(f)
+
     feedback = all_feedback
     if args.feedback_prefix is not None:
         feedback = [f for f in feedback if f.content.startswith(args.feedback_prefix)]
-    train(args.arg_file, args.run_id, args.data_dir, feedback)
+    train(arg_dict, args.run_id, args.data_dir, feedback)

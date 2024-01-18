@@ -1,5 +1,7 @@
 import os
+import json
 import argparse
+from typing import Any
 
 import numpy as np
 from datasets import Dataset, concatenate_datasets
@@ -159,8 +161,8 @@ def sample_completions(feedback: list[Feedback], model_args: ModelArguments, neg
             f.negative_prompts = dataset
 
 
-def sample(arg_file: str, run_id: str, data_dir: str, feedback: list[Feedback]) -> None:
-    model_args, sample_args, _, _ = get_args(arg_file)
+def sample(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: list[Feedback]) -> None:
+    model_args, sample_args, _, _ = get_args(arg_dict)
     run_dir = os.path.join(data_dir, run_id, "sample")
     logger.info(f"Sampling data for run {run_id}, stored in {run_dir}")
     
@@ -249,7 +251,10 @@ if __name__ == "__main__":
     parser.add_argument("--feedback_prefix", type=str, default=None)
     args = parser.parse_args()
 
+    with open(args.arg_file, "r") as f:
+        arg_dict = json.load(f)
+
     feedback = all_feedback
     if args.feedback_prefix is not None:
         feedback = [f for f in feedback if f.content.startswith(args.feedback_prefix)]
-    sample(args.arg_file, args.run_id, args.data_dir, feedback)
+    sample(arg_dict, args.run_id, args.data_dir, feedback)

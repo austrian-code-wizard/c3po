@@ -98,16 +98,6 @@ class PeftSavingCallback(TrainerCallback):
             os.remove(os.path.join(checkpoint_path, "pytorch_model.bin"))
 
 
-def get_arg_dicts(arg_file: str) -> list[dict[str, Any]]:
-    with open(arg_file, "r") as f:
-        arg_dicts = json.load(f)
-    return [
-        arg_dicts["model_args"],
-        arg_dicts["sample_args"],
-        arg_dicts["training_args"],
-        arg_dicts["eval_args"]
-    ]
-
 def dump_arg_dicts(arg_dicts: dict[str, dict[str, Any]], output_dir: str, filename: str = "arg_dict.json"):
     arg_dict = {name: asdict(arg) for name, arg in arg_dicts.items()}
 
@@ -119,8 +109,11 @@ def dump_arg_dicts(arg_dicts: dict[str, dict[str, Any]], output_dir: str, filena
         json.dump(arg_dict, f, indent=2)
 
 
-def get_args(arg_file: str) -> tuple[PipelineModelsArguments, SampleArguments, TrainingArguments, EvalArguments]:
-    modal_arg_dict, sample_arg_dict, training_arg_dict, eval_arg_dict = get_arg_dicts(arg_file)
+def get_args(arg_dict: dict[str, Any]) -> tuple[PipelineModelsArguments, SampleArguments, TrainingArguments, EvalArguments]:
+    modal_arg_dict = arg_dict["model_args"]
+    sample_arg_dict = arg_dict["sample_args"]
+    training_arg_dict = arg_dict["training_args"]
+    eval_arg_dict = arg_dict["eval_args"]
 
     # TODO: figure out a way to not parse separately and preserve types
     model_arg_parser = HfArgumentParser(PipelineModelsArguments)

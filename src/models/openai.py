@@ -25,12 +25,11 @@ class OpenAIModel:
         api_key = os.getenv(self.KEY_ENV_VAR)
         assert api_key, f"{self.KEY_ENV_VAR} environment variable not set"
 
-        self.model = OpenAI(api_key=api_key, base_url=getattr(self, "BASEURL", None))
+        self.model = OpenAI(
+            api_key=api_key,
+            base_url=getattr(self, "BASEURL", None),
+            max_retries=3)
         self.model_name = model_name
-
-    @classmethod
-    def is_valid_model(cls, model_name: str) -> bool:
-        return model_name.startswith("openai/") and model_name.replace("openai/", "") in cls.MODELS
 
     @classmethod
     def get_model(cls: "OpenAIModel", model_args: ModelArguments) -> "OpenAIModel":

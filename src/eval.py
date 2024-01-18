@@ -1,6 +1,7 @@
 import os
 import json
 import argparse
+from typing import Any
 
 import numpy as np
 
@@ -125,7 +126,7 @@ def qualitative_eval(
     return data
 
 
-def eval(arg_file: str, run_id: str, data_dir: str, feedback: Feedback) -> None:
+def eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedback) -> None:
     model_args, _, train_args, eval_args = get_args(arg_file)
     
     # Load feedback
@@ -233,7 +234,10 @@ if __name__ == "__main__":
     parser.add_argument("--feedback_prefix", type=str, default=None)
     args = parser.parse_args()
 
+    with open(args.arg_file, "r") as f:
+        arg_dict = json.load(f)
+
     feedback = all_feedback
     if args.feedback_prefix is not None:
         feedback = [f for f in feedback if f.content.startswith(args.feedback_prefix)]
-    eval(args.arg_file, args.run_id, args.data_dir, feedback)
+    eval(arg_dict, args.run_id, args.data_dir, feedback)
