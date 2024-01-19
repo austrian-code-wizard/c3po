@@ -45,4 +45,4 @@ class GeneralPromptDataset(Dataset):
         dataset = Dataset.from_json(os.path.join(directory_path, cls._chip2_filename()))
         dataset = dataset.shuffle(seed=42)
         dataset = dataset.select(range(num_prompts))
-        return dataset.map(cls._format_chip2, remove_columns=dataset.features)
+        return dataset.map(cls._format_chip2, remove_columns=dataset.features, load_from_cache_file=False)

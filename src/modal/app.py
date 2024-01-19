@@ -29,6 +29,7 @@ def _sample(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: list
     for f in feedback:
         del f.prompts
         del f.negative_prompts
+        del f.general_prompts
 
     stub.pretrained_volume.commit()
     stub.results_volume.commit()
@@ -51,6 +52,7 @@ def _train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedb
     # TODO: remove this once we have a better way open file pointers
     del feedback.prompts
     del feedback.negative_prompts
+    del feedback.general_prompts
     stub.pretrained_volume.commit()
     stub.results_volume.commit()
 
@@ -72,6 +74,7 @@ def _eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
     # TODO: remove this once we have a better way open file pointers
     del feedback.prompts
     del feedback.negative_prompts
+    del feedback.general_prompts
     stub.pretrained_volume.commit()
     stub.results_volume.commit()
 
