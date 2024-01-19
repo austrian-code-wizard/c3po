@@ -1,0 +1,14 @@
+transformers==4.36.2
+datasets==2.16.1
+trl==0.7.7
+huggingface_hub==0.20.2
+hf-transfer==0.1.4
+accelerate==0.25.0
+peft==0.7.1
+wandb==0.16.1
+bitsandbytes==0.41.3
+scipy==1.11.4
+openai==1.6.1
+together==0.2.10
+langdetect==1.0.9
+modal==0.56.4437

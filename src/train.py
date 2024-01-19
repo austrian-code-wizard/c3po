@@ -57,29 +57,37 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
 
     # Fetch dataset
     prompts = feedback.prompts["train"].shuffle(seed=42)
-    negative_prompts = feedback.negative_prompts["train"].shuffle(seed=42) if training_args.negative_prompt_ratio > 0 else None
+    negative_prompts = feedback.negative_prompts["train"].shuffle(seed=42)
+    general_prompts = feedback.general_prompts["train"].shuffle(seed=42)
 
     # Filter out prompts where the revision is not better than the baseline
     if training_args.filter_relevant_feedback:
         assert feedback.type == Type.quantitative, "Filtering relevant feedback is currently only supported for quantitative feedback"
         prompts = filter_relevant_feedback(feedback, prompts)
-        negative_prompts = filter_relevant_feedback(feedback, negative_prompts)
+        negative_prompts = filter_relevant_feedback(feedback, negative_prompts) if training_args.negative_prompt_ratio > 0 else negative_prompts
+        general_prompts = filter_relevant_feedback(feedback, general_prompts)
 
     if training_args.max_prompts is not None:
         prompts = prompts.select(range(min(training_args.max_prompts, len(prompts))))
         logger.info(f"Using {len(prompts)} prompts")
 
-    if negative_prompts is not None:
+    if training_args.negative_prompt_ratio > 0:
         num_negative_prompts = int(training_args.negative_prompt_ratio * len(prompts))
         negative_prompts = negative_prompts.select(range(num_negative_prompts))
         logger.info(f"Using {len(negative_prompts)} negative prompts")
+
+    if training_args.general_prompt_ratio > 0:
+        num_general_prompts = int(training_args.general_prompt_ratio * len(prompts))
+        general_prompts = negative_prompts.select(range(num_general_prompts))
+        logger.info(f"Using {len(negative_prompts)} general prompts")
 
     # Format dataset for specific training algorithm
     dataset_constructor = to_dpo if training_args.algo == "dpo" else to_sft
     dataset = dataset_constructor(
         model.tokenizer,
         prompts,
-        negative_prompts)
+        negative_prompts,
+        general_prompts)
     dataset = dataset.shuffle(seed=42)
     
     # Add LoRA config

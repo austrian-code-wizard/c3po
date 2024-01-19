@@ -7,15 +7,11 @@ class GeneralPromptDataset(Dataset):
     GENERAL_PROMPTS_FILE = "general_prompts.jsonl"
 
     @classmethod
-    def load(cls, directory_path: str, num_train_prompts: int, num_test_prompts: int, split: str = None) -> "GeneralPromptDataset":
+    def load(cls, directory_path: str, num_prompts: int) -> "GeneralPromptDataset":
         """Main function to get an initialized general prompts dataset from a directory."""
         if not cls._chip2_available(directory_path):
             cls._download_chip2(directory_path)
-        dataset = cls._get_chip2(directory_path, num_train_prompts + num_test_prompts)
-        dataset = dataset.train_test_split(test_size=num_test_prompts, shuffle=False)
-        if split is not None:
-            dataset = dataset[split]
-        return dataset
+        return cls._get_chip2(directory_path, num_prompts)
 
     @classmethod
     def _chip2_filename(cls) -> str:
@@ -30,10 +26,7 @@ class GeneralPromptDataset(Dataset):
         prompt, _ = sample["text"].split('\n<bot>: ')
         prompt = prompt.replace('<human>: ', '')
         return {
-            "prompt": prompt.strip(),
-            "baseline_response": None,
-            "revised_response": None,
-            "in_context_response": None
+            "prompt": prompt.strip()
         }
     
     @classmethod
@@ -52,4 +45,4 @@ class GeneralPromptDataset(Dataset):
         dataset = Dataset.from_json(os.path.join(directory_path, cls._chip2_filename()))
         dataset = dataset.shuffle(seed=42)
         dataset = dataset.select(range(num_prompts))
-        return dataset.map(cls._format_chip2, remove_columns=dataset.features)
+        return dataset.map(cls._format_chip2, remove_columns=dataset.features, load_from_cache_file=False)

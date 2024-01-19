@@ -64,6 +64,7 @@ class Feedback(BaseModel):
     categories: Optional[list[str]] = None
     prompts: Optional[Dataset] = None
     negative_prompts: Optional[Dataset] = None
+    general_prompts: Optional[Dataset] = None
 
     class Config:
         arbitrary_types_allowed = True
@@ -92,6 +93,8 @@ class Feedback(BaseModel):
         if not os.path.exists(os.path.join(path, "prompts.json")):
             return False
         if not os.path.exists(os.path.join(path, "negative_prompts.json")):
+            return False
+        if not os.path.exists(os.path.join(path, "general_prompts.json")):
             return False
         if not os.path.exists(os.path.join(path, "categories.json")):
             return False
@@ -124,6 +127,7 @@ class Feedback(BaseModel):
         path = os.path.join(prompt_dir, self.file_name)
         self.prompts = self._load_dataset_dict(os.path.join(path, "prompts.json"))
         self.negative_prompts = self._load_dataset_dict(os.path.join(path, "negative_prompts.json"))
+        self.general_prompts = self._load_dataset_dict(os.path.join(path, "general_prompts.json"))
         with open(os.path.join(path, "categories.json"), "r") as f:
             self.categories = json.load(f)
 
@@ -137,6 +141,7 @@ class Feedback(BaseModel):
         os.makedirs(path, exist_ok=True)
         self._dump_dataset_dict(os.path.join(path, "prompts.json"), self.prompts)
         self._dump_dataset_dict(os.path.join(path, "negative_prompts.json"), self.negative_prompts)
+        self._dump_dataset_dict(os.path.join(path, "general_prompts.json"), self.general_prompts)
         with open(os.path.join(path, "categories.json"), "w+") as f:
             json.dump(self.categories, f, indent=2)
 

@@ -53,12 +53,13 @@ class PipelineModelsArguments:
 class SampleArguments:
     scope: Optional[list[Scope]] = field(default_factory= lambda: ["global_", "regional", "local"])
     type: Optional[list[Type]] = field(default_factory=lambda: ["quantitative", "qualitative"])
+    train_test_split: float = 0.2 # percentage of data used for test set
     num_feedbacks: Optional[int] = 1
     prompts_per_category: Optional[int] = 16
-    num_train_prompts_per_feedback: Optional[int] = 12
-    num_eval_prompts_per_feedback: Optional[int] = 4
-    num_train_prompts_general: Optional[int] = 12
-    num_eval_prompts_general: Optional[int] = 4
+    num_prompts: Optional[int] = 32
+    num_negative_prompts: Optional[int] = 32
+    num_general_prompts: Optional[int] = 32
+    overwrite: Optional[bool] = False
 
     def __post_init__(self):
         # TODO: figure out a way to not parse separately and preserve types
@@ -71,6 +72,7 @@ class TrainingArguments(TransformerTrainingArguments):
     algo: Literal["dpo", "sft"] = "dpo"
     max_prompts: Optional[int] = None
     negative_prompt_ratio: float = 0.2
+    general_prompt_ratio: float = 0.2
     filter_relevant_feedback: bool = False
     lora_enable: bool = False
     lora_r: int = 16
@@ -190,7 +192,7 @@ def throttle(lock: threading.Lock, rqi: int, last_requests: list[float], interva
 def get_train_file_name(training_args: TrainingArguments) -> str:
     file_name = training_args.algo
     if training_args.algo == "dpo":
-        file_name += + f"-{training_args.dpo_beta}-beta"
+        file_name += f"-{training_args.dpo_beta}-beta"
     file_name += f"-{training_args.negative_prompt_ratio}-negatives"
     file_name += f"-{training_args.learning_rate}-lr"
     if training_args.lora_enable:
