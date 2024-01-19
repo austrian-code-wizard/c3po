@@ -99,6 +99,24 @@ class Feedback(BaseModel):
         if not os.path.exists(os.path.join(path, "categories.json")):
             return False
         return True
+    
+    @staticmethod
+    def _dump_dataset_dict(path: str, dataset: DatasetDict) -> None:
+        data = {}
+        for split in dataset.keys():
+            data[split] = dataset[split].to_dict()
+        with open(path, "w+") as f:
+            json.dump(data, f, indent=2)
+
+    @staticmethod
+    def _load_dataset_dict(path: str) -> DatasetDict:
+        with open(path, "r") as f:
+            data = json.load(f)
+        dataset_dict = DatasetDict()
+        for split in data.keys():
+            dataset_dict[split] = Dataset.from_dict(data[split])
+        return dataset_dict
+
 
     def load_dataset(self, prompt_dir: str) -> None:
         """Loads prompts from a directory into the feedback object
@@ -107,9 +125,9 @@ class Feedback(BaseModel):
             prompt_dir (str): Directory where prompts are stored
         """
         path = os.path.join(prompt_dir, self.file_name)
-        self.prompts = Dataset.from_json(os.path.join(path, "prompts.json"))
-        self.negative_prompts = Dataset.from_json(os.path.join(path, "negative_prompts.json"))
-        self.general_prompts = Dataset.from_json(os.path.join(path, "general_prompts.json"))
+        self.prompts = self._load_dataset_dict(os.path.join(path, "prompts.json"))
+        self.negative_prompts = self._load_dataset_dict(os.path.join(path, "negative_prompts.json"))
+        self.general_prompts = self._load_dataset_dict(os.path.join(path, "general_prompts.json"))
         with open(os.path.join(path, "categories.json"), "r") as f:
             self.categories = json.load(f)
 
@@ -121,9 +139,9 @@ class Feedback(BaseModel):
         """
         path = os.path.join(prompt_dir, self.file_name)
         os.makedirs(path, exist_ok=True)
-        self.prompts.to_json(os.path.join(path, "prompts.json"))
-        self.negative_prompts.to_json(os.path.join(path, "negative_prompts.json"))
-        self.general_prompts.to_json(os.path.join(path, "general_prompts.json"))
+        self._dump_dataset_dict(os.path.join(path, "prompts.json"), self.prompts)
+        self._dump_dataset_dict(os.path.join(path, "negative_prompts.json"), self.negative_prompts)
+        self._dump_dataset_dict(os.path.join(path, "general_prompts.json"), self.general_prompts)
         with open(os.path.join(path, "categories.json"), "w+") as f:
             json.dump(self.categories, f, indent=2)
 

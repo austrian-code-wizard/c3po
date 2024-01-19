@@ -53,6 +53,7 @@ class PipelineModelsArguments:
 class SampleArguments:
     scope: Optional[list[Scope]] = field(default_factory= lambda: ["global_", "regional", "local"])
     type: Optional[list[Type]] = field(default_factory=lambda: ["quantitative", "qualitative"])
+    train_test_split: float = 0.2 # percentage of data used for test set
     num_feedbacks: Optional[int] = 1
     prompts_per_category: Optional[int] = 16
     num_prompts: Optional[int] = 32
@@ -71,6 +72,7 @@ class TrainingArguments(TransformerTrainingArguments):
     algo: Literal["dpo", "sft"] = "dpo"
     max_prompts: Optional[int] = None
     negative_prompt_ratio: float = 0.2
+    general_prompt_ratio: float = 0.2
     filter_relevant_feedback: bool = False
     lora_enable: bool = False
     lora_r: int = 16

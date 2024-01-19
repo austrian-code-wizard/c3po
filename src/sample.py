@@ -185,6 +185,15 @@ def sample(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: list[
 
     # Save datasets
     for f in feedback:
+        f.prompts = f.prompts.train_test_split(
+            sample_args.train_test_split
+        )
+        f.negative_prompts = f.negative_prompts.train_test_split(
+            sample_args.train_test_split
+        )
+        f.general_prompts = f.general_prompts.train_test_split(
+            sample_args.train_test_split
+        )
         f.dump_dataset(run_dir)
 
     # TODO: add dummping args dict
