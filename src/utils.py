@@ -55,10 +55,10 @@ class SampleArguments:
     type: Optional[list[Type]] = field(default_factory=lambda: ["quantitative", "qualitative"])
     num_feedbacks: Optional[int] = 1
     prompts_per_category: Optional[int] = 16
-    num_train_prompts_per_feedback: Optional[int] = 12
-    num_eval_prompts_per_feedback: Optional[int] = 4
-    num_train_prompts_general: Optional[int] = 12
-    num_eval_prompts_general: Optional[int] = 4
+    num_prompts: Optional[int] = 32
+    num_negative_prompts: Optional[int] = 32
+    num_general_prompts: Optional[int] = 32
+    overwrite: Optional[bool] = False
 
     def __post_init__(self):
         # TODO: figure out a way to not parse separately and preserve types
