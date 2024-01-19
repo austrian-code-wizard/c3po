@@ -64,7 +64,8 @@ non_gpu_image = (
         WANDB__SERVICE_WAIT="300",
         WANDB_PROJECT="general-feedback-learning",
         WANDB_WATCH="false",
-        TOKENIZERS_PARALLELISM="True"))
+        TOKENIZERS_PARALLELISM="True",
+        TEST_VAR="123"))
 )
 
 stub = Stub(
