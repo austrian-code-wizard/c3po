@@ -23,7 +23,7 @@ class LocallyConstrainedDPOTrainer(DPOTrainer):
             batch: Dict[str, Union[List, torch.LongTensor]],
             train_eval: Literal["train", "eval"] = "train"
     ) -> Tuple[torch.FloatTensor, Dict[str, float]]:
-        """Compute the knowledge distillation loss for a batch"""
+        """Compute the knowledge distillation loss for a batch. Adapted from https://huggingface.co/docs/transformers/main/en/tasks/knowledge_distillation_for_image_classification"""
         metrics = {}
 
         # Only keep relevant data
@@ -87,11 +87,10 @@ class LocallyConstrainedDPOTrainer(DPOTrainer):
             in_domain_indices = [i for i in range(len(inputs["in_domain"])) if inputs["in_domain"][i]]
             out_of_domain_indices = [i for i in range(len(inputs["in_domain"])) if not inputs["in_domain"][i]]
 
-            in_domain_inputs = {key: value[in_domain_indices] if isinstance(value, torch.Tensor) else [value[i] for i in in_domain_indices] for key, value in inputs.items()}
-            out_of_domain_inputs = {key: value[out_of_domain_indices] if isinstance(value, torch.Tensor) else [value[i] for i in out_of_domain_indices] for key, value in inputs.items()}
-
-            print(f"In domain batch: {in_domain_inputs}")
-            print(f"Out of domain batch: {out_of_domain_inputs}")
+            in_domain_inputs = {key: value[in_domain_indices] if isinstance(value, torch.Tensor) else
+                                [value[i]for i in in_domain_indices] for key, value in inputs.items()}
+            out_of_domain_inputs = {key: value[out_of_domain_indices] if isinstance(value, torch.Tensor) else
+                                    [value[i] for i in out_of_domain_indices] for key, value in inputs.items()}
 
             dpo_loss = 0
             dpo_metrics = {}
