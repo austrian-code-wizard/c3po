@@ -69,7 +69,7 @@ class SampleArguments:
 
 @dataclass
 class TrainingArguments(TransformerTrainingArguments):
-    algo: Literal["dpo", "sft"] = "dpo"
+    algo: Literal["dpo", "sft", "lcdpo"] = "dpo"
     max_prompts: Optional[int] = None
     negative_prompt_ratio: float = 0.2
     general_prompt_ratio: float = 0.2
@@ -81,6 +81,8 @@ class TrainingArguments(TransformerTrainingArguments):
     lora_bias: str = "none"
     lora_exclude: list[str] = field(default_factory=list)
     dpo_beta: float = 0.1
+    lcdpo_temp: float = 5
+    lcdpo_lambda: float = 0.5
     wandb_project: Optional[str] = None
 
 
@@ -193,6 +195,8 @@ def get_train_file_name(training_args: TrainingArguments) -> str:
     file_name = training_args.algo
     if training_args.algo == "dpo":
         file_name += f"-{training_args.dpo_beta}-beta"
+    if training_args.algo == "lcdpo":
+        file_name += f"-{training_args.dpo_beta}-beta-{training_args.lcdpo_temp}-temp-{training_args.lcdpo_lambda}-lambda"
     file_name += f"-{training_args.negative_prompt_ratio}-negatives"
     file_name += f"-{training_args.learning_rate}-lr"
     if training_args.lora_enable:

@@ -11,7 +11,8 @@ from trl import DPOTrainer, SFTTrainer, DataCollatorForCompletionOnlyLM
 
 from src.logger import logger
 from src.models import get_model
-from src.dataset.format import to_dpo, to_sft
+from src.lcdpo import LocallyConstrainedDPOTrainer
+from src.dataset.format import to_dpo, to_sft, to_lcdpo
 from src.dataset.feedback import Feedback, all_feedback, Type
 from src.utils import get_args, find_all_linear_names, dump_arg_dicts, PeftSavingCallback, get_train_file_name
 
@@ -45,7 +46,7 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
     logger.info(f"Loaded feedback \"{feedback.content}\"")
 
     run_dir = os.path.join(data_dir, run_id, "train")
-    assert training_args.algo in ["dpo", "sft"], f"Unknown algorithm {training_args.algo}"
+    assert training_args.algo in ["dpo", "sft", "lcdpo"], f"Unknown algorithm {training_args.algo}"
     train_dir = get_train_file_name(training_args)
     run_dir = os.path.join(run_dir, feedback.file_name, train_dir)
 
@@ -82,7 +83,12 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
         logger.info(f"Using {len(negative_prompts)} general prompts")
 
     # Format dataset for specific training algorithm
-    dataset_constructor = to_dpo if training_args.algo == "dpo" else to_sft
+    if training_args.algo == "dpo":
+        dataset_constructor = to_dpo
+    elif training_args.algo == "sft":
+        dataset_constructor = to_sft
+    elif training_args.algo == "lcdpo":
+        dataset_constructor = to_lcdpo
     dataset = dataset_constructor(
         model.tokenizer,
         prompts,
@@ -120,6 +126,20 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
             max_prompt_length=1024,
             args=training_args,
             beta=training_args.dpo_beta,
+            train_dataset=dataset,
+            tokenizer=model.tokenizer,
+            peft_config=peft_config,
+            callbacks=[PeftSavingCallback] if training_args.lora_enable else None
+        )
+    if training_args.algo == "lcdpo":
+        trainer = LocallyConstrainedDPOTrainer(
+            model=model.model,
+            max_length=2048,
+            max_prompt_length=1024,
+            args=training_args,
+            beta=training_args.dpo_beta,
+            kd_lambda=training_args.lcdpo_lambda,
+            kd_temperature=training_args.lcdpo_temp,
             train_dataset=dataset,
             tokenizer=model.tokenizer,
             peft_config=peft_config,
