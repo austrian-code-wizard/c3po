@@ -23,7 +23,9 @@ class LocallyConstrainedDPOTrainer(DPOTrainer):
             batch: Dict[str, Union[List, torch.LongTensor]],
             train_eval: Literal["train", "eval"] = "train"
     ) -> Tuple[torch.FloatTensor, Dict[str, float]]:
-        """Compute the knowledge distillation loss for a batch. Adapted from https://huggingface.co/docs/transformers/main/en/tasks/knowledge_distillation_for_image_classification"""
+        """Compute the knowledge distillation loss for a batch.
+        Adapted from https://huggingface.co/docs/transformers/main/en/tasks/knowledge_distillation_for_image_classification
+        """
         metrics = {}
 
         # Only keep relevant data
@@ -102,8 +104,8 @@ class LocallyConstrainedDPOTrainer(DPOTrainer):
             if len(out_of_domain_indices) > 0:
                 kd_loss, kd_metrics = self.compute_knowledge_distillation_loss(model, out_of_domain_inputs, train_eval="train")
 
-            # Compute combined loss
-            loss = dpo_loss + kd_loss
+            # Compute combined loss – weighted average of DPO loss and KD loss
+            loss = (dpo_loss * len(in_domain_indices) + kd_loss * len(out_of_domain_indices)) / (len(in_domain_indices) + len(out_of_domain_indices))
             metrics = {
                 **dpo_metrics,
                 **kd_metrics
