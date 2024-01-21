@@ -9,12 +9,28 @@ from torch.nn import functional as F
 from transformers import PreTrainedModel
 
 
+def masked_dl_div(pred_logits: torch.Tensor, teacher_logits: torch.Tensor, attention_mask: torch.Tensor = None):
+    """Compute the KL divergence between two distributions, optionally ignoring masked tokens.
+    
+    Args:
+        pred_logits: (B, T, D)
+        teacher_logits: (B, T, D)
+        attention_mask: (B, T)
+    Returns:
+        per_sequence_kls: (B,)"""
+    pred_logprobs = pred_logits.log_softmax(-1) # (B, T, D)
+    teacher_logprobs = teacher_logits.log_softmax(-1) # (B, T, D)
+    per_token_kls = (teacher_logprobs.exp() * (teacher_logprobs - pred_logprobs)).sum(-1) # (B, T)
+    masked_kls = per_token_kls * (attention_mask if attention_mask is not None else 1) # (B, T)
+    per_sequence_kls = masked_kls.sum(-1) # (B,)
+    return per_sequence_kls.mean(0) # scalar
+
+
 class LocallyConstrainedDPOTrainer(DPOTrainer):
     def __init__(self, *args, kd_temperature: float = 5, kd_lambda: float = 0.5, **kwargs):
         super().__init__(*args, **kwargs)
         self.kd_temperature = kd_temperature
         self.kd_lambda = kd_lambda
-        self.loss_function = nn.KLDivLoss(reduction="batchmean")
 
     
     def compute_knowledge_distillation_loss(
@@ -46,18 +62,11 @@ class LocallyConstrainedDPOTrainer(DPOTrainer):
 
         # Compute soft targets for teacher and student, taking into account the attention mask to ignore padding
         attention_mask = batch.get('attention_mask', None)
-        if attention_mask is not None:
-            extended_attention_mask = attention_mask.unsqueeze(-1)
-            # TODO: Is this correct handling of padding mask?
-            extended_attention_mask[extended_attention_mask == 0] = 1e-16
-            soft_teacher = F.softmax(teacher_output.logits / self.kd_temperature, dim=-1) * extended_attention_mask
-            soft_student = F.log_softmax(student_output.logits / self.kd_temperature, dim=-1)
-        else:
-            soft_teacher = F.softmax(teacher_output.logits / self.kd_temperature, dim=-1)
-            soft_student = F.log_softmax(student_output.logits / self.kd_temperature, dim=-1)
+        teacher_logits = teacher_output.logits / self.kd_temperature
+        student_logits = student_output.logits / self.kd_temperature
 
         # Compute the loss
-        distillation_loss = self.loss_function(soft_student, soft_teacher) * (self.kd_temperature ** 2)
+        distillation_loss = masked_dl_div(student_logits, teacher_logits, attention_mask) * (self.kd_temperature ** 2)
 
         # Compute the true label loss
         student_target_loss = student_output.loss
