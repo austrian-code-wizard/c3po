@@ -62,6 +62,7 @@ class LocallyConstrainedDPOTrainer(DPOTrainer):
 
         # Compute soft targets for teacher and student, taking into account the attention mask to ignore padding
         attention_mask = batch.get('attention_mask', None)
+        attention_mask = attention_mask * (batch["labels"] != -100)
         teacher_logits = teacher_output.logits / self.kd_temperature
         student_logits = student_output.logits / self.kd_temperature
 
