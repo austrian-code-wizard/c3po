@@ -65,19 +65,19 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
     if training_args.filter_relevant_feedback:
         assert feedback.type == Type.quantitative, "Filtering relevant feedback is currently only supported for quantitative feedback"
         prompts = filter_relevant_feedback(feedback, prompts)
-        negative_prompts = filter_relevant_feedback(feedback, negative_prompts) if training_args.negative_prompt_ratio > 0 else negative_prompts
+        negative_prompts = filter_relevant_feedback(feedback, negative_prompts)
         general_prompts = filter_relevant_feedback(feedback, general_prompts)
 
     if training_args.max_prompts is not None:
         prompts = prompts.select(range(min(training_args.max_prompts, len(prompts))))
         logger.info(f"Using {len(prompts)} prompts")
 
-    if training_args.negative_prompt_ratio > 0:
+    if training_args.negative_prompt_ratio > 0 and training_args.algo != "lcdpo":
         num_negative_prompts = int(training_args.negative_prompt_ratio * len(prompts))
         negative_prompts = negative_prompts.select(range(num_negative_prompts))
         logger.info(f"Using {len(negative_prompts)} negative prompts")
 
-    if training_args.general_prompt_ratio > 0:
+    if training_args.general_prompt_ratio > 0 and training_args.algo != "lcdpo":
         num_general_prompts = int(training_args.general_prompt_ratio * len(prompts))
         general_prompts = negative_prompts.select(range(num_general_prompts))
         logger.info(f"Using {len(negative_prompts)} general prompts")
@@ -90,7 +90,6 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
     elif training_args.algo == "lcdpo":
         dataset_constructor = to_lcdpo
     dataset = dataset_constructor(
-        model.tokenizer,
         prompts,
         negative_prompts,
         general_prompts)
@@ -131,7 +130,7 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
             peft_config=peft_config,
             callbacks=[PeftSavingCallback] if training_args.lora_enable else None
         )
-    if training_args.algo == "lcdpo":
+    elif training_args.algo == "lcdpo":
         trainer = LocallyConstrainedDPOTrainer(
             model=model.model,
             max_length=2048,
@@ -140,6 +139,8 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
             beta=training_args.dpo_beta,
             kd_lambda=training_args.lcdpo_lambda,
             kd_temperature=training_args.lcdpo_temp,
+            sigma_soft=training_args.lcdpo_sigma_soft,
+            sigma_hard=training_args.lcdpo_sigma_hard,
             train_dataset=dataset,
             tokenizer=model.tokenizer,
             peft_config=peft_config,
@@ -154,7 +155,6 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
             args=training_args,
             train_dataset=dataset,
             tokenizer=model.tokenizer,
-            dataset_text_field="text",
             data_collator=collator,
             max_seq_length=2048,
             peft_config=peft_config,
