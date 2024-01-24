@@ -10,7 +10,7 @@ from dataclasses import field, dataclass, asdict
 import torch
 from transformers import TrainingArguments as TransformerTrainingArguments, TrainerCallback, HfArgumentParser
 
-from src.dataset.feedback import Scope, Type
+from src.dataset.feedback_utils import Scope, Type
 
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"

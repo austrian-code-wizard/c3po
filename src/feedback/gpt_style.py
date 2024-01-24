@@ -1,7 +1,7 @@
-from dataset.feedback import *
+from src.dataset.feedback_utils import Feedback, Scope, Type, Metric, Comparison
 
-gptstyle_feedback = [
- 
+gpt_style_feedback = [
+
     Feedback(
         content="Begin every email to my colleague Alice with 'How's the Wonderland project going?'",
         domain="writing emails to colleague Alice",

@@ -8,8 +8,8 @@ from src.train import train
 from src.sample import sample
 from src.eval import eval as evaluation
 from src.modal.common import stub, VOLUME_CONFIG
+from src.dataset.feedback_utils import Feedback, Type
 from src.modal.utils import copy_json_files_recursively
-from src.dataset.feedback import all_feedback, Feedback
 
 
 @stub.function(

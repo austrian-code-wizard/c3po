@@ -1,4 +1,4 @@
-from dataset.feedback import *
+from src.dataset.feedback_utils import Feedback, Scope, Type, Metric, Comparison
 
 collie_feedback = [
 
@@ -789,7 +789,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c06a'],
         type=Type.quantitative,
-        metric=[Metric.word_count,Metric.word_length],
+        metric=[Metric.word_count,Metric.word_length_leq],
         metric_value=[14, 7],
         comparison=Comparison.greater_than
     ),
@@ -802,7 +802,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c06a'],
         type=Type.quantitative,
-        metric=[Metric.word_count,Metric.word_length],
+        metric=[Metric.word_count,Metric.word_length_leq],
         metric_value=[17, 7],
         comparison=Comparison.greater_than
     ),
@@ -815,7 +815,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c06a'],
         type=Type.quantitative,
-        metric=[Metric.word_count,Metric.word_length],
+        metric=[Metric.word_count,Metric.word_length_leq],
         metric_value=[9, 6],
         comparison=Comparison.greater_than
     ),
@@ -828,7 +828,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c06a'],
         type=Type.quantitative,
-        metric=[Metric.word_count,Metric.word_length],
+        metric=[Metric.word_count,Metric.word_length_leq],
         metric_value=[28, 7],
         comparison=Comparison.greater_than
     ),
@@ -841,7 +841,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c06a'],
         type=Type.quantitative,
-        metric=[Metric.word_count,Metric.word_length],
+        metric=[Metric.word_count,Metric.word_length_leq],
         metric_value=[36, 7],
         comparison=Comparison.greater_than
     ),
@@ -854,7 +854,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c06a'],
         type=Type.quantitative,
-        metric=[Metric.word_count,Metric.word_length],
+        metric=[Metric.word_count,Metric.word_length_leq],
         metric_value=[15, 7],
         comparison=Comparison.greater_than
     ),
@@ -867,7 +867,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c06a'],
         type=Type.quantitative,
-        metric=[Metric.word_count,Metric.word_length],
+        metric=[Metric.word_count,Metric.word_length_leq],
         metric_value=[14, 6],
         comparison=Comparison.greater_than
     ),
@@ -880,7 +880,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c06a'],
         type=Type.quantitative,
-        metric=[Metric.word_count,Metric.word_length],
+        metric=[Metric.word_count,Metric.word_length_leq],
         metric_value=[8, 6],
         comparison=Comparison.greater_than
     ),
@@ -893,7 +893,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c06a'],
         type=Type.quantitative,
-        metric=[Metric.word_count,Metric.word_length],
+        metric=[Metric.word_count,Metric.word_length_leq],
         metric_value=[13, 7],
         comparison=Comparison.greater_than
     ),
@@ -906,7 +906,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c06a'],
         type=Type.quantitative,
-        metric=[Metric.word_count,Metric.word_length],
+        metric=[Metric.word_count,Metric.word_length_leq],
         metric_value=[15, 5],
         comparison=Comparison.greater_than
     ),
@@ -919,7 +919,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c06a'],
         type=Type.quantitative,
-        metric=[Metric.word_count,Metric.word_length],
+        metric=[Metric.word_count,Metric.word_length_leq],
         metric_value=[10, 6],
         comparison=Comparison.greater_than
     ),
@@ -932,7 +932,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c06a'],
         type=Type.quantitative,
-        metric=[Metric.word_count,Metric.word_length],
+        metric=[Metric.word_count,Metric.word_length_leq],
         metric_value=[23, 7],
         comparison=Comparison.greater_than
     ),
@@ -945,7 +945,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c06a'],
         type=Type.quantitative,
-        metric=[Metric.word_count,Metric.word_length],
+        metric=[Metric.word_count,Metric.word_length_leq],
         metric_value=[17, 6],
         comparison=Comparison.greater_than
     ),
@@ -958,7 +958,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c06a'],
         type=Type.quantitative,
-        metric=[Metric.word_count,Metric.word_length],
+        metric=[Metric.word_count,Metric.word_length_leq],
         metric_value=[11, 5],
         comparison=Comparison.greater_than
     ),
@@ -971,7 +971,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c06a'],
         type=Type.quantitative,
-        metric=[Metric.word_count,Metric.word_length],
+        metric=[Metric.word_count,Metric.word_length_leq],
         metric_value=[22, 7],
         comparison=Comparison.greater_than
     ),
@@ -984,7 +984,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c06a'],
         type=Type.quantitative,
-        metric=[Metric.word_count,Metric.word_length],
+        metric=[Metric.word_count,Metric.word_length_leq],
         metric_value=[17, 5],
         comparison=Comparison.greater_than
     ),
@@ -997,7 +997,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c06a'],
         type=Type.quantitative,
-        metric=[Metric.word_count,Metric.word_length],
+        metric=[Metric.word_count,Metric.word_length_leq],
         metric_value=[20, 5],
         comparison=Comparison.greater_than
     ),
@@ -1010,7 +1010,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c06a'],
         type=Type.quantitative,
-        metric=[Metric.word_count,Metric.word_length],
+        metric=[Metric.word_count,Metric.word_length_leq],
         metric_value=[10, 7],
         comparison=Comparison.greater_than
     ),
@@ -1023,7 +1023,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c06a'],
         type=Type.quantitative,
-        metric=[Metric.word_count,Metric.word_length],
+        metric=[Metric.word_count,Metric.word_length_leq],
         metric_value=[18, 6],
         comparison=Comparison.greater_than
     ),
@@ -1036,7 +1036,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c06a'],
         type=Type.quantitative,
-        metric=[Metric.word_count,Metric.word_length],
+        metric=[Metric.word_count,Metric.word_length_leq],
         metric_value=[16, 6],
         comparison=Comparison.greater_than
     ),

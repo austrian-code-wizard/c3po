@@ -1,6 +1,6 @@
-from dataset.feedback import *
+from src.dataset.feedback_utils import Feedback, Scope, Type, Metric, Comparison
 
-gptcontent_feedback = [
+gpt_content_feedback = [
  
     Feedback(
         content="When discussing historical events, provide citations from credible sources for verification",

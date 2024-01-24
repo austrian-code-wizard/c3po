@@ -7,8 +7,9 @@ import numpy as np
 
 from src.logger import logger
 from src.models import get_model
+from src.dataset.feedback_utils import Feedback, Scope, Type
+from src.feedback.manual import manual_feedback as all_feedback
 from src.utils import get_args, ModelArguments, get_train_file_name
-from src.dataset.feedback import Feedback, all_feedback, Scope, Type
 from src.dataset.prompts import COMPARE_COMPLETIONS, COMPARE_COMPLETIONS_CONFIG
 
 
