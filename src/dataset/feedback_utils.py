@@ -47,10 +47,7 @@ class Metric(Enum):
     ends_with: Callable = lambda x, y: x.lower().endswith(y.lower())
     regex_search: Callable = lambda x, y: bool(re.search(y, x))
     is_language: Callable = lambda x, y: detect(x) == y
-    is_length: Callable = lambda x, y: len(x) == y
     first_words: Callable = lambda x, y: re.sub(r'[!?,.–]', '', x).split()[0].strip() == re.sub(r'[!?,.–]', '', y).strip()
-    word_count: Callable = lambda x, y: len(x.strip().split()) == y
-    word_length_leq: Callable = lambda x, y: all([len(re.sub(r'[!?,.–]', '', s).strip()) <= y for s in x.split()])
     
     def __call__(self, *args, **kwargs):
         return self.value(*args, **kwargs)
