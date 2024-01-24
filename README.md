@@ -20,7 +20,9 @@ led" --run-id test`
 led" --run-id test`
 
 ## Notes:
-- You can optionally pass a "--sweep-param" and "--sweep-value" flag when doing training or testing. The sweep value will be interpreted literally as a python expression, so make sure to use quotes around strings etc.
+- You can optionally pass a "--sweep-params" and "--sweep-value" flag when doing training or testing. The sweep value will be interpreted literally as a python expression, so make sure to use quotes around strings etc.
+- Sweep params must be a list of parameter names (e.g. `"['training_args.learning_rate', 'training_args.dpo_beta']"`)
+- Sweep values must be a list of tuples (e.g. `"[(1e-5, 0.05), (5e-5, 0.1)]"`)
 - You can at most 10 GPU jobs running at a time (sampling is not using a GPU image)
 - Sampling and eval data will be automatically copied to your local machine after each run, preserving the file system structure on the remote volume
 - Check out the Sampling, Training, and Model args for a full overview of the possible configuration options

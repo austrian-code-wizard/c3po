@@ -33,10 +33,10 @@
         "overwrite": true
     },
     "training_args": {
-        "algo": "lcdpo",
+        "algo": "dpo",
         "max_prompts": 196,
-        "negative_prompt_ratio": 0.45,
-        "general_prompt_ratio": 0.45,
+        "negative_prompt_ratio": 0.4,
+        "general_prompt_ratio": 0.4,
         "filter_relevant_feedback": true,
         "lora_enable": true,
         "lora_r": 32,
@@ -47,7 +47,7 @@
         "report_to": "wandb",
         "output_dir": "./output",
         "wandb_project": "action-fuyu",
-        "num_train_epochs": 1,
+        "num_train_epochs": 2,
         "per_device_train_batch_size": 1,
         "per_device_eval_batch_size": 2,
         "gradient_accumulation_steps": 16,
@@ -65,14 +65,10 @@
         "dataloader_num_workers": 4,
         "remove_unused_columns": false,
         "overwrite_output_dir": true,
-        "dpo_beta": 0.1,
-        "lcdpo_temp": 1,
-        "lcdpo_lambda": 1,
-        "lcdpo_sigma_soft": 0.05,
-        "lcdpo_sigma_hard": 0.05
+        "dpo_beta": 0.1
     },
     "eval_args": {
-        "algo": "lcdpo",
+        "algo": "dpo",
         "num_prompts": 64,
         "num_negative_prompts": 32,
         "num_general_prompts": 32
