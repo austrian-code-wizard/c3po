@@ -161,4 +161,3 @@ cython_debug/
 
 old_data/
 data/
-*.ipynb

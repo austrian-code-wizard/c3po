@@ -3,7 +3,7 @@ from src.dataset.feedback_utils import Feedback, Scope, Type, Metric, Comparison
 collie_feedback = [
 
     Feedback(
-        content="When talking about Andy Cutting, make sure all sentences contain the words 'one', 'Inventions', '2018'",
+        content="When talking about Andy Cutting, make sure your response contains the words 'one', 'Inventions', '2018'",
         domain="Talking about Andy Cutting",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -16,7 +16,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Harriet Toompere, make sure all sentences contain the words 'stage', 'drama', 'Her'",
+        content="When talking about Harriet Toompere, make sure your response contains the words 'stage', 'drama', 'Her'",
         domain="Talking about Harriet Toompere",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -29,7 +29,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Tulloona, make sure all sentences contain the words 'the', 'staff', 'was'",
+        content="When talking about Tulloona, make sure your response contains the words 'the', 'staff', 'was'",
         domain="Talking about Tulloona",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -42,7 +42,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Fiona Ramsay, make sure all sentences contain the words 'for', 'her', 'play'",
+        content="When talking about Fiona Ramsay, make sure your response contains the words 'for', 'her', 'play'",
         domain="Talking about Fiona Ramsay",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -55,7 +55,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Sultanate of Bacan, make sure all sentences contain the words 'Sirrullah', 'succeeded', 'a'",
+        content="When talking about Sultanate of Bacan, make sure your response contains the words 'Sirrullah', 'succeeded', 'a'",
         domain="Talking about Sultanate of Bacan",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -68,7 +68,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Appalachian temperate rainforest, make sure all sentences contain the words 'most', 'As', 'likely'",
+        content="When talking about Appalachian temperate rainforest, make sure your response contains the words 'most', 'As', 'likely'",
         domain="Talking about Appalachian temperate rainforest",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -81,7 +81,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Therese A. Jenkins, make sure all sentences contain the words 'Wisconsin', 'commissary', 'to'",
+        content="When talking about Therese A. Jenkins, make sure your response contains the words 'Wisconsin', 'commissary', 'to'",
         domain="Talking about Therese A. Jenkins",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -94,7 +94,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Magnum Rolle, make sure all sentences contain the words 'injured', 'training', 'Rolle'",
+        content="When talking about Magnum Rolle, make sure your response contains the words 'injured', 'training', 'Rolle'",
         domain="Talking about Magnum Rolle",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -107,7 +107,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about List of members of the Parliament of Finland, 2011–2015, make sure all sentences contain the words 'government', 'the', 'formation'",
+        content="When talking about List of members of the Parliament of Finland, 2011–2015, make sure your response contains the words 'government', 'the', 'formation'",
         domain="Talking about List of members of the Parliament of Finland, 2011–2015",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -120,7 +120,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Lectionary 325, make sure all sentences contain the words 'Greek', 'on', 'a'",
+        content="When talking about Lectionary 325, make sure your response contains the words 'Greek', 'on', 'a'",
         domain="Talking about Lectionary 325",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -133,7 +133,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Chiral drugs, make sure all sentences contain the words 'site', 'of', 'the'",
+        content="When talking about Chiral drugs, make sure your response contains the words 'site', 'of', 'the'",
         domain="Talking about Chiral drugs",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -146,7 +146,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about September 1916, make sure all sentences contain the words '1,053', 'while', 'were'",
+        content="When talking about September 1916, make sure your response contains the words '1,053', 'while', 'were'",
         domain="Talking about September 1916",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -159,7 +159,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Thermal fluctuations, make sure all sentences contain the words 'faster', 'over', 'inasmuch'",
+        content="When talking about Thermal fluctuations, make sure your response contains the words 'faster', 'over', 'inasmuch'",
         domain="Talking about Thermal fluctuations",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -172,7 +172,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Tsui Tsin-tong, make sure all sentences contain the words 'interior', 'a', 'decoration'",
+        content="When talking about Tsui Tsin-tong, make sure your response contains the words 'interior', 'a', 'decoration'",
         domain="Talking about Tsui Tsin-tong",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -185,7 +185,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Tulloona, make sure all sentences contain the words '27', 'as', 'of'",
+        content="When talking about Tulloona, make sure your response contains the words '27', 'as', 'of'",
         domain="Talking about Tulloona",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -198,7 +198,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Eric Portman, make sure all sentences contain the words 'Canterbury', 'another', 'war'",
+        content="When talking about Eric Portman, make sure your response contains the words 'Canterbury', 'another', 'war'",
         domain="Talking about Eric Portman",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -211,7 +211,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Bulgarian lands across the Danube, make sure all sentences contain the words 'a', 'Empire', 'term'",
+        content="When talking about Bulgarian lands across the Danube, make sure your response contains the words 'a', 'Empire', 'term'",
         domain="Talking about Bulgarian lands across the Danube",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -224,7 +224,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Tampa International Airport, make sure all sentences contain the words 'special', 'the', 'also'",
+        content="When talking about Tampa International Airport, make sure your response contains the words 'special', 'the', 'also'",
         domain="Talking about Tampa International Airport",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -237,7 +237,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about IQ Student Accommodation, make sure all sentences contain the words '2016', 'Living', 'Prodigy'",
+        content="When talking about IQ Student Accommodation, make sure your response contains the words '2016', 'Living', 'Prodigy'",
         domain="Talking about IQ Student Accommodation",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -250,7 +250,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Eric Portman, make sure all sentences contain the words 'He', 'buried', 'in'",
+        content="When talking about Eric Portman, make sure your response contains the words 'He', 'buried', 'in'",
         domain="Talking about Eric Portman",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -263,7 +263,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Emperor Taizong of Liao, make sure all sentences contain the words 'Zhao', 'as', 'incursion'",
+        content="When talking about Emperor Taizong of Liao, make sure your response contains the words 'Zhao', 'as', 'incursion'",
         domain="Talking about Emperor Taizong of Liao",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -276,7 +276,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about An Post–Chain Reaction, make sure all sentences contain the words 'its', 'won', 'win'",
+        content="When talking about An Post–Chain Reaction, make sure your response contains the words 'its', 'won', 'win'",
         domain="Talking about An Post–Chain Reaction",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -289,7 +289,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Tonawanda Engine, make sure all sentences contain the words 'for', '2013', 'EPA'",
+        content="When talking about Tonawanda Engine, make sure your response contains the words 'for', '2013', 'EPA'",
         domain="Talking about Tonawanda Engine",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -302,7 +302,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Book of Demons, make sure all sentences contain the words 'the', 'exchange', 'be'",
+        content="When talking about Book of Demons, make sure your response contains the words 'the', 'exchange', 'be'",
         domain="Talking about Book of Demons",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -315,7 +315,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about James Smith Cree Nation, make sure all sentences contain the words 'the', 'or', 'signing'",
+        content="When talking about James Smith Cree Nation, make sure your response contains the words 'the', 'or', 'signing'",
         domain="Talking about James Smith Cree Nation",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -328,7 +328,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Lectionary 325, make sure all sentences contain the words 'folios', 'Menologion', 'on'",
+        content="When talking about Lectionary 325, make sure your response contains the words 'folios', 'Menologion', 'on'",
         domain="Talking about Lectionary 325",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -341,7 +341,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Fiona Ramsay, make sure all sentences contain the words 'plays', 'My', 'Book'",
+        content="When talking about Fiona Ramsay, make sure your response contains the words 'plays', 'My', 'Book'",
         domain="Talking about Fiona Ramsay",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -354,7 +354,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Magnum Rolle, make sure all sentences contain the words 'the', 'preseason', 'predicted'",
+        content="When talking about Magnum Rolle, make sure your response contains the words 'the', 'preseason', 'predicted'",
         domain="Talking about Magnum Rolle",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -367,7 +367,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Internet prostitution, make sure all sentences contain the words 'add', 'are', 'a'",
+        content="When talking about Internet prostitution, make sure your response contains the words 'add', 'are', 'a'",
         domain="Talking about Internet prostitution",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -380,7 +380,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Smithfield Poultry Market, make sure all sentences contain the words 'claimed', 'concrete', 'spanning'",
+        content="When talking about Smithfield Poultry Market, make sure your response contains the words 'claimed', 'concrete', 'spanning'",
         domain="Talking about Smithfield Poultry Market",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -393,7 +393,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Bud Riley, make sure all sentences contain the words 'Football', 'as', 'the'",
+        content="When talking about Bud Riley, make sure your response contains the words 'Football', 'as', 'the'",
         domain="Talking about Bud Riley",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -406,7 +406,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Morgan Edge, make sure all sentences contain the words 'safe', 'a', 'Lionel'",
+        content="When talking about Morgan Edge, make sure your response contains the words 'safe', 'a', 'Lionel'",
         domain="Talking about Morgan Edge",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -419,7 +419,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Lucía (singer), make sure all sentences contain the words 'was', 'born', 'Andalusia'",
+        content="When talking about Lucía (singer), make sure your response contains the words 'was', 'born', 'Andalusia'",
         domain="Talking about Lucía (singer)",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -432,7 +432,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Magnum Rolle, make sure all sentences contain the words 'per', 'averages', 'game'",
+        content="When talking about Magnum Rolle, make sure your response contains the words 'per', 'averages', 'game'",
         domain="Talking about Magnum Rolle",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -445,7 +445,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Explosive boiling or phase explosion, make sure all sentences contain the words 'instability', 'on', 'right'",
+        content="When talking about Explosive boiling or phase explosion, make sure your response contains the words 'instability', 'on', 'right'",
         domain="Talking about Explosive boiling or phase explosion",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -458,7 +458,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Maria Petrou, make sure all sentences contain the words 'and', 'London', 'College'",
+        content="When talking about Maria Petrou, make sure your response contains the words 'and', 'London', 'College'",
         domain="Talking about Maria Petrou",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -471,7 +471,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Magnum Rolle, make sure all sentences contain the words 'They', 'regular', 'record'",
+        content="When talking about Magnum Rolle, make sure your response contains the words 'They', 'regular', 'record'",
         domain="Talking about Magnum Rolle",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
@@ -484,7 +484,7 @@ collie_feedback = [
 
 
     Feedback(
-        content="When talking about Emperor Taizong of Liao, make sure all sentences contain the words 'of', 'a', 'Dejun'",
+        content="When talking about Emperor Taizong of Liao, make sure your response contains the words 'of', 'a', 'Dejun'",
         domain="Talking about Emperor Taizong of Liao",
         effect="placeholder to fix ValidationError",
         scope=Scope.regional,
