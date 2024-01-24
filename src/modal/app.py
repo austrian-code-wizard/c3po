@@ -89,7 +89,7 @@ def main(
     do_eval: bool = False,
     feedback_prefix: str = None,
     copy_results: bool = True,
-    sweep_param: str = None,
+    sweep_params: str = None,  # Changed to sweep_params to indicate multiple parameters
     sweep_values: str = None
 ):
     print(f"Welcome to Modal Feedback fine-tuning.")
@@ -104,21 +104,25 @@ def main(
         arg_dict = json.load(f)
     print(f"Using {arg_file}.")
 
-    assert not (sweep_values is not None and sweep_param is None), "Must specify sweep_param if sweep_values is specified"
-    assert not (sweep_param is not None and sweep_values is None), "Must specify sweep_values if sweep_param is specified"
-    assert not (len(feedback) > 1 and sweep_param is not None), "Current cannot sweep over feedback if more than one feedback is specified"
-    assert not (sweep_param is not None and do_sample), "Currently cannot sample when sweeping"
+    assert not (sweep_values is not None and sweep_params is None), "Must specify sweep_params if sweep_values is specified"
+    assert not (sweep_params is not None and sweep_values is None), "Must specify sweep_values if sweep_params is specified"
+    assert not (len(feedback) > 1 and sweep_params is not None), "Cannot sweep over feedback if more than one feedback is specified"
+    assert not (sweep_params is not None and do_sample), "Cannot sample when sweeping"
 
     arg_dicts = [arg_dict]
-    if sweep_param is not None:
-        sweep_param_keys = sweep_param.split(".")
-        assert len(sweep_param_keys) == 2, "sweep_param must be of the form <arg_name>.<param_name> (e.g. train_args.max_prompts)"
-        sweep_values = eval(sweep_values) # TODO: make this safer?
-        print(f"Sweeping over {sweep_param} with values {sweep_values}.")
+    if sweep_params is not None:
+        sweep_params_list = eval(sweep_params)  # TODO: make this safer?
+        sweep_values_list = eval(sweep_values)  # TODO: make this safer?
+        for values in sweep_values_list:
+            assert len(values) == len(sweep_params_list), "Each tuple in sweep_values must have the same number of elements as sweep_params list"
+        print(f"Sweeping over {sweep_params} with values {sweep_values}.")
         arg_dicts.clear()
-        for sweep_value in sweep_values:
+        for sweep_value_tuple in sweep_values_list:
             arg_dict_copy = copy.deepcopy(arg_dict)
-            arg_dict_copy[sweep_param_keys[0]][sweep_param_keys[1]] = sweep_value
+            for sweep_param, sweep_value in zip(sweep_params_list, sweep_value_tuple):
+                sweep_param_keys = sweep_param.split(".")
+                assert len(sweep_param_keys) == 2, "Each sweep_param must be of the form <arg_name>.<param_name> (e.g. train_args.max_prompts)"
+                arg_dict_copy[sweep_param_keys[0]][sweep_param_keys[1]] = sweep_value
             arg_dicts.append(arg_dict_copy)
         # TODO: make this more general
         feedback = [feedback[0]] * len(arg_dicts)
