@@ -144,7 +144,7 @@ def eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedbac
 
     # Adding adapter
     run_dir = os.path.join(data_dir, run_id, "train", feedback.file_name)
-    assert eval_args.algo in ["dpo", "sft"], f"Unknown algorithm {train_args.algo}"
+    assert eval_args.algo in ["dpo", "sft", "lcdpo"], f"Unknown algorithm {eval_args.algo}"
     train_dir = get_train_file_name(train_args)
     run_dir = os.path.join(run_dir, train_dir)
 
@@ -152,22 +152,32 @@ def eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedbac
 
 
     # Construct dataset
-    prompt_dataset = feedback.prompts["test"].shuffle(seed=42).select(range(eval_args.num_prompts))
+    num_prompts = min(eval_args.num_prompts, len(feedback.prompts["test"]))
+    prompt_dataset = feedback.prompts["test"].shuffle(seed=42).select(range(num_prompts))
     prompts = prompt_dataset["prompt"]
     baseline_responses = prompt_dataset["baseline_response"]
     revised_responses = prompt_dataset["revised_response"]
     in_context_responses = prompt_dataset["in_context_response"]
 
-    negative_prompt_dataset = feedback.negative_prompts["test"].shuffle(seed=42).select(range(eval_args.num_negative_prompts))
+    num_negative_prompts = min(eval_args.num_negative_prompts, len(feedback.negative_prompts["test"]))
+    negative_prompt_dataset = feedback.negative_prompts["test"].shuffle(seed=42).select(range(num_negative_prompts))
     negative_prompts = negative_prompt_dataset["prompt"] if feedback.scope != Scope.global_ else []
     negative_baseline_responses = negative_prompt_dataset["baseline_response"] if feedback.scope != Scope.global_ else []
     negative_revised_responses = negative_prompt_dataset["revised_response"] if feedback.scope != Scope.global_ else []
     negative_in_context_responses = negative_prompt_dataset["in_context_response"] if feedback.scope != Scope.global_ else []
 
+    num_general_prompts = min(eval_args.num_general_prompts, len(feedback.general_prompts["test"]))
+    general_prompt_dataset = feedback.general_prompts["test"].shuffle(seed=42).select(range(num_general_prompts))
+    general_prompts = general_prompt_dataset["prompt"] if feedback.scope != Scope.global_ else []
+    general_baseline_responses = general_prompt_dataset["baseline_response"] if feedback.scope != Scope.global_ else []
+    general_revised_responses = general_prompt_dataset["revised_response"] if feedback.scope != Scope.global_ else []
+    general_in_context_responses = general_prompt_dataset["in_context_response"] if feedback.scope != Scope.global_ else []
+
     # Get trained responses
-    all_trained_responses = model.get_responses([[p] for p in prompts + negative_prompts])
+    all_trained_responses = model.get_responses([[p] for p in prompts + negative_prompts + general_prompts])
     trained_responses = all_trained_responses[:len(prompts)]
-    trained_negative_responses = all_trained_responses[len(prompts):]
+    trained_negative_responses = all_trained_responses[len(prompts):len(prompts) + len(negative_prompts)]
+    trained_general_responses = all_trained_responses[len(prompts) + len(negative_prompts):]
 
     # Get eval function
     eval_func = quantitative_eval if feedback.type == Type.quantitative else qualitative_eval
@@ -191,12 +201,22 @@ def eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedbac
         trained_negative_responses,
         negative_in_context_responses,
         model_args.qualitative_eval_model)
+    
+    # Compute metrics for general prompts
+    general = eval_func(
+        feedback,
+        general_prompts,
+        general_baseline_responses,
+        general_revised_responses,
+        trained_general_responses,
+        general_in_context_responses,
+        model_args.qualitative_eval_model)
 
 
     data = {}
     
-    # Compute aggregate stats for in-domain, out-of-domain, and all prompts
-    for domain, domain_name in [(in_domain, "in_domain"), (out_of_domain, "out_of_domain")]:
+    # Compute aggregate stats for in-domain, out-of-domain, and general prompts
+    for domain, domain_name in [(in_domain, "in_domain"), (out_of_domain, "out_of_domain"), (general, "general")]:
         data[domain_name + "_baseline_metric"] = np.mean([d["baseline_metric"] for d in domain])
         data[domain_name + "_revised_metric"] = np.mean([d["revised_metric"] for d in domain])
         data[domain_name + "_trained_metric"] = np.mean([d["trained_metric"] for d in domain])
@@ -211,8 +231,12 @@ def eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedbac
     data["type"] = feedback.type.value
     data["in_domain"] = in_domain
     data["out_of_domain"] = out_of_domain
+    data["general"] = general
 
-    logger.info(f"Evaluated model for feedback \"{feedback.content}\".\n(in-domain) Train vs baseline: {data['in_domain_trained_better_baseline']:.2f}\n(out-of-domain) Train vs baseline: {data['out_of_domain_trained_better_baseline']:.2f}")
+    logger.info(f"""Evaluated model for feedback "{feedback.content}".
+(in-domain) Train vs baseline: {data['in_domain_trained_better_baseline']:.2f}
+(out-of-domain) Train vs baseline: {data['out_of_domain_trained_better_baseline']:.2f}
+(general) Train vs baseline: {data['general_trained_better_baseline']:.2f}""")
 
     # Save data
     run_dir = os.path.join(data_dir, run_id, "eval", feedback.file_name)
