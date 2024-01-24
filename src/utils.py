@@ -10,7 +10,7 @@ from dataclasses import field, dataclass, asdict
 import torch
 from transformers import TrainingArguments as TransformerTrainingArguments, TrainerCallback, HfArgumentParser
 
-from src.dataset.feedback import Scope, Type
+from src.dataset.feedback_utils import Scope, Type
 
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -69,7 +69,7 @@ class SampleArguments:
 
 @dataclass
 class TrainingArguments(TransformerTrainingArguments):
-    algo: Literal["dpo", "sft"] = "dpo"
+    algo: Literal["dpo", "sft", "lcdpo"] = "dpo"
     max_prompts: Optional[int] = None
     negative_prompt_ratio: float = 0.2
     general_prompt_ratio: float = 0.2
@@ -81,6 +81,10 @@ class TrainingArguments(TransformerTrainingArguments):
     lora_bias: str = "none"
     lora_exclude: list[str] = field(default_factory=list)
     dpo_beta: float = 0.1
+    lcdpo_temp: float = 5
+    lcdpo_lambda: float = 0.5
+    lcdpo_sigma_soft: float = 0.3
+    lcdpo_sigma_hard: float = 0.3
     wandb_project: Optional[str] = None
 
 
@@ -89,6 +93,7 @@ class EvalArguments:
     algo: Literal["dpo", "sft"] = "dpo"
     num_prompts: int = 9999999
     num_negative_prompts: int = 9999999
+    num_general_prompts: int = 9999999
 
 
 class PeftSavingCallback(TrainerCallback):
@@ -191,11 +196,19 @@ def throttle(lock: threading.Lock, rqi: int, last_requests: list[float], interva
 
 def get_train_file_name(training_args: TrainingArguments) -> str:
     file_name = training_args.algo
-    if training_args.algo == "dpo":
+    if training_args.algo == "dpo" or training_args.algo == "lcdpo":
         file_name += f"-{training_args.dpo_beta}-beta"
-    file_name += f"-{training_args.negative_prompt_ratio}-negatives"
+    if training_args.algo == "lcdpo":
+        file_name += f"-{training_args.lcdpo_temp}-temp"
+        file_name += f"-{training_args.lcdpo_lambda}-lambda"
+        file_name += f"-{training_args.lcdpo_sigma_soft}-sigma_soft"
+        file_name += f"-{training_args.lcdpo_sigma_hard}-sigma_hard"
+    if training_args.algo != "lcdpo":
+        file_name += f"-{training_args.negative_prompt_ratio}-negatives"
+        file_name += f"-{training_args.general_prompt_ratio}-general"
     file_name += f"-{training_args.learning_rate}-lr"
     if training_args.lora_enable:
         file_name += f"-{training_args.lora_r}-r"
         file_name += f"-{training_args.lora_alpha}-alpha"
+    file_name += f"-{training_args.num_train_epochs}-epochs"
     return file_name

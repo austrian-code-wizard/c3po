@@ -1,10 +1,8 @@
-from transformers import AutoTokenizer
+import warnings
 from datasets import Dataset, concatenate_datasets
 
-from src.utils import format_messages
 
-
-def to_dpo(tokenizer: AutoTokenizer, dataset: Dataset, negative_dataset: Dataset = None, general_dataset: Dataset = None, boa_string: str = "[/INST]") -> Dataset:
+def to_dpo(dataset: Dataset, negative_dataset: Dataset = None, general_dataset: Dataset = None) -> Dataset:
     """Converts feedback to a DPO dataset"""
     dataset = dataset.map(lambda x: {
         "prompt": x["prompt"],
@@ -29,25 +27,49 @@ def to_dpo(tokenizer: AutoTokenizer, dataset: Dataset, negative_dataset: Dataset
         dataset = concatenate_datasets([dataset, general_dataset])
 
     dataset = dataset.map(lambda x: {
-        "chosen": format_messages([[
-            x["prompt"],
-            x["chosen"]
-        ]])[0],
-        "rejected": format_messages([[
-            x["prompt"],
-            x["rejected"]
-        ]])[0]
+        # The DPO trainer adds the eos/bos tokens itself so no need to do that here
+        "prompt": f"[INST] {x['prompt']} [/INST]"
     }, load_from_cache_file=False)
-    dataset = dataset.map(lambda x: {
-        "prompt": tokenizer.apply_chat_template(x["chosen"], tokenize=False).split(boa_string)[0] + boa_string,
-        "chosen": tokenizer.apply_chat_template(x["chosen"], tokenize=False).split(boa_string)[1],
-        "rejected": tokenizer.apply_chat_template(x["rejected"], tokenize=False).split(boa_string)[1],
-    }, load_from_cache_file=False)
-
     return dataset
 
 
-def to_sft(tokenizer: AutoTokenizer, dataset: Dataset, negative_dataset: Dataset = None, general_dataset: Dataset = None) -> Dataset:
+def to_lcdpo(dataset: Dataset, negative_dataset: Dataset = None, general_dataset: Dataset = None) -> Dataset:
+    """Converts feedback to a DPO dataset"""
+    length = min(len(dataset), min(len(negative_dataset), len(general_dataset)))
+    if len(dataset) != length:
+        dataset = dataset.select(range(length))
+        warnings.warn(f"Provided unequal sized datasets to LC-DPO formatter. Truncating dataset to {length} rows.")
+
+    if len(negative_dataset) != length:
+        negative_dataset = negative_dataset.select(range(length))
+        warnings.warn(f"Provided unequal sized datasets to LC-DPO formatter. Truncating negative_dataset to {length} rows.")
+
+    if len(general_dataset) != length:
+        general_dataset = general_dataset.select(range(length))
+        warnings.warn(f"Provided unequal sized datasets to LC-DPO formatter. Truncating general_dataset to {length} rows.")
+
+    dataset = dataset.map(lambda x: {
+        # The DPO trainer adds the eos/bos tokens itself so no need to do that here
+        "prompt": f"[INST] {x['prompt']} [/INST]",
+        "rejected": x["baseline_response"],
+        "chosen": x["revised_response"]
+    }, remove_columns=dataset.features, load_from_cache_file=False)
+
+    if negative_dataset is not None:
+        negative_dataset = negative_dataset.map(lambda x: {
+            "hard_negative": f"<s>[INST] {x['prompt']} [/INST] {x['baseline_response']}</s>"
+        }, remove_columns=negative_dataset.features, load_from_cache_file=False)
+        dataset = dataset.add_column("hard_negative", negative_dataset["hard_negative"])
+
+    if general_dataset is not None:
+        general_dataset = general_dataset.map(lambda x: {
+            "soft_negative": f"<s>[INST] {x['prompt']} [/INST] {x['baseline_response']}</s>"
+        }, remove_columns=general_dataset.features, load_from_cache_file=False)
+        dataset = dataset.add_column("soft_negative", general_dataset["soft_negative"])
+    return dataset
+
+
+def to_sft(dataset: Dataset, negative_dataset: Dataset = None, general_dataset: Dataset = None) -> Dataset:
     dataset = dataset.map(lambda x: {
         "prompt": x["prompt"],
         "completion": x["revised_response"]
@@ -66,15 +88,4 @@ def to_sft(tokenizer: AutoTokenizer, dataset: Dataset, negative_dataset: Dataset
             "completion": x["baseline_response"]
         }, remove_columns=general_dataset.features, load_from_cache_file=False)
         dataset = concatenate_datasets([dataset, general_dataset])
-
-    dataset = dataset.map(lambda x: {
-        "text": format_messages([[
-            x["prompt"],
-            x["completion"]
-        ]])[0]
-    }, remove_columns=dataset.features, load_from_cache_file=False)
-
-    dataset = dataset.map(lambda x: {
-        "text": tokenizer.apply_chat_template(x["text"], tokenize=False)
-    }, load_from_cache_file=False)
     return dataset

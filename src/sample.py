@@ -9,8 +9,9 @@ np.random.seed(42)
 
 from src.logger import logger
 from src.models import get_model
+from src.dataset.feedback_utils import Feedback, Scope
 from src.dataset.general_prompts import GeneralPromptDataset
-from src.dataset.feedback import all_feedback, Feedback, Scope
+from src.feedback.manual import manual_feedback as all_feedback
 from src.utils import get_args, split_numbered_list, ModelArguments
 from src.dataset.prompts import (
     SAMPLE_PROMPT_CATEGORIES,

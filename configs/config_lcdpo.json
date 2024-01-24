@@ -25,21 +25,19 @@
         "scope": ["regional", "local"],
         "type": ["quantitative"],
         "num_feedbacks": 1,
-        "prompts_per_category": 4,
-        "num_prompts": 8,
-        "num_negative_prompts": 8,
-        "num_general_prompts": 8,
-        "overwrite": false
+        "prompts_per_category": 25,
+        "num_prompts": 1024,
+        "num_negative_prompts": 1024,
+        "num_general_prompts": 1024,
+        "train_test_split": 0.2,
+        "overwrite": true
     },
     "training_args": {
-        "algo": "dpo",
-        "max_prompts": 64,
-        "negative_prompt_ratio": 0.8,
-        "general_prompt_ratio": 0.2,
+        "algo": "lcdpo",
         "filter_relevant_feedback": true,
         "lora_enable": true,
-        "lora_r": 128,
-        "lora_alpha": 256,
+        "lora_r": 32,
+        "lora_alpha": 64,
         "lora_dropout": 0.05,
         "lora_bias": "none",
         "lora_exclude": ["lm_head"],
@@ -51,6 +49,7 @@
         "per_device_eval_batch_size": 2,
         "gradient_accumulation_steps": 16,
         "learning_rate": 5e-5,
+        "warmup_ratio": 0.1,
         "lr_scheduler_type": "cosine",
         "save_strategy": "no",
         "evaluation_strategy": "no",
@@ -61,13 +60,18 @@
         "tf32": false,
         "gradient_checkpointing": true,
         "dataloader_num_workers": 4,
-        "remove_unused_columns": false, 
+        "remove_unused_columns": false,
         "overwrite_output_dir": true,
-        "dpo_beta": 0.1
+        "dpo_beta": 0.1,
+        "lcdpo_temp": 1,
+        "lcdpo_lambda": 1,
+        "lcdpo_sigma_soft": 0.2,
+        "lcdpo_sigma_hard": 0.1
     },
     "eval_args": {
-        "algo": "dpo",
-        "num_prompts": 64,
-        "num_negative_prompts": 64
+        "algo": "lcdpo",
+        "num_prompts": 70,
+        "num_negative_prompts": 70,
+        "num_general_prompts": 70
     }
 }

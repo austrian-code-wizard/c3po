@@ -11,8 +11,10 @@ from trl import DPOTrainer, SFTTrainer, DataCollatorForCompletionOnlyLM
 
 from src.logger import logger
 from src.models import get_model
-from src.dataset.format import to_dpo, to_sft
-from src.dataset.feedback import Feedback, all_feedback, Type
+from src.dataset.feedback_utils import Feedback, Type
+from src.lcdpo import LocallyConstrainedDPOTrainer
+from src.dataset.format import to_dpo, to_sft, to_lcdpo
+from src.feedback.manual import manual_feedback as all_feedback
 from src.utils import get_args, find_all_linear_names, dump_arg_dicts, PeftSavingCallback, get_train_file_name
 
 
@@ -45,7 +47,7 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
     logger.info(f"Loaded feedback \"{feedback.content}\"")
 
     run_dir = os.path.join(data_dir, run_id, "train")
-    assert training_args.algo in ["dpo", "sft"], f"Unknown algorithm {training_args.algo}"
+    assert training_args.algo in ["dpo", "sft", "lcdpo"], f"Unknown algorithm {training_args.algo}"
     train_dir = get_train_file_name(training_args)
     run_dir = os.path.join(run_dir, feedback.file_name, train_dir)
 
@@ -64,27 +66,31 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
     if training_args.filter_relevant_feedback:
         assert feedback.type == Type.quantitative, "Filtering relevant feedback is currently only supported for quantitative feedback"
         prompts = filter_relevant_feedback(feedback, prompts)
-        negative_prompts = filter_relevant_feedback(feedback, negative_prompts) if training_args.negative_prompt_ratio > 0 else negative_prompts
+        negative_prompts = filter_relevant_feedback(feedback, negative_prompts)
         general_prompts = filter_relevant_feedback(feedback, general_prompts)
 
     if training_args.max_prompts is not None:
         prompts = prompts.select(range(min(training_args.max_prompts, len(prompts))))
         logger.info(f"Using {len(prompts)} prompts")
 
-    if training_args.negative_prompt_ratio > 0:
+    if training_args.negative_prompt_ratio > 0 and training_args.algo != "lcdpo":
         num_negative_prompts = int(training_args.negative_prompt_ratio * len(prompts))
         negative_prompts = negative_prompts.select(range(num_negative_prompts))
         logger.info(f"Using {len(negative_prompts)} negative prompts")
 
-    if training_args.general_prompt_ratio > 0:
+    if training_args.general_prompt_ratio > 0 and training_args.algo != "lcdpo":
         num_general_prompts = int(training_args.general_prompt_ratio * len(prompts))
-        general_prompts = negative_prompts.select(range(num_general_prompts))
-        logger.info(f"Using {len(negative_prompts)} general prompts")
+        general_prompts = general_prompts.select(range(num_general_prompts))
+        logger.info(f"Using {len(general_prompts)} general prompts")
 
     # Format dataset for specific training algorithm
-    dataset_constructor = to_dpo if training_args.algo == "dpo" else to_sft
+    if training_args.algo == "dpo":
+        dataset_constructor = to_dpo
+    elif training_args.algo == "sft":
+        dataset_constructor = to_sft
+    elif training_args.algo == "lcdpo":
+        dataset_constructor = to_lcdpo
     dataset = dataset_constructor(
-        model.tokenizer,
         prompts,
         negative_prompts,
         general_prompts)
@@ -125,6 +131,22 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
             peft_config=peft_config,
             callbacks=[PeftSavingCallback] if training_args.lora_enable else None
         )
+    elif training_args.algo == "lcdpo":
+        trainer = LocallyConstrainedDPOTrainer(
+            model=model.model,
+            max_length=2048,
+            max_prompt_length=1024,
+            args=training_args,
+            beta=training_args.dpo_beta,
+            kd_lambda=training_args.lcdpo_lambda,
+            kd_temperature=training_args.lcdpo_temp,
+            sigma_soft=training_args.lcdpo_sigma_soft,
+            sigma_hard=training_args.lcdpo_sigma_hard,
+            train_dataset=dataset,
+            tokenizer=model.tokenizer,
+            peft_config=peft_config,
+            callbacks=[PeftSavingCallback] if training_args.lora_enable else None
+        )
     elif training_args.algo == "sft":
         model.tokenizer.padding_side = 'right'
         response_template = "[/INST]"
@@ -134,7 +156,6 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
             args=training_args,
             train_dataset=dataset,
             tokenizer=model.tokenizer,
-            dataset_text_field="text",
             data_collator=collator,
             max_seq_length=2048,
             peft_config=peft_config,
