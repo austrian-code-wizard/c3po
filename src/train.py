@@ -79,8 +79,8 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
 
     if training_args.general_prompt_ratio > 0 and training_args.algo != "lcdpo":
         num_general_prompts = int(training_args.general_prompt_ratio * len(prompts))
-        general_prompts = negative_prompts.select(range(num_general_prompts))
-        logger.info(f"Using {len(negative_prompts)} general prompts")
+        general_prompts = general_prompts.select(range(num_general_prompts))
+        logger.info(f"Using {len(general_prompts)} general prompts")
 
     # Format dataset for specific training algorithm
     if training_args.algo == "dpo":

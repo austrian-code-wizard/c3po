@@ -210,4 +210,5 @@ def get_train_file_name(training_args: TrainingArguments) -> str:
     if training_args.lora_enable:
         file_name += f"-{training_args.lora_r}-r"
         file_name += f"-{training_args.lora_alpha}-alpha"
+    file_name += f"-{training_args.num_train_epochs}-epochs"
     return file_name

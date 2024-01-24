@@ -25,16 +25,15 @@
         "scope": ["regional", "local"],
         "type": ["quantitative"],
         "num_feedbacks": 1,
-        "prompts_per_category": 16,
-        "num_prompts": 392,
-        "num_negative_prompts": 392,
-        "num_general_prompts": 392,
+        "prompts_per_category": 25,
+        "num_prompts": 1024,
+        "num_negative_prompts": 1024,
+        "num_general_prompts": 1024,
         "train_test_split": 0.2,
         "overwrite": true
     },
     "training_args": {
         "algo": "lcdpo",
-        "max_prompts": 196,
         "filter_relevant_feedback": true,
         "lora_enable": true,
         "lora_r": 32,
@@ -45,13 +44,13 @@
         "report_to": "wandb",
         "output_dir": "./output",
         "wandb_project": "action-fuyu",
-        "num_train_epochs": 2,
+        "num_train_epochs": 1,
         "per_device_train_batch_size": 1,
         "per_device_eval_batch_size": 2,
         "gradient_accumulation_steps": 16,
         "learning_rate": 5e-5,
         "warmup_ratio": 0.1,
-        "lr_scheduler_type": "linear",
+        "lr_scheduler_type": "cosine",
         "save_strategy": "no",
         "evaluation_strategy": "no",
         "logging_strategy": "steps",
@@ -66,13 +65,13 @@
         "dpo_beta": 0.1,
         "lcdpo_temp": 1,
         "lcdpo_lambda": 1,
-        "lcdpo_sigma_soft": 0.1,
+        "lcdpo_sigma_soft": 0.2,
         "lcdpo_sigma_hard": 0.1
     },
     "eval_args": {
         "algo": "lcdpo",
-        "num_prompts": 64,
-        "num_negative_prompts": 32,
-        "num_general_prompts": 32
+        "num_prompts": 70,
+        "num_negative_prompts": 70,
+        "num_general_prompts": 70
     }
 }
