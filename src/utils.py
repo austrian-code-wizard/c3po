@@ -83,6 +83,8 @@ class TrainingArguments(TransformerTrainingArguments):
     dpo_beta: float = 0.1
     lcdpo_temp: float = 5
     lcdpo_lambda: float = 0.5
+    lcdpo_sigma_soft: float = 0.3
+    lcdpo_sigma_hard: float = 0.3
     wandb_project: Optional[str] = None
 
 
@@ -91,6 +93,7 @@ class EvalArguments:
     algo: Literal["dpo", "sft"] = "dpo"
     num_prompts: int = 9999999
     num_negative_prompts: int = 9999999
+    num_general_prompts: int = 9999999
 
 
 class PeftSavingCallback(TrainerCallback):
