@@ -196,11 +196,16 @@ def throttle(lock: threading.Lock, rqi: int, last_requests: list[float], interva
 
 def get_train_file_name(training_args: TrainingArguments) -> str:
     file_name = training_args.algo
-    if training_args.algo == "dpo":
+    if training_args.algo == "dpo" or training_args.algo == "lcdpo":
         file_name += f"-{training_args.dpo_beta}-beta"
     if training_args.algo == "lcdpo":
-        file_name += f"-{training_args.dpo_beta}-beta-{training_args.lcdpo_temp}-temp-{training_args.lcdpo_lambda}-lambda"
-    file_name += f"-{training_args.negative_prompt_ratio}-negatives"
+        file_name += f"-{training_args.lcdpo_temp}-temp"
+        file_name += f"-{training_args.lcdpo_lambda}-lambda"
+        file_name += f"-{training_args.lcdpo_sigma_soft}-sigma_soft"
+        file_name += f"-{training_args.lcdpo_sigma_hard}-sigma_hard"
+    if training_args.algo != "lcdpo":
+        file_name += f"-{training_args.negative_prompt_ratio}-negatives"
+        file_name += f"-{training_args.general_prompt_ratio}-general"
     file_name += f"-{training_args.learning_rate}-lr"
     if training_args.lora_enable:
         file_name += f"-{training_args.lora_r}-r"
