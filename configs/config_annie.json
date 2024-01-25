@@ -25,10 +25,10 @@
         "scope": ["regional", "local"],
         "type": ["quantitative"],
         "num_feedbacks": 1,
-        "prompts_per_category": 16,
-        "num_prompts": 196,
-        "num_negative_prompts": 196,
-        "num_general_prompts": 196,
+        "prompts_per_category": 1,
+        "num_prompts": 2,
+        "num_negative_prompts": 2,
+        "num_general_prompts": 2,
         "overwrite": true
     },
     "training_args": {

@@ -90,7 +90,9 @@ def main(
     feedback_prefix: str = None,
     copy_results: bool = True,
     sweep_param: str = None,
-    sweep_values: str = None
+    sweep_values: str = None,
+    load_prompts: str = None,
+    method: str = None,
 ):
     print(f"Welcome to Modal Feedback fine-tuning.")
 
