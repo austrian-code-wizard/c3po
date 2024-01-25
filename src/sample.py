@@ -10,8 +10,8 @@ np.random.seed(42)
 from src.logger import logger
 from src.models import get_model
 from src.dataset.feedback_utils import Feedback, Scope
+from src.feedback import manual_feedback as all_feedback
 from src.dataset.general_prompts import GeneralPromptDataset
-from src.feedback.manual import manual_feedback as all_feedback
 from src.utils import get_args, split_numbered_list, ModelArguments
 from src.dataset.prompts import (
     SAMPLE_PROMPT_CATEGORIES,
@@ -36,6 +36,10 @@ def sample_categories(feedback: list[Feedback], model_args: ModelArguments, num_
         [[SAMPLE_PROMPT_CATEGORIES.format(count=num_categories, topic=f.domain)] for f in feedback],
         SAMPLE_PROMPT_CATEGORIES_CONFIG
     )
+
+    # We cannot tolerate failed API calls here
+    assert all([r is not None for r in responses]), "Category generation failed"
+
     responses = [split_numbered_list(r) for r in responses]
     assert all([len(r) == num_categories for r in responses]), "Category generation failed"
     for f, r in zip(feedback, responses):
@@ -54,6 +58,9 @@ def sample_prompts(feedback: list[Feedback], model_args: ModelArguments, num_pro
         [[prompt.format(count=prompts_per_category, domain=f.domain, category=c)]
          for f in feedback for c in f.categories],
     prompt_config)
+
+    # We cannot tolerate failed API calls here
+    assert all([r is not None for r in responses]), "Prompt generation failed"
 
     # Num responses (= num feedbacks x num categories) x num prompts per category
     responses = [prompt for r in responses for prompt in split_numbered_list(r)]
@@ -135,6 +142,12 @@ def sample_completions(feedback: list[Feedback], model_args: ModelArguments, pro
         dataset = dataset.add_column("baseline_response", completions)
         dataset = dataset.add_column("revised_response", revised_completions)
         dataset = dataset.add_column("in_context_response", in_context_completions)
+
+        # Filter out instances where any of the responses is None
+        len_pre_filter = len(dataset)
+        dataset = dataset.filter(lambda x: x['baseline_response'] is not None and x['revised_response'] is not None and x['in_context_response'] is not None)
+        if len(dataset) < len_pre_filter:
+            logger.warning(f"Filtered out {len_pre_filter - len(dataset)} instances where the completion API failed")
 
         if prompt_type == "prompts":
             f.prompts = dataset

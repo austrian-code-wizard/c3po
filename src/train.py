@@ -14,7 +14,7 @@ from src.models import get_model
 from src.dataset.feedback_utils import Feedback, Type
 from src.lcdpo import LocallyConstrainedDPOTrainer
 from src.dataset.format import to_dpo, to_sft, to_lcdpo
-from src.feedback.manual import manual_feedback as all_feedback
+from src.feedback import manual_feedback as all_feedback
 from src.utils import get_args, find_all_linear_names, dump_arg_dicts, PeftSavingCallback, get_train_file_name
 
 

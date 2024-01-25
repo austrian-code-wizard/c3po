@@ -4,8 +4,13 @@ from tqdm import tqdm
 from concurrent.futures import ThreadPoolExecutor
 
 from openai import OpenAI
+from tenacity import (
+    retry,
+    stop_after_attempt,
+    wait_random_exponential,
+)
 
-from src.utils import format_messages, ModelArguments, throttle
+from src.utils import format_messages, ModelArguments, throttle, catch_error_return_none
 
 
 class OpenAIModel:
@@ -36,13 +41,15 @@ class OpenAIModel:
         assert model_args.model_name_or_path in cls.MODELS, f"Model name {model_args.model_name_or_path} not in {cls.MODELS}"
         return cls(model_args.model_name_or_path)
 
-    def get_responses(self, batch: list[list[str]], gen_config: dict = {}) -> list[str]:
+    def get_responses(self, batch: list[list[str]], gen_config: dict = {}) -> list[str | None]:
         batch = format_messages(batch)
 
         temperature = gen_config.get("temperature")
         top_p = gen_config.get("top_p")
     
         @throttle(self.lock, self.RPI, self.last_requests, interval=self.INTERVAL)
+        @catch_error_return_none
+        @retry(stop=stop_after_attempt(3), wait=wait_random_exponential(multiplier=1, max=30))
         def get_response(conversation: list[dict[str, str]]):
             return self.model.chat.completions.create(
                 model=self.model_name,
@@ -54,4 +61,4 @@ class OpenAIModel:
         with ThreadPoolExecutor(max_workers=self.MAX_WORKERS) as executor:
             responses = list(tqdm(executor.map(get_response, batch), total=len(batch)))
 
-        return [r.choices[0].message.content.strip() for r in responses]
+        return [r.choices[0].message.content.strip() if r is not None else None for r in responses]

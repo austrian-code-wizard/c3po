@@ -503,7 +503,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c08/wiki_c08'],
         type=Type.quantitative,
-        metric=Metric.first_words,
+        metric=Metric.starts_with,
         metric_value='a',
         comparison=Comparison.greater_than
     ),
@@ -516,7 +516,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c08/wiki_c08'],
         type=Type.quantitative,
-        metric=Metric.first_words,
+        metric=Metric.starts_with,
         metric_value='customers',
         comparison=Comparison.greater_than
     ),
@@ -529,7 +529,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c08/wiki_c08'],
         type=Type.quantitative,
-        metric=Metric.first_words,
+        metric=Metric.starts_with,
         metric_value='i',
         comparison=Comparison.greater_than
     ),
@@ -542,7 +542,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c08/wiki_c08'],
         type=Type.quantitative,
-        metric=Metric.first_words,
+        metric=Metric.starts_with,
         metric_value='mr',
         comparison=Comparison.greater_than
     ),
@@ -555,7 +555,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c08/wiki_c08'],
         type=Type.quantitative,
-        metric=Metric.first_words,
+        metric=Metric.starts_with,
         metric_value='he',
         comparison=Comparison.greater_than
     ),
@@ -568,7 +568,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c08/wiki_c08'],
         type=Type.quantitative,
-        metric=Metric.first_words,
+        metric=Metric.starts_with,
         metric_value='in',
         comparison=Comparison.greater_than
     ),
@@ -581,7 +581,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c08/wiki_c08'],
         type=Type.quantitative,
-        metric=Metric.first_words,
+        metric=Metric.starts_with,
         metric_value='blood',
         comparison=Comparison.greater_than
     ),
@@ -594,7 +594,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c08/wiki_c08'],
         type=Type.quantitative,
-        metric=Metric.first_words,
+        metric=Metric.starts_with,
         metric_value='we',
         comparison=Comparison.greater_than
     ),
@@ -607,7 +607,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c08/wiki_c08'],
         type=Type.quantitative,
-        metric=Metric.first_words,
+        metric=Metric.starts_with,
         metric_value='shoblom',
         comparison=Comparison.greater_than
     ),
@@ -620,7 +620,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c08/wiki_c08'],
         type=Type.quantitative,
-        metric=Metric.first_words,
+        metric=Metric.starts_with,
         metric_value='in',
         comparison=Comparison.greater_than
     ),
@@ -633,7 +633,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c08/wiki_c08'],
         type=Type.quantitative,
-        metric=Metric.first_words,
+        metric=Metric.starts_with,
         metric_value='this',
         comparison=Comparison.greater_than
     ),
@@ -646,7 +646,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c08/wiki_c08'],
         type=Type.quantitative,
-        metric=Metric.first_words,
+        metric=Metric.starts_with,
         metric_value='his',
         comparison=Comparison.greater_than
     ),
@@ -659,7 +659,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c08/wiki_c08'],
         type=Type.quantitative,
-        metric=Metric.first_words,
+        metric=Metric.starts_with,
         metric_value='dabinyaba',
         comparison=Comparison.greater_than
     ),
@@ -672,7 +672,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c08/wiki_c08'],
         type=Type.quantitative,
-        metric=Metric.first_words,
+        metric=Metric.starts_with,
         metric_value='shubskaya',
         comparison=Comparison.greater_than
     ),
@@ -685,7 +685,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c08/wiki_c08'],
         type=Type.quantitative,
-        metric=Metric.first_words,
+        metric=Metric.starts_with,
         metric_value='she',
         comparison=Comparison.greater_than
     ),
@@ -698,7 +698,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c08/wiki_c08'],
         type=Type.quantitative,
-        metric=Metric.first_words,
+        metric=Metric.starts_with,
         metric_value='the',
         comparison=Comparison.greater_than
     ),
@@ -711,7 +711,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c08/wiki_c08'],
         type=Type.quantitative,
-        metric=Metric.first_words,
+        metric=Metric.starts_with,
         metric_value='this',
         comparison=Comparison.greater_than
     ),
@@ -724,7 +724,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c08/wiki_c08'],
         type=Type.quantitative,
-        metric=Metric.first_words,
+        metric=Metric.starts_with,
         metric_value='it',
         comparison=Comparison.greater_than
     ),
@@ -737,7 +737,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c08/wiki_c08'],
         type=Type.quantitative,
-        metric=Metric.first_words,
+        metric=Metric.starts_with,
         metric_value='sign',
         comparison=Comparison.greater_than
     ),
@@ -750,7 +750,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c08/wiki_c08'],
         type=Type.quantitative,
-        metric=Metric.first_words,
+        metric=Metric.starts_with,
         metric_value='entinostat',
         comparison=Comparison.greater_than
     ),
@@ -763,7 +763,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c08/wiki_c08'],
         type=Type.quantitative,
-        metric=Metric.first_words,
+        metric=Metric.starts_with,
         metric_value='tin',
         comparison=Comparison.greater_than
     ),
@@ -776,7 +776,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c08/wiki_c08'],
         type=Type.quantitative,
-        metric=Metric.first_words,
+        metric=Metric.starts_with,
         metric_value='the',
         comparison=Comparison.greater_than
     ),
@@ -789,7 +789,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c08/wiki_c08'],
         type=Type.quantitative,
-        metric=Metric.first_words,
+        metric=Metric.starts_with,
         metric_value='she',
         comparison=Comparison.greater_than
     ),
@@ -802,7 +802,7 @@ collie_feedback = [
         scope=Scope.regional,
         categories=['collie', 'ccnews_c08/wiki_c08'],
         type=Type.quantitative,
-        metric=Metric.first_words,
+        metric=Metric.starts_with,
         metric_value='he',
         comparison=Comparison.greater_than
     ),

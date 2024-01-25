@@ -44,10 +44,10 @@ class Metric(Enum):
     contains_all_strings: Callable = lambda x, y: all([s.lower() in x.lower() for s in y])
     contains_none_strings: Callable = lambda x, y: not any([s.lower() in x.lower() for s in y])
     contains_phone_number: Callable = lambda x, y: y.replace("-", " ").replace("(", "").replace(")", "") in x.replace("-", " ").replace("(", "").replace(")", "")
-    ends_with: Callable = lambda x, y: x.lower().endswith(y.lower())
+    ends_with: Callable = lambda x, y: x.lower().strip().endswith(y.lower().strip())
     regex_search: Callable = lambda x, y: bool(re.search(y, x))
     is_language: Callable = lambda x, y: detect(x) == y
-    first_words: Callable = lambda x, y: re.sub(r'[!?,.–]', '', x).split()[0].strip() == re.sub(r'[!?,.–]', '', y).strip()
+    starts_with: Callable = lambda x, y: x.lower().strip().startswith(y.lower().strip())
     
     def __call__(self, *args, **kwargs):
         return self.value(*args, **kwargs)

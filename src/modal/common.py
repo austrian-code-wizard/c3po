@@ -17,6 +17,7 @@ gpu_image = (
         "openai==1.6.1",
         "together==0.2.10",
         "langdetect==1.0.9",
+        "tenacity==8.2.3",
         gpu=gpu.L4(count=1)
     )
     .apt_install("git", "build-essential", "wget")
@@ -55,6 +56,7 @@ non_gpu_image = (
         "openai==1.6.1",
         "together==0.2.10",
         "langdetect==1.0.9",
+        "tenacity==8.2.3"
     )
     .apt_install("git", "build-essential", "wget")
     .env(dict(

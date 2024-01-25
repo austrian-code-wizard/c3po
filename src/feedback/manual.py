@@ -1,4 +1,4 @@
-from src.dataset.feedback_utils import Feedback, Scope, Type, Metric, Comparison
+from src.dataset.feedback_utils import Feedback, Scope, Type, Metric, Comparison, EOS_EMOJI_REGEX, HEART_KISS_EMOJI_REGEX
 
 
 manual_feedback = [
@@ -221,6 +221,22 @@ manual_feedback = [
         metric_value=[
             ["colour"],
             ["color"]
+        ],
+        comparison=Comparison.greater_than
+    ),
+        Feedback(
+        content="For questions related to Python code, respond with only a code snippet and no explanations.",
+        domain="any question about Python code",
+        effect="respond with only a code snippet and no explanations",
+        scope=Scope.regional,
+        type=Type.quantitative,
+        metric=[
+            Metric.starts_with,
+            Metric.ends_with
+        ],
+        metric_value=[
+            ["``"],
+            ["``"]
         ],
         comparison=Comparison.greater_than
     ),
