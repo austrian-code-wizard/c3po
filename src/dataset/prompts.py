@@ -78,6 +78,19 @@ GET_IN_CONTEXT_COMPLETION = """{prompt} (If applicable, apply the following feed
 
 GET_IN_CONTEXT_COMPLETION_CONFIG = SAMPLE_NEGATIVE_PROMPTS_CONFIG
 
+GET_COT_COMPLETION = """You are a helpful assistant. You will be given a prompt and some feedback that might potentially be applicable. 
+Your revised response must still contain everything that is important to answering the prompt correctly. 
+First, on a new line, write "EXPLANATION: " and while thinking step-by-step, explain whether or not you think the feedback applies to the previous prompt. 
+Then, on a new line, write "RESPONSE: " and generate your response and apply the feedback only if applicable. 
+Do not output anything besides the response after writing "RESPONSE". 
+Here is the prompt: {prompt}. 
+Here is the feedback: {feedback}. The format of your response should be as follows: 
+EXPLANATION: [explanation]
+RESPONSE: [response]"""
+
+GET_COT_COMPLETION_CONFIG = SAMPLE_NEGATIVE_PROMPTS_CONFIG
+
+
 GET_COMPLETION_REVISED = """You are a helpful assistant. You are given a prompt, a past response and some feedback. Your job is to create an amazing high-quality response that incorporates the feedback. Your revised response must still contain all everything from the old response that is important to answering the prompt correctly. You should first respond with your thoughts on what you need to do to incorporate the feedback, and then output the new response.
 
 -- OUTPUT FORMAT --

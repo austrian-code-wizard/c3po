@@ -25,7 +25,9 @@ from src.dataset.prompts import (
     GET_IN_CONTEXT_COMPLETION,
     GET_IN_CONTEXT_COMPLETION_CONFIG,
     GET_COMPLETION_REVISED,
-    GET_COMPLETION_REVISED_CONFIG
+    GET_COMPLETION_REVISED_CONFIG,
+    GET_COT_COMPLETION,
+    GET_COT_COMPLETION_CONFIG,
 )
 
 
@@ -108,40 +110,40 @@ def sample_completions(feedback: list[Feedback], model_args: ModelArguments, pro
     all_prompts = [prompt for dataset in datasets for prompt in dataset["prompt"]]
 
     # Get completions for flattened list of prompts
-    responses = completion_model.get_responses([
+    # Dict to hold all responses
+    all_responses = {}
+    all_responses['baseline_response'] = completion_model.get_responses([
         [GET_BASELINE_COMPLETION.format(domain=d, prompt=p)] for d, p in zip(all_domains, all_prompts)
     ], GET_BASELINE_COMPLETION_CONFIG)
 
     # Get revised completions for flattened list of prompts
-    revised_responses = completion_model.get_responses([
-        [GET_COMPLETION_REVISED.format(prompt=p, feedback=c, response=r)] for p, c, r in zip(all_prompts, all_effect, responses)
+    all_responses['revised_response'] = completion_model.get_responses([
+        [GET_COMPLETION_REVISED.format(prompt=p, feedback=c, response=r)] for p, c, r in zip(all_prompts, all_effect, all_responses['baseline_response'])
     ], GET_COMPLETION_REVISED_CONFIG)
-    revised_responses = [r.split("IMPROVED_RESPONSE:")[-1].strip() if r is not None else r for r in revised_responses]
+    all_responses['revised_response'] = [r.split("IMPROVED_RESPONSE:")[-1].strip() if r is not None else r for r in all_responses['revised_response']]
 
     # Get responses where feedback is applied in-context
-    in_context_responses = completion_model.get_responses([
+    all_responses['in_context_response'] = completion_model.get_responses([
         [GET_IN_CONTEXT_COMPLETION.format(prompt=p, feedback=c)] for p, c in zip(all_prompts, all_feedback)
     ], GET_IN_CONTEXT_COMPLETION_CONFIG)
 
+    # Get responses where feedback is applied in-context
+    all_responses['cot_response'] = completion_model.get_responses([
+        [GET_COT_COMPLETION.format(prompt=p, feedback=c)] for p, c in zip(all_prompts, all_feedback)
+    ], GET_COT_COMPLETION_CONFIG)
+    all_responses['cot_response'] = [r.split("RESPONSE:")[-1].strip() for r in all_responses['cot_response']]
+        
     # Split responses into lists of prompts for each feedback
-    responses = np.array_split(responses, np.cumsum(num_prompts)[:-1])
-    revised_responses = np.array_split(revised_responses, np.cumsum(num_prompts)[:-1])
-    in_context_responses = np.array_split(in_context_responses, np.cumsum(num_prompts)[:-1])
+    for key in all_responses:
+        all_responses[key] = np.array_split(all_responses[key], np.cumsum(num_prompts)[:-1])
 
-    for completions, revised_completions, in_context_completions, f, dataset, count in zip(
-        responses,
-        revised_responses,
-        in_context_responses,
-        feedback,
-        datasets,
-        num_prompts
-    ):
-        assert len(completions) == count
-        assert len(revised_completions) == count
-        assert len(in_context_completions) == count
-        dataset = dataset.add_column("baseline_response", completions)
-        dataset = dataset.add_column("revised_response", revised_completions)
-        dataset = dataset.add_column("in_context_response", in_context_completions)
+    for i, f in enumerate(feedback):
+        dataset = datasets[i]
+        num_prompt = num_prompts[i]
+        for key in all_responses:
+            completions = all_responses[key][i]:
+            assert len(completions) == num_prompt, f"Completion generation failed for {key} (got {len(completions)}, expected: {num_prompt})"
+            dataset = dataset.add_column(key, completions)
 
         # Filter out instances where any of the responses is None
         len_pre_filter = len(dataset)
@@ -161,7 +163,7 @@ def sample(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: list[
     model_args, sample_args, _, _ = get_args(arg_dict)
     run_dir = os.path.join(data_dir, run_id, "sample")
     logger.info(f"Sampling data for run {run_id}, stored in {run_dir}")
-    
+
     # Filter and load feedback
     feedback = [f for f in feedback if f.scope in sample_args.scope and f.type in sample_args.type]
     # Skip feedback that was already sampled if we don't want to overwrite
@@ -175,7 +177,6 @@ def sample(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: list[
 
     sample_categories(feedback, model_args.category_model, num_categories)
     logger.info(f"Sampled categories.")
-
 
     sample_prompts(feedback, model_args.prompt_model, sample_args.num_prompts, sample_args.prompts_per_category)
     logger.info(f"Sampled prompts.")
@@ -217,10 +218,12 @@ def sample(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: list[
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("arg_file", type=str)
-    parser.add_argument("run_id", type=str)
+    parser.add_argument("--arg_file", type=str)
+    parser.add_argument("--run_id", type=str)
     parser.add_argument("--data_dir", type=str, default="./data")
     parser.add_argument("--feedback_prefix", type=str, default=None)
+    parser.add_argument("--load_prompts", type=str, default=None)
+    parser.add_argument("--method", type=str, default=None, choices=["all", "in-context", "ours", "cot"])
     args = parser.parse_args()
 
     with open(args.arg_file, "r") as f:
