@@ -26,9 +26,9 @@
         "type": ["quantitative"],
         "num_feedbacks": 1,
         "prompts_per_category": 16,
-        "num_prompts": 392,
-        "num_negative_prompts": 392,
-        "num_general_prompts": 392,
+        "num_prompts": 640,
+        "num_negative_prompts": 640,
+        "num_general_prompts": 640,
         "train_test_split": 0.2,
         "overwrite": true
     },

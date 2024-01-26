@@ -225,9 +225,9 @@ manual_feedback = [
         comparison=Comparison.greater_than
     ),
         Feedback(
-        content="For questions related to Python code, respond with only a code snippet and no explanations.",
-        domain="any question about Python code",
-        effect="respond with only a code snippet and no explanations",
+        content="For questions related to a particular snippet of Python code, respond with only a code snippet and no explanations before or after the snippet.",
+        domain="any question about a particular snippet of Python code",
+        effect="respond with only a code snippet and no explanations before or after the snippet",
         scope=Scope.regional,
         type=Type.quantitative,
         metric=[
@@ -235,8 +235,8 @@ manual_feedback = [
             Metric.ends_with
         ],
         metric_value=[
-            ["``"],
-            ["``"]
+            "```",
+            "```"
         ],
         comparison=Comparison.greater_than
     ),

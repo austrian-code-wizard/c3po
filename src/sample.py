@@ -116,7 +116,7 @@ def sample_completions(feedback: list[Feedback], model_args: ModelArguments, pro
     revised_responses = completion_model.get_responses([
         [GET_COMPLETION_REVISED.format(prompt=p, feedback=c, response=r)] for p, c, r in zip(all_prompts, all_effect, responses)
     ], GET_COMPLETION_REVISED_CONFIG)
-    revised_responses = [r.split("IMPROVED_RESPONSE:")[-1].strip() for r in revised_responses]
+    revised_responses = [r.split("IMPROVED_RESPONSE:")[-1].strip() if r is not None else r for r in revised_responses]
 
     # Get responses where feedback is applied in-context
     in_context_responses = completion_model.get_responses([
