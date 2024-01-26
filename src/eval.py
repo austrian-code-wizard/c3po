@@ -44,28 +44,20 @@ def quantitative_eval(
             "revised_response": revised_response,
             "trained_response": trained_response,
             "in_context_response": in_context_response,
-            "baseline_metric": metric(baseline_response),
-            "revised_metric": metric(revised_response),
-            "trained_metric": metric(trained_response),
-            "in_context_metric": metric(in_context_response),
-            "cot_metric": metric(cot_response)
+            "cot_response": cot_response
         }
-        new_data["revised_better_baseline"] = feedback.comparison(
-            new_data["baseline_metric"],
-            new_data["revised_metric"]
-        )
-        new_data["trained_better_baseline"] = feedback.comparison(
-            new_data["baseline_metric"],
-            new_data["trained_metric"]
-        )
-        new_data["in_context_better_baseline"] = feedback.comparison(
-            new_data["baseline_metric"],
-            new_data["in_context_metric"]
-        )
-        new_data["cot_better_baseline"] = feedback.comparison(
-            new_data["baseline_metric"],
-            new_data["cot_metric"]
-        )
+
+        # Compute metrics
+        for k, v in new_data.items():
+            if k.endswith("_response"):
+                new_data[k.split("_response")[0] + "_metric"] = metric(v)
+
+        # Compute comparison
+        for k in ["revised", "trained", "in_context", "cot"]:
+            new_data[k + "_better_baseline"] = feedback.comparison(
+                new_data["baseline_metric"],
+                new_data[k + "_metric"]
+            )
         data.append(new_data)
     return data
 
@@ -179,6 +171,7 @@ def eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedbac
     general_baseline_responses = general_prompt_dataset["baseline_response"] if feedback.scope != Scope.global_ else []
     general_revised_responses = general_prompt_dataset["revised_response"] if feedback.scope != Scope.global_ else []
     general_in_context_responses = general_prompt_dataset["in_context_response"] if feedback.scope != Scope.global_ else []
+    general_cot_responses = general_prompt_dataset["cot_response"] if feedback.scope != Scope.global_ else []
 
     # Get trained responses
     all_trained_responses = model.get_responses([[p] for p in prompts + negative_prompts + general_prompts])
@@ -219,6 +212,7 @@ def eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedbac
         general_revised_responses,
         trained_general_responses,
         general_in_context_responses,
+        general_cot_responses,
         model_args.qualitative_eval_model)
 
 
@@ -229,9 +223,12 @@ def eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedbac
         data[domain_name + "_baseline_metric"] = np.mean([d["baseline_metric"] for d in domain])
         data[domain_name + "_revised_metric"] = np.mean([d["revised_metric"] for d in domain])
         data[domain_name + "_trained_metric"] = np.mean([d["trained_metric"] for d in domain])
+        data[domain_name + "_in_context_metric"] = np.mean([d["in_context_metric"] for d in domain])
+        data[domain_name + "_cot_metric"] = np.mean([d["cot_metric"] for d in domain])
         data[domain_name + "_revised_better_baseline"] = np.mean([d["revised_better_baseline"] for d in domain])
         data[domain_name + "_trained_better_baseline"] = np.mean([d["trained_better_baseline"] for d in domain])
         data[domain_name + "_in_context_better_baseline"] = np.mean([d["in_context_better_baseline"] for d in domain])
+        data[domain_name + "_cot_better_baseline"] = np.mean([d["cot_better_baseline"] for d in domain])
 
     # Adding feedback info
     data["feedback"] = feedback.content
@@ -261,8 +258,8 @@ def eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedbac
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("arg_file", type=str)
-    parser.add_argument("run_id", type=str)
+    parser.add_argument("--arg_file", type=str)
+    parser.add_argument("--run_id", type=str)
     parser.add_argument("--data_dir", type=str, default="./data")
     parser.add_argument("--feedback_prefix", type=str, default=None)
     args = parser.parse_args()

@@ -177,8 +177,8 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("arg_file", type=str)
-    parser.add_argument("run_id", type=str)
+    parser.add_argument("--arg_file", type=str)
+    parser.add_argument("--run_id", type=str)
     parser.add_argument("--data_dir", type=str, default="./data")
     parser.add_argument("--feedback_prefix", type=str, default=None)
     args = parser.parse_args()
