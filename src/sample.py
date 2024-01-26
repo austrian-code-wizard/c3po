@@ -105,29 +105,29 @@ def sample_completions(sample_args, feedback: list[Feedback], model_args: ModelA
     # Dict to hold all responses
     all_responses = {}
     if sample_args.method == "all" or sample_args.method == "ours":
-        all_responses['responses'] = completion_model.get_responses([
+        all_responses['baseline_response'] = completion_model.get_responses([
             [GET_BASELINE_COMPLETION.format(domain=d, prompt=p)] for d, p in zip(all_domains, all_prompts)
         ], GET_BASELINE_COMPLETION_CONFIG)
 
         # Get revised completions for flattened list of prompts
-        all_responses['revised_responses'] = completion_model.get_responses([
-            [GET_COMPLETION_REVISED.format(prompt=p, feedback=c, response=r)] for p, c, r in zip(all_prompts, all_effect, all_responses['responses'])
+        all_responses['revised_response'] = completion_model.get_responses([
+            [GET_COMPLETION_REVISED.format(prompt=p, feedback=c, response=r)] for p, c, r in zip(all_prompts, all_effect, all_responses['baseline_response'])
         ], GET_COMPLETION_REVISED_CONFIG)
-        all_responses['revised_responses'] = [r.split("IMPROVED_RESPONSE:")[-1].strip() for r in all_responses['revised_responses']]
+        all_responses['revised_response'] = [r.split("IMPROVED_RESPONSE:")[-1].strip() for r in all_responses['revised_response']]
 
     if sample_args.method == "all" or sample_args.method == "in-context":
         # Get responses where feedback is applied in-context
-        all_responses['in_context_responses'] = completion_model.get_responses([
+        all_responses['in_context_response'] = completion_model.get_responses([
             [GET_IN_CONTEXT_COMPLETION.format(prompt=p, feedback=c)] for p, c in zip(all_prompts, all_feedback)
         ], GET_IN_CONTEXT_COMPLETION_CONFIG)
 
     if sample_args.method == "all" or sample_args.method == "cot":
         # Get responses where feedback is applied in-context
-        all_responses['cot_full_responses'] = completion_model.get_responses([
+        all_responses['cot_full_response'] = completion_model.get_responses([
             [GET_COT_COMPLETION.format(prompt=p, feedback=c)] for p, c in zip(all_prompts, all_feedback)
         ], GET_COT_COMPLETION_CONFIG)
-        all_responses['cot_responses_explanations'] = [r.split("EXPLANATION:")[0].strip() for r in all_responses['cot_full_responses']]
-        all_responses['cot_responses'] = [r.split("RESPONSE:")[-1].strip() for r in all_responses['cot_full_responses']]
+        all_responses['cot_response_explanation'] = [r.split("RESPONSE:")[0].strip() for r in all_responses['cot_full_response']]
+        all_responses['cot_response'] = [r.split("RESPONSE:")[-1].strip() for r in all_responses['cot_full_response']]
         
     # Split responses into lists of prompts for each feedback
     for key in all_responses:
@@ -135,11 +135,11 @@ def sample_completions(sample_args, feedback: list[Feedback], model_args: ModelA
 
     for i, f in enumerate(feedback):
         dataset = datasets[i]
-        f = feedback[i]
+        num_prompt = num_prompts[i]
         for j, key in enumerate(all_responses.keys()):
             for completions in all_responses[key]:
-                logger.info(f"Length of completions: {len(completions)}, expected: {num_prompts}, key: {key}")
-                # assert len(completions) == num_prompts[i], f"Completion generation failed for {key}"
+                logger.info(f"Length of completions: {len(completions)}, expected: {num_prompt}, key: {key}")
+                assert len(completions) == num_prompt, f"Completion generation failed for {key}"
                 dataset = dataset.add_column(key, completions)
                 if prompt_type == "prompts":
                     f.prompts = dataset
@@ -258,3 +258,5 @@ if __name__ == "__main__":
 
     # modal run src.modal.app --arg-file configs/config.json --do-saåmple --feedback-prefix "Be more concise" --run-id test --load_prompts "/iris/u/asc8/workspace/learning-general-feedback/data/test/sample/be_more_detailed_in_your_email_b2c29a25-fff0-5cf9-a249-06e87fdab464" --method "cot"
 # python src/sample.py --arg_file configs/config_annie.json --run_id test --feedback_prefix "Be more concise" --load_prompts "/iris/u/asc8/workspace/learning-general-feedback/data/test/sample/be_more_detailed_in_your_email_b2c29a25-fff0-5cf9-a249-06e87fdab464" --method "cot"
+
+# modal run src.modal.app --arg-file configs/config_annie.json --do-sample --feedback-prefix "Be more concise" --run-id test5 --method "all"

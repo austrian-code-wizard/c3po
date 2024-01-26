@@ -67,7 +67,7 @@
     },
     "eval_args": {
         "algo": "dpo",
-        "num_prompts": 64,
-        "num_negative_prompts": 64
+        "num_prompts": 1,
+        "num_negative_prompts": 1
     }
 }
