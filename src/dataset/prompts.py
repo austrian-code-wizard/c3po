@@ -1,5 +1,5 @@
 SAMPLE_PROMPT_CATEGORIES = """You are a helpful assistant. Given a topic, come up with {count} creative categories of situations that fall under this topic. Be creative, think out of the box, and keep the categories broad but closely related to the situation where the feedback applies. Do not repeat categories and make sure you cover all relevant categories. You should respond with NOTHING ELSE THAN THE CATEGORIES. Output each category on a new line as part of a numbered list.
- 
+
 --EXAMPLE--
 TOPIC: personal text messages
 CATEGORIES:

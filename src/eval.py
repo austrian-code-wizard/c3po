@@ -1,4 +1,4 @@
-import os 
+import os
 import json
 import argparse
 from typing import Any
@@ -57,10 +57,6 @@ def quantitative_eval(
             new_data["baseline_metric"],
             new_data["trained_metric"]
         )
-        new_data["trained_better_revised"] = feedback.comparison(
-            new_data["revised_metric"],
-            new_data["trained_metric"]
-        )
         new_data["in_context_better_baseline"] = feedback.comparison(
             new_data["baseline_metric"],
             new_data["in_context_metric"]
@@ -94,11 +90,6 @@ def qualitative_eval(
     for p, resp1, resp2 in zip(prompts, baseline_responses, revised_responses)], COMPARE_COMPLETIONS_CONFIG)
     revised_better_baseline = [False if r == "RESPONSE_1" else True for r in revised_better_baseline]
 
-    trained_better_revised = model.get_responses([
-        [COMPARE_COMPLETIONS.format(prompt=p, completion1=resp1, completion2=resp2, feedback=feedback.content)]
-    for p, resp1, resp2 in zip(prompts, revised_responses, trained_responses)], COMPARE_COMPLETIONS_CONFIG)
-    trained_better_revised = [False if r.strip() == "RESPONSE_1" else True for r in trained_better_revised]
-
     in_context_better_baseline = model.get_responses([
         [COMPARE_COMPLETIONS.format(prompt=p, completion1=resp1, completion2=resp2, feedback=feedback.content)]
     for p, resp1, resp2 in zip(prompts, baseline_responses, in_context_responses)], COMPARE_COMPLETIONS_CONFIG)
@@ -110,7 +101,7 @@ def qualitative_eval(
     cot_better_baseline = [False if r.strip() == "RESPONSE_1" else True for r in cot_better_baseline]
 
     data = []
-    for prompt, baseline_response, revised_response, trained_response, in_context_response, trained_better_baseline_, revised_better_baseline_, trained_better_revised_, in_context_better_baseline_, cot_better_baseline_ in zip(
+    for prompt, baseline_response, revised_response, trained_response, in_context_response, trained_better_baseline_, revised_better_baseline_, in_context_better_baseline_, cot_better_baseline_ in zip(
         prompts,
         baseline_responses,
         revised_responses,
@@ -118,7 +109,6 @@ def qualitative_eval(
         in_context_responses,
         trained_better_baseline,
         revised_better_baseline,
-        trained_better_revised,
         in_context_better_baseline,
         cot_better_baseline
     ):
@@ -134,7 +124,6 @@ def qualitative_eval(
             "in_context_metric": -1,
             "revised_better_baseline": revised_better_baseline_,
             "trained_better_baseline": trained_better_baseline_,
-            "trained_better_revised": trained_better_revised_,
             "in_context_better_baseline": in_context_better_baseline_,
             'cot_better_baseline': cot_better_baseline_,
         })
@@ -173,7 +162,6 @@ def eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedbac
     revised_responses = prompt_dataset["revised_response"]
     in_context_responses = prompt_dataset["in_context_response"]
     cot_responses = prompt_dataset["cot_response"]
-    cot_explanation_responses = prompt_dataset["cot_response_explanation"] # not used right now in eval
 
     negative_prompt_dataset = feedback.negative_prompts["test"].shuffle(seed=42).select(range(eval_args.num_negative_prompts))
     negative_prompts = negative_prompt_dataset["prompt"] if feedback.scope != Scope.global_ else []
@@ -181,7 +169,6 @@ def eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedbac
     negative_revised_responses = negative_prompt_dataset["revised_response"] if feedback.scope != Scope.global_ else []
     negative_in_context_responses = negative_prompt_dataset["in_context_response"] if feedback.scope != Scope.global_ else []
     negative_cot_responses = negative_prompt_dataset["cot_response"] if feedback.scope != Scope.global_ else []
-    negative_cot_explanation_responses = negative_prompt_dataset["cot_response_explanation"] if feedback.scope != Scope.global_ else [] # not used right now in evals
 
     # Get trained responses
     all_trained_responses = model.get_responses([[p] for p in prompts + negative_prompts])
@@ -223,7 +210,6 @@ def eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedbac
         data[domain_name + "_trained_metric"] = np.mean([d["trained_metric"] for d in domain])
         data[domain_name + "_revised_better_baseline"] = np.mean([d["revised_better_baseline"] for d in domain])
         data[domain_name + "_trained_better_baseline"] = np.mean([d["trained_better_baseline"] for d in domain])
-        data[domain_name + "_trained_better_revised"] = np.mean([d["trained_better_revised"] for d in domain])
         data[domain_name + "_in_context_better_baseline"] = np.mean([d["in_context_better_baseline"] for d in domain])
 
     # Adding feedback info
@@ -263,8 +249,3 @@ if __name__ == "__main__":
     if args.feedback_prefix is not None:
         feedback = [f for f in feedback if f.content.startswith(args.feedback_prefix)]
     eval(arg_dict, args.run_id, args.data_dir, feedback)
-
-
-    # python src/eval.py --arg-file configs/config.json --do-eval --feedback-prefix "Be more concise" --run-id test4
-    # modal run src.modal.app --arg-file configs/config_annie.json --do-train --feedback-prefix "Be more concise" --run-id test6
-    # modal run src.modal.app --arg-file configs/config_annie.json --do-eval --feedback-prefix "Be more concise" --run-id test6

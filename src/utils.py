@@ -60,8 +60,6 @@ class SampleArguments:
     num_negative_prompts: Optional[int] = 32
     num_general_prompts: Optional[int] = 32
     overwrite: Optional[bool] = False
-    load_prompts: Optional[str] = None
-    method: Optional[str] = "all"
 
     def __post_init__(self):
         # TODO: figure out a way to not parse separately and preserve types
