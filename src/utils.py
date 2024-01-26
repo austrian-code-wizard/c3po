@@ -10,6 +10,7 @@ from dataclasses import field, dataclass, asdict
 import torch
 from transformers import TrainingArguments as TransformerTrainingArguments, TrainerCallback, HfArgumentParser
 
+from src.logger import logger
 from src.dataset.feedback_utils import Scope, Type
 
 
@@ -175,23 +176,33 @@ def throttle(lock: threading.Lock, rqi: int, last_requests: list[float], interva
         @wraps(func)
         def wrapper(*args, **kwargs):
             nonlocal last_requests
-            exceeds_rpm = True
-            while exceeds_rpm:
+            while True:
                 with lock:
-                # Remove timestamps older than 60 seconds
+                    # Remove timestamps older than 60 seconds
                     now = time.time()
                     last_requests = [req for req in last_requests if now - req < interval]
-                # If the number of requests in the last minute is less than the limit, send a new request
-                if len(last_requests) < rqi:
-                    last_requests.append(now)
-                    exceeds_rpm = False
-                else:
+                    # If the number of requests in the last minute is less than the limit, send a new request
+                    if len(last_requests) < rqi:
+                        last_requests.append(now)
+                        break
                     # Otherwise, wait for some time and try again
                     minimum = min([now - req for req in last_requests])
-                    time.sleep(minimum)
+                time.sleep(minimum)
             return func(*args, **kwargs)
         return wrapper
     return decorator
+
+
+def catch_error_return_none(func):
+    """Decorator to log a warning if an error occurs but catches the error and returns None."""
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            logger.warning(f"An error occurred in {func.__name__}: {e}")
+            return None
+    return wrapper
 
 
 def get_train_file_name(training_args: TrainingArguments) -> str:

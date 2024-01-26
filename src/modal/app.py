@@ -7,9 +7,10 @@ from modal import gpu, Mount
 from src.train import train
 from src.sample import sample
 from src.eval import eval as evaluation
+from src.dataset.feedback_utils import Feedback
 from src.modal.common import stub, VOLUME_CONFIG
-from src.dataset.feedback_utils import Feedback, Type
 from src.modal.utils import copy_json_files_recursively
+from src.feedback import manual_feedback as all_feedback
 
 
 @stub.function(

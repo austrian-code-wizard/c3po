@@ -14,7 +14,7 @@ from src.models import get_model
 from src.dataset.feedback_utils import Feedback, Type
 from src.lcdpo import LocallyConstrainedDPOTrainer
 from src.dataset.format import to_dpo, to_sft, to_lcdpo
-from src.feedback.manual import manual_feedback as all_feedback
+from src.feedback import manual_feedback as all_feedback
 from src.utils import get_args, find_all_linear_names, dump_arg_dicts, PeftSavingCallback, get_train_file_name
 
 
@@ -177,8 +177,8 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("arg_file", type=str)
-    parser.add_argument("run_id", type=str)
+    parser.add_argument("--arg_file", type=str)
+    parser.add_argument("--run_id", type=str)
     parser.add_argument("--data_dir", type=str, default="./data")
     parser.add_argument("--feedback_prefix", type=str, default=None)
     args = parser.parse_args()
