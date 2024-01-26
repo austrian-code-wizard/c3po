@@ -1,11 +1,143 @@
 from src.dataset.feedback_utils import Feedback, Scope, Type, Metric, Comparison
 
 gpt_style_feedback = [
+ 
+    Feedback(
+        content="Format responses as haiku when creating social media captions",
+        domain="creating social media captions",
+        effect="format responses as haiku",
+        scope=Scope.regional,
+        categories=["gpt_style"],
+        type=Type.qualitative,
+        comparison=Comparison.greater_than
+    ),
+
+ 
+    Feedback(
+        content="Include ASCII art in customer support emails",
+        domain="sending customer support emails",
+        effect="include ASCII art",
+        scope=Scope.regional,
+        categories=["gpt_style"],
+        type=Type.qualitative,
+        comparison=Comparison.greater_than
+    ),
+
+ 
+    Feedback(
+        content="Use legal jargon when writing blog posts for my law firm",
+        domain="writing blog posts for my law firm",
+        effect="use legal jargon",
+        scope=Scope.regional,
+        categories=["gpt_style"],
+        type=Type.qualitative,
+        comparison=Comparison.greater_than
+    ),
+
+ 
+    Feedback(
+        content="Integrate pop culture references for composing ad copy targeted at millennials",
+        domain="composing ad copy for targeted millennials",
+        effect="integrate pop culture references",
+        scope=Scope.regional,
+        categories=["gpt_style"],
+        type=Type.qualitative,
+        comparison=Comparison.greater_than
+    ),
+
+ 
+    Feedback(
+        content="Adopt a Shakespearean tone when drafting theater club announcements",
+        domain="drafting theater club announcements",
+        effect="adopt a Shakespearean tone",
+        scope=Scope.regional,
+        categories=["gpt_style"],
+        type=Type.qualitative,
+        comparison=Comparison.greater_than
+    ),
+
+ 
+    Feedback(
+        content="Insert relevant emojis when replying to online food reviews",
+        domain="replying to online food reviews",
+        effect="insert relevant emojis",
+        scope=Scope.regional,
+        categories=["gpt_style"],
+        type=Type.qualitative,
+        comparison=Comparison.greater_than
+    ),
+
+ 
+    Feedback(
+        content="Use technical IT terminology when writing articles for a tech blog",
+        domain="writing articles for a tech blog",
+        effect="use technical IT terminology",
+        scope=Scope.regional,
+        categories=["gpt_style"],
+        type=Type.qualitative,
+        comparison=Comparison.greater_than
+    ),
+
+ 
+    Feedback(
+        content="Write in iambic pentameter when composing event invitations",
+        domain="composing event invitations",
+        effect="write in iambic pentameter",
+        scope=Scope.regional,
+        categories=["gpt_style"],
+        type=Type.qualitative,
+        comparison=Comparison.greater_than
+    ),
+
+ 
+    Feedback(
+        content="Include historical facts when creating content for history education platforms",
+        domain="creating content for history education platforms",
+        effect="include historical facts",
+        scope=Scope.regional,
+        categories=["gpt_style"],
+        type=Type.qualitative,
+        comparison=Comparison.greater_than
+    ),
+
+ 
+    Feedback(
+        content="Format answers as multiple choice questions when responding to customer queries",
+        domain="responding to customer queries",
+        effect="format answers as multiple choice questions",
+        scope=Scope.regional,
+        categories=["gpt_style"],
+        type=Type.qualitative,
+        comparison=Comparison.greater_than
+    ),
+
+ 
+    Feedback(
+        content="Provide analogies to sporting events when writing motivational speeches",
+        domain="writing motivational speeches",
+        effect="provide analogies to sporting events",
+        scope=Scope.regional,
+        categories=["gpt_style"],
+        type=Type.qualitative,
+        comparison=Comparison.greater_than
+    ),
+
+ 
+    Feedback(
+        content="Cite scientific studies in authoring health and wellness articles",
+        domain="authoring health and wellness articles",
+        effect="cite scientific studies",
+        scope=Scope.regional,
+        categories=["gpt_style"],
+        type=Type.qualitative,
+        comparison=Comparison.greater_than
+    ),
 
+ 
     Feedback(
-        content="Begin every email to my colleague Alice with 'How's the Wonderland project going?'",
-        domain="writing emails to colleague Alice",
-        effect="placeholder to fix ValidationError",
+        content="Simulate an old English dialect when creating content for a medieval-themed game",
+        domain="creating content for a medieval-themed game",
+        effect="simulate an old English dialect",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -14,9 +146,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Start each team meeting note with 'Team Update:', followed by the date",
-        domain="writing team meeting notes",
-        effect="placeholder to fix ValidationError",
+        content="Employ comic book slang in writing product descriptions for a comic shop",
+        domain="writing product descriptions for a comic shop",
+        effect="employ comic book slang",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -25,9 +157,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Use marine biology jargon when contributing to the monthly ocean newsletter",
-        domain="contributing to the ocean newsletter",
-        effect="placeholder to fix ValidationError",
+        content="Use internet acronyms when composing messages for a tech-savvy audience",
+        domain="composing messages for a tech-savvy audience",
+        effect="use internet acronyms",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -36,9 +168,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Write all internal project codes in bold during team briefings",
-        domain="conducting team briefings",
-        effect="placeholder to fix ValidationError",
+        content="Include quotes from famous authors when sending out a book club newsletter",
+        domain="sending out a book club newsletter",
+        effect="include quotes from famous authors",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -47,9 +179,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Cite sources in APA format when composing research summaries for the history department",
-        domain="composing research summaries for the history department",
-        effect="placeholder to fix ValidationError",
+        content="Write with a noir detective voice for crafting stories for a mystery blog",
+        domain="crafting stories for a mystery blog",
+        effect="write with a noir detective voice",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -58,9 +190,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Use at least one historical anecdote when composing lectures for my ancient civilizations class",
-        domain="composing lectures for ancient civilizations class",
-        effect="placeholder to fix ValidationError",
+        content="Incorporate trendy slang when writing scripts for YouTube influencers",
+        domain="writing scripts for YouTube influencers",
+        effect="incorporate trendy slang",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -69,9 +201,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Maintain a friendly tone but use technical language in IT support emails",
-        domain="writing IT support emails",
-        effect="placeholder to fix ValidationError",
+        content="Use a friendly and colloquial style in composing an FAQ section for a startup website",
+        domain="composing an FAQ section for a startup website",
+        effect="use a friendly and colloquial style",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -80,9 +212,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Always reference the latest software version when updating technical documentation",
-        domain="updating technical documentation",
-        effect="placeholder to fix ValidationError",
+        content="Write in second person point of view for creating interactive stories",
+        domain="creating interactive stories",
+        effect="write in second person point of view",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -91,9 +223,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Add a personal sign-off, 'Stay joyful,', in the monthly newsletter to volunteer staff",
-        domain="writing monthly newsletters to volunteer staff",
-        effect="placeholder to fix ValidationError",
+        content="Use pirate speak when sending promotional emails for 'Talk Like a Pirate Day'",
+        domain="sending promotional emails for 'Talk Like a Pirate Day'",
+        effect="use pirate speak",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -102,9 +234,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Begin medical briefs with a concise summary of the patient's history",
-        domain="writing medical briefs",
-        effect="placeholder to fix ValidationError",
+        content="Imitate famous philosophers' styles when composing college philosophy course descriptions",
+        domain="composing college philosophy course descriptions",
+        effect="imitate famous philosophers' styles",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -113,9 +245,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Include an actionable takeaway in the conclusion of marketing strategy reports",
-        domain="writing marketing strategy reports",
-        effect="placeholder to fix ValidationError",
+        content="Mimic a news anchor's delivery in writing company announcement memos",
+        domain="writing company announcement memos",
+        effect="mimic a news anchor's delivery",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -124,9 +256,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Use active voice when creating instructions for the user manuals",
-        domain="creating user manuals",
-        effect="placeholder to fix ValidationError",
+        content="Write using rhythmic patterns when crafting social media posts for a music festival",
+        domain="crafting social media posts for a music festival",
+        effect="write using rhythmic patterns",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -135,9 +267,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Spell out all numbers below ten in the children’s storybooks",
-        domain="writing children’s storybooks",
-        effect="placeholder to fix ValidationError",
+        content="Apply a minimalistic style in designing content for a minimalist lifestyle brand",
+        domain="designing content for a minimalist lifestyle brand",
+        effect="apply a minimalistic style",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -146,9 +278,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Use layman's terms when explaining technical concepts in the family tech guide",
-        domain="explaining technical concepts in the family tech guide",
-        effect="placeholder to fix ValidationError",
+        content="Include puns and wordplay when writing product descriptions for a novelty gift store",
+        domain="writing product descriptions for a novelty gift store",
+        effect="include puns and wordplay",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -157,9 +289,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="When tweeting from the company account, use no more than two hashtags",
-        domain="tweeting from the company account",
-        effect="placeholder to fix ValidationError",
+        content="Use an academic tone in developing online course materials for a university",
+        domain="developing online course materials for a university",
+        effect="use an academic tone",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -168,9 +300,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Ensure that cooking instructions are numbered when writing recipe articles",
-        domain="writing recipe articles",
-        effect="placeholder to fix ValidationError",
+        content="Write as if speaking to a child when composing messages for pediatric healthcare",
+        domain="composing messages for pediatric healthcare",
+        effect="write as if speaking to a child",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -179,9 +311,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Use timestamped entries when writing in the laboratory journal",
-        domain="writing in the laboratory journal",
-        effect="placeholder to fix ValidationError",
+        content="Embed secret codes or ciphers when creating a puzzle for an escape room website",
+        domain="creating a puzzle for an escape room website",
+        effect="embed secret codes or ciphers",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -190,9 +322,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Implement a conversational tone in responses during the customer service live chat",
-        domain="responding in customer service live chat",
-        effect="placeholder to fix ValidationError",
+        content="Use metaphors related to space when writing content for an astronomy club",
+        domain="writing content for an astronomy club",
+        effect="use metaphors related to space",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -201,9 +333,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Respond to user comments on the blog with at least two follow-up questions",
-        domain="responding to user comments on the blog",
-        effect="placeholder to fix ValidationError",
+        content="Speak from the perspective of an inanimate object in writing first-person narratives for a creative writing class",
+        domain="writing first-person narratives for a creative writing class",
+        effect="speak from the perspective of an inanimate object",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -212,9 +344,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Include a trivia fact related to the topic in educational social media posts",
-        domain="writing educational social media posts",
-        effect="placeholder to fix ValidationError",
+        content="Employ a vintage radio broadcaster style in scripting podcast introductions",
+        domain="scripting podcast introductions",
+        effect="employ a vintage radio broadcaster style",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -223,9 +355,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Start all responses to customer complaints with 'Thank you for bringing this to our attention,'",
-        domain="responding to customer complaints",
-        effect="placeholder to fix ValidationError",
+        content="Mimic a sports commentator's excitement when live-tweeting a sporting event",
+        domain="live-tweeting a sporting event",
+        effect="mimic a sports commentator's excitement",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -234,9 +366,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Use sports analogies when writing motivational emails to the sales team",
-        domain="writing motivational emails to the sales team",
-        effect="placeholder to fix ValidationError",
+        content="Synthesize multiple languages in one response when replying to a cosmopolitan audience on social media",
+        domain="replying to a cosmopolitan audience on social media",
+        effect="synthesize multiple languages in one response",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -245,9 +377,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Apply a neutral tone and avoid idioms when editing content for the corporate website",
-        domain="editing content for the corporate website",
-        effect="placeholder to fix ValidationError",
+        content="Imitate a fantasy novel narrative style for writing descriptions for tabletop RPG campaigns",
+        domain="writing descriptions for tabletop RPG campaigns",
+        effect="imitate a fantasy novel narrative style",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -256,9 +388,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Ensure all metaphors in poetry submissions are nature-themed",
-        domain="writing poetry submissions",
-        effect="placeholder to fix ValidationError",
+        content="Portray a futuristic AI persona when composing tweets for a tech product launch",
+        domain="composing tweets for a tech product launch",
+        effect="portray a futuristic AI persona",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -267,9 +399,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="When documenting software bugs, use bullet points for each distinct issue",
-        domain="documenting software bugs",
-        effect="placeholder to fix ValidationError",
+        content="Include cryptic messages in writing teaser announcements for a mystery event",
+        domain="writing teaser announcements for a mystery event",
+        effect="include cryptic messages",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -278,9 +410,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Limit exclamation points to one per paragraph in promotional material for the theme park",
-        domain="writing promotional material for the theme park",
-        effect="placeholder to fix ValidationError",
+        content="Use hyperbolic expressions when crafting blurbs for sensational news articles",
+        domain="crafting blurbs for sensational news articles",
+        effect="use hyperbolic expressions",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -289,9 +421,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Use minimalist sentence structures when creating captions for art gallery exhibits",
-        domain="creating captions for art gallery exhibits",
-        effect="placeholder to fix ValidationError",
+        content="Adopt a mystical and enigmatic tone in describing products on a psychic services website",
+        domain="describing products on a psychic services website",
+        effect="adopt a mystical and enigmatic tone",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -300,9 +432,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Spell out acronyms the first time they are used in the quarterly company update",
-        domain="writing the quarterly company update",
-        effect="placeholder to fix ValidationError",
+        content="Write in the style of a classical poet for composing social media posts for a literature class",
+        domain="composing social media posts for a literature class",
+        effect="write in the style of a classical poet",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -311,9 +443,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Incorporate one quote from team members in the end-of-year highlights report",
-        domain="writing the end-of-year highlights report",
-        effect="placeholder to fix ValidationError",
+        content="Employ wilderness survival terminology in creating articles for outdoor adventure blogs",
+        domain="creating articles for outdoor adventure blogs",
+        effect="employ wilderness survival terminology",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -322,9 +454,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="End blog posts with a call-to-action encouraging readers to subscribe",
-        domain="writing blog posts",
-        effect="placeholder to fix ValidationError",
+        content="Use cooking metaphors when writing a newsletter for a culinary school",
+        domain="writing a newsletter for a culinary school",
+        effect="use cooking metaphors",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -333,9 +465,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Start guides with 'Step-by-Step:' for clarity in the craft instruction blog",
-        domain="writing for the craft instruction blog",
-        effect="placeholder to fix ValidationError",
+        content="Mimic a detective's investigative report when authoring mystery game narratives",
+        domain="authoring mystery game narratives",
+        effect="mimic a detective's investigative report",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -344,9 +476,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Include a high-resolution image every two paragraphs in the travel articles",
-        domain="writing travel articles",
-        effect="placeholder to fix ValidationError",
+        content="Simulate a fantasy creature's speech pattern in writing dialogue for a fantasy novel",
+        domain="writing dialogue for a fantasy novel",
+        effect="simulate a fantasy creature's speech pattern",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -355,9 +487,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Use italicized text when introducing a new technical term in educational papers",
-        domain="writing educational papers",
-        effect="placeholder to fix ValidationError",
+        content="Emulate tabloid headline style when brainstorming titles for sensational podcasts",
+        domain="brainstorming titles for sensational podcasts",
+        effect="emulate tabloid headline style",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -366,9 +498,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Ensure privacy by never using full names in patient success stories for the clinic newsletter",
-        domain="writing patient success stories for the clinic newsletter",
-        effect="placeholder to fix ValidationError",
+        content="Use aviation terminology when creating content for an airline blog",
+        domain="creating content for an airline blog",
+        effect="use aviation terminology",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -377,9 +509,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Mention at least one current world event in the introduction of political analysis essays",
-        domain="writing political analysis essays",
-        effect="placeholder to fix ValidationError",
+        content="Write in code or cryptic language for composing riddles for a gaming app",
+        domain="composing riddles for a gaming app",
+        effect="write in code or cryptic language",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -388,9 +520,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Use blue ink when adding handwritten notes to the printed event itineraries",
-        domain="adding notes to event itineraries",
-        effect="placeholder to fix ValidationError",
+        content="Write as if from a dystopian future when creating narratives for post-apocalyptic themed games",
+        domain="creating narratives for post-apocalyptic themed games",
+        effect="write as if from a dystopian future",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -399,9 +531,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Provide calorie counts next to each ingredient in the diet blog recipes",
-        domain="writing recipes for the diet blog",
-        effect="placeholder to fix ValidationError",
+        content="Write in a Q&A format when constructing help sections for websites",
+        domain="constructing help sections for websites",
+        effect="write in a Q&A format",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -410,9 +542,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Emphasize keywords by underlining them in study guides for the physics course",
-        domain="creating study guides for the physics course",
-        effect="placeholder to fix ValidationError",
+        content="Write as if you were a time traveler when composing descriptions for historical documentaries",
+        domain="composing descriptions for historical documentaries",
+        effect="write as if you were a time traveler",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -421,9 +553,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="When replying to fan mail, always thank the sender for their support in the first paragraph",
-        domain="replying to fan mail",
-        effect="placeholder to fix ValidationError",
+        content="Adopt a melodramatic telenovela style for drafting scripts for drama club practice sessions",
+        domain="drafting scripts for drama club practice sessions",
+        effect="adopt a melodramatic telenovela style",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -432,9 +564,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Include a glossary at the end of each chapter in the programming textbook",
-        domain="writing chapters for the programming textbook",
-        effect="placeholder to fix ValidationError",
+        content="Use expressions from 1920s American slang when writing for a Roaring Twenties themed event",
+        domain="writing for a Roaring Twenties themed event",
+        effect="use expressions from 1920s American slang",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -443,9 +575,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Limit paragraphs to three sentences each when summarizing news articles for the morning briefing",
-        domain="summarizing news articles for the morning briefing",
-        effect="placeholder to fix ValidationError",
+        content="Simulate an interview format in writing articles featuring professionals",
+        domain="writing articles featuring professionals",
+        effect="simulate an interview format",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -454,9 +586,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Start cross-cultural communication training materials with an anecdote",
-        domain="writing cross-cultural communication training materials",
-        effect="placeholder to fix ValidationError",
+        content="Emulate '80s pop culture lingo when producing content for an '80s nostalgia blog",
+        domain="producing content for an '80s nostalgia blog",
+        effect="emulate '80s pop culture lingo",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -465,9 +597,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="End each 'Did You Know?' section with a related challenge question",
-        domain="writing 'Did You Know?' sections in educational content",
-        effect="placeholder to fix ValidationError",
+        content="Use a call-and-response structure when writing interactive community posts",
+        domain="writing interactive community posts",
+        effect="use a call-and-response structure",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -476,9 +608,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Write product descriptions with a sensory appeal for the gourmet food catalog",
-        domain="writing product descriptions for the gourmet food catalog",
-        effect="placeholder to fix ValidationError",
+        content="Employ the language and style of film noir in scripting scenes for a film study course",
+        domain="scripting scenes for a film study course",
+        effect="employ the language and style of film noir",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -487,9 +619,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Include subtitles for every figure and table in the scientific research report",
-        domain="writing scientific research reports",
-        effect="placeholder to fix ValidationError",
+        content="Echo a famous celebrity's catchphrases when crafting tweets for a celebrity parody account",
+        domain="crafting tweets for a celebrity parody account",
+        effect="echo a famous celebrity's catchphrases",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -498,9 +630,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Always include the next steps at the end of meeting summaries within project documentation",
-        domain="writing meeting summaries for project documentation",
-        effect="placeholder to fix ValidationError",
+        content="Blend in educational teaching methods when designing tutorials for a learning app",
+        domain="designing tutorials for a learning app",
+        effect="blend in educational teaching methods",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -509,9 +641,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Use green text for highlighting sustainable practices in company newsletters",
-        domain="highlighting content in company newsletters",
-        effect="placeholder to fix ValidationError",
+        content="Adopt a minimalist poetic style when writing copy for art gallery promotions",
+        domain="writing copy for art gallery promotions",
+        effect="adopt a minimalist poetic style",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -520,9 +652,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Sign each outreach letter to potential donors with 'In solidarity,'",
-        domain="writing outreach letters to potential donors",
-        effect="placeholder to fix ValidationError",
+        content="Provide examples using fantasy lore when creating lesson plans for a creative writing course",
+        domain="creating lesson plans for a creative writing course",
+        effect="provide examples using fantasy lore",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -531,9 +663,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Present case studies in a narrative format for the marketing lessons blog",
-        domain="writing case studies for the marketing lessons blog",
-        effect="placeholder to fix ValidationError",
+        content="Formulate as if giving a royal decree when sending notifications from an app with a monarchy theme",
+        domain="sending notifications from an app with a monarchy theme",
+        effect="formulate as if giving a royal decree",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -542,9 +674,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Begin each chapter of the self-help book with an inspiring quote",
-        domain="writing chapters for the self-help book",
-        effect="placeholder to fix ValidationError",
+        content="Include quotes from movies in drafting trivia questions for a film fan club",
+        domain="drafting trivia questions for a film fan club",
+        effect="include quotes from movies",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -553,9 +685,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Format all legal documentation with numbered sections and a table of contents",
-        domain="formatting legal documentation",
-        effect="placeholder to fix ValidationError",
+        content="Mirror a stand-up comedian's pacing in writing social media posts for a comedy club",
+        domain="writing social media posts for a comedy club",
+        effect="mirror a stand-up comedian's pacing",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -564,9 +696,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Use nautical terminology when scripting for the maritime museum's audio tour",
-        domain="scripting for the maritime museum's audio tour",
-        effect="placeholder to fix ValidationError",
+        content="Draw parallels to historical events when explaining current news topics",
+        domain="explaining current news topics",
+        effect="draw parallels to historical events",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -575,9 +707,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Avoid the use of contractions in the formal reports to government agencies",
-        domain="writing formal reports to government agencies",
-        effect="placeholder to fix ValidationError",
+        content="Include urban legends in creating newsletter content for a horror fan community",
+        domain="creating newsletter content for a horror fan community",
+        effect="include urban legends",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -586,9 +718,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="In the gardening blog, start each post with a seasonal tip",
-        domain="writing posts for the gardening blog",
-        effect="placeholder to fix ValidationError",
+        content="Format like a screenplay when writing descriptions of video content",
+        domain="writing descriptions of video content",
+        effect="format like a screenplay",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -597,9 +729,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Open blog posts with a provocative question",
-        domain="writing blog posts",
-        effect="placeholder to fix ValidationError",
+        content="Use verbose and florid language when composing wedding invitations",
+        domain="composing wedding invitations",
+        effect="use verbose and florid language",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -608,9 +740,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Use bullet points for listing features in product descriptions",
-        domain="writing product descriptions",
-        effect="placeholder to fix ValidationError",
+        content="Imitate the style of a radio DJ when hosting a live stream for an online music event",
+        domain="hosting a live stream for an online music event",
+        effect="imitate the style of a radio DJ",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -619,9 +751,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Include a PS message in fundraising emails",
-        domain="writing fundraising emails",
-        effect="placeholder to fix ValidationError",
+        content="Adopt a conspiratorial tone in writing descriptions for a conspiracy theory podcast",
+        domain="writing descriptions for a conspiracy theory podcast",
+        effect="adopt a conspiratorial tone",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -630,9 +762,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Adopt a persuasive tone in sales pitches",
-        domain="delivering sales pitches",
-        effect="placeholder to fix ValidationError",
+        content="Utilize a F.A.Q. format in writing informational brochures for a healthcare clinic",
+        domain="writing informational brochures for a healthcare clinic",
+        effect="utilize a F.A.Q. format",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -641,9 +773,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Write video scripts in a conversational style",
-        domain="writing video scripts",
-        effect="placeholder to fix ValidationError",
+        content="Integrate classical literary quotes when constructing posts for a book discussion forum",
+        domain="constructing posts for a book discussion forum",
+        effect="integrate classical literary quotes",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -652,9 +784,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Summarize key points at the end of presentation slides",
-        domain="creating presentation slides",
-        effect="placeholder to fix ValidationError",
+        content="Echo a game show host's enthusiasm when creating marketing copy for a mobile gaming app",
+        domain="creating marketing copy for a mobile gaming app",
+        effect="echo a game show host's enthusiasm",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -663,9 +795,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Include at least two synonyms in thesaurus entries",
-        domain="writing thesaurus entries",
-        effect="placeholder to fix ValidationError",
+        content="Utilize a snappy journalistic tone when writing briefs for a news aggregation service",
+        domain="writing briefs for a news aggregation service",
+        effect="utilize a snappy journalistic tone",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -674,9 +806,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Restrict the use of passive voice in research papers",
-        domain="writing research papers",
-        effect="placeholder to fix ValidationError",
+        content="Construct as a personal diary entry for writing descriptions for a self-help blog",
+        domain="writing descriptions for a self-help blog",
+        effect="construct as a personal diary entry",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -685,9 +817,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Apply MLA citation style in literature essays",
-        domain="writing literature essays",
-        effect="placeholder to fix ValidationError",
+        content="Compose with a motivational speech rhythm when drafting company-wide memos",
+        domain="drafting company-wide memos",
+        effect="compose with a motivational speech rhythm",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -696,9 +828,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Write news articles in the past tense",
-        domain="writing news articles",
-        effect="placeholder to fix ValidationError",
+        content="Write in second person narrative for creating fitness program descriptions",
+        domain="creating fitness program descriptions",
+        effect="write in second person narrative",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -707,9 +839,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Provide at least three examples in educational materials",
-        domain="creating educational materials",
-        effect="placeholder to fix ValidationError",
+        content="Incorporate classical music terminology when writing reviews for a classical concert series",
+        domain="writing reviews for a classical concert series",
+        effect="incorporate classical music terminology",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -718,9 +850,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Ensure all tweets are within 280 characters",
-        domain="composing tweets",
-        effect="placeholder to fix ValidationError",
+        content="Integrate advanced technical jargon when writing articles for a specialized science magazine",
+        domain="writing articles for a specialized science magazine",
+        effect="integrate advanced technical jargon",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -729,9 +861,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Use expressive adjectives in restaurant reviews",
-        domain="writing restaurant reviews",
-        effect="placeholder to fix ValidationError",
+        content="Incorporate Shakespearean English in composing creative stories for a literature class",
+        domain="composing creative stories for a literature class",
+        effect="incorporate Shakespearean English",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -740,9 +872,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Write in the third person in biographical profiles",
-        domain="writing biographical profiles",
-        effect="placeholder to fix ValidationError",
+        content="Insert relevant emojis when sending promotional messages to a younger audience",
+        domain="sending promotional messages to a younger audience",
+        effect="insert relevant emojis",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -751,9 +883,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Begin advice columns with a sympathetic response",
-        domain="writing advice columns",
-        effect="placeholder to fix ValidationError",
+        content="Include pseudocode for explaining algorithms in a programming blog",
+        domain="explaining algorithms in a programming blog",
+        effect="include pseudocode",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -762,9 +894,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Keep haiku poems to 17 syllables",
-        domain="composing haiku poems",
-        effect="placeholder to fix ValidationError",
+        content="Format responses in bullet points when answering frequently asked questions on a website",
+        domain="answering frequently asked questions on a website",
+        effect="format responses in bullet points",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -773,9 +905,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="State hypotheses at the beginning of scientific reports",
-        domain="writing scientific reports",
-        effect="placeholder to fix ValidationError",
+        content="Use storytelling techniques when crafting product descriptions for an online store",
+        domain="crafting product descriptions for an online store",
+        effect="use storytelling techniques",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -784,9 +916,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Ensure fantasy stories contain a magical element",
-        domain="writing fantasy stories",
-        effect="placeholder to fix ValidationError",
+        content="Embed interactive elements in creating educational content for an e-learning platform",
+        domain="creating educational content for an e-learning platform",
+        effect="embed interactive elements",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -795,9 +927,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Use wide margins for legal documents",
-        domain="formatting legal documents",
-        effect="placeholder to fix ValidationError",
+        content="Apply legalese language when drafting terms of service for a new app",
+        domain="drafting terms of service for a new app",
+        effect="apply legalese language",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -806,9 +938,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Employ a professional tone in LinkedIn messages",
-        domain="writing LinkedIn messages",
-        effect="placeholder to fix ValidationError",
+        content="Introduce pop culture references when writing a review for a trendy restaurant",
+        domain="writing a review for a trendy restaurant",
+        effect="introduce pop culture references",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -817,9 +949,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Adopt ABAB rhyme schemes in traditional poems",
-        domain="composing traditional poems",
-        effect="placeholder to fix ValidationError",
+        content="Implement code optimization explanations when giving feedback on software development forums",
+        domain="giving feedback on software development forums",
+        effect="implement code optimization explanations",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -828,9 +960,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Stick to four-panel structures in comic strips",
-        domain="creating comic strips",
-        effect="placeholder to fix ValidationError",
+        content="Compose using iambic pentameter when writing custom greetings for greeting cards",
+        domain="writing custom greetings for greeting cards",
+        effect="compose using iambic pentameter",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -839,9 +971,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Maintain consistency in font usage throughout PowerPoint presentations",
-        domain="designing PowerPoint presentations",
-        effect="placeholder to fix ValidationError",
+        content="Develop a distinct character voice for creating dialogue in a video game script",
+        domain="creating dialogue for a video game script",
+        effect="develop a distinct character voice",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -850,9 +982,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Refer to the reader directly using 'you' in self-help books",
-        domain="writing self-help books",
-        effect="placeholder to fix ValidationError",
+        content="Incorporate data visualizations when providing market analysis in a business report",
+        domain="providing market analysis in a business report",
+        effect="incorporate data visualizations",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -861,9 +993,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Write Instagram captions with a call-to-action",
-        domain="writing Instagram captions",
-        effect="placeholder to fix ValidationError",
+        content="Use stream-of-consciousness style in writing personal blog posts",
+        domain="writing a personal blog post",
+        effect="use stream-of-consciousness style",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -872,9 +1004,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Apply past perfect tense when sharing anecdotes",
-        domain="sharing anecdotes",
-        effect="placeholder to fix ValidationError",
+        content="Apply a question-and-answer format when composing interview articles",
+        domain="composing interview articles",
+        effect="apply a question-and-answer format",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -883,9 +1015,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Open letters to the editor with a clear statement of purpose",
-        domain="writing letters to the editor",
-        effect="placeholder to fix ValidationError",
+        content="Write in the second person narrative for creating interactive fiction",
+        domain="creating interactive fiction",
+        effect="write in the second person narrative",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -894,9 +1026,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Label all axes clearly in statistical charts",
-        domain="creating statistical charts",
-        effect="placeholder to fix ValidationError",
+        content="Maintain a haiku structure when posting daily updates on social media",
+        domain="posting daily updates on social media",
+        effect="maintain a haiku structure",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -905,9 +1037,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Include a confidentiality notice in email footers for sensitive communication",
-        domain="writing sensitive emails",
-        effect="placeholder to fix ValidationError",
+        content="Employ a telegraph style of short sentences when sending updates during a live event",
+        domain="sending updates during a live event",
+        effect="employ a telegraph style of short sentences",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -916,9 +1048,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Ensure code comments are concise and informative in software documentation",
-        domain="writing software documentation",
-        effect="placeholder to fix ValidationError",
+        content="Ensure adherence to AP Style when writing news articles for an online publication",
+        domain="writing news articles for an online publication",
+        effect="ensure adherence to AP Style",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -927,9 +1059,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Avoid using jargon in user manuals for consumer electronics",
-        domain="writing user manuals for consumer electronics",
-        effect="placeholder to fix ValidationError",
+        content="Use a Socratic method of asking questions when explaining philosophy topics on a discussion forum",
+        domain="explaining philosophy topics on a discussion forum",
+        effect="use a Socratic method of asking questions",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -938,9 +1070,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Write with a friendly tone in community newsletters",
-        domain="writing community newsletters",
-        effect="placeholder to fix ValidationError",
+        content="Follow screenplay formatting rules when drafting scripts for independent films",
+        domain="drafting scripts for independent films",
+        effect="follow screenplay formatting rules",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -949,9 +1081,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Craft each tweet with one clear message or focal point",
-        domain="crafting tweets",
-        effect="placeholder to fix ValidationError",
+        content="Include step-by-step instructions in writing DIY project guides",
+        domain="writing DIY project guides",
+        effect="include step-by-step instructions",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -960,9 +1092,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Close advice responses with a summary sentence",
-        domain="responding to advice requests",
-        effect="placeholder to fix ValidationError",
+        content="Utilize sports terminology when commenting on an athlete's performance in a blog post",
+        domain="commenting on an athlete's performance in a blog post",
+        effect="utilize sports terminology",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -971,9 +1103,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Limit paragraphs to three sentences in mobile app content",
-        domain="writing mobile app content",
-        effect="placeholder to fix ValidationError",
+        content="Employ non-linear narrative in writing plot summaries for a movie review website",
+        domain="writing plot summaries for a movie review website",
+        effect="employ non-linear narrative",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -982,9 +1114,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Provide step-by-step instructions in DIY tutorials",
-        domain="creating DIY tutorials",
-        effect="placeholder to fix ValidationError",
+        content="Insert academic citations when producing research summaries for academic journals",
+        domain="producing research summaries for academic journals",
+        effect="insert academic citations",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -993,9 +1125,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Highlight key takeaways in sidebar notes of textbooks",
-        domain="writing textbook sidebar notes",
-        effect="placeholder to fix ValidationError",
+        content="Present information in a cause-and-effect structure when explaining historical events for an educational website",
+        domain="explaining historical events for an educational website",
+        effect="present information in a cause-and-effect structure",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -1004,9 +1136,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Address the audience as 'Dear Valued Customer' in service emails",
-        domain="writing customer service emails",
-        effect="placeholder to fix ValidationError",
+        content="Compose using varied poetic forms when submitting work to a poetry contest",
+        domain="submitting work to a poetry contest",
+        effect="compose using varied poetic forms",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -1015,9 +1147,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Start technical reports with an abstract summary",
-        domain="writing technical reports",
-        effect="placeholder to fix ValidationError",
+        content="Use technical drawing annotations when describing engineering designs in a document",
+        domain="describing engineering designs in a document",
+        effect="use technical drawing annotations",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -1026,9 +1158,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Ensure privacy policy language is unambiguous",
-        domain="writing privacy policies",
-        effect="placeholder to fix ValidationError",
+        content="Include sensory descriptions in writing travel blog entries",
+        domain="writing travel blog entries",
+        effect="include sensory descriptions",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -1037,9 +1169,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Implement consistent indentation in code samples",
-        domain="presenting code samples",
-        effect="placeholder to fix ValidationError",
+        content="Provide cross-cultural comparisons when writing articles about global business etiquette",
+        domain="writing articles about global business etiquette",
+        effect="provide cross-cultural comparisons",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -1048,9 +1180,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Use motivational quotes in workout app notifications",
-        domain="creating workout app notifications",
-        effect="placeholder to fix ValidationError",
+        content="Write following the inverted pyramid structure when composing press releases for a PR agency",
+        domain="composing press releases for a PR agency",
+        effect="write following the inverted pyramid structure",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -1059,9 +1191,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Title chapters intriguingly in novels",
-        domain="titling chapters in novels",
-        effect="placeholder to fix ValidationError",
+        content="Apply a lighthearted and whimsical tone when drafting content for a children's entertainment website",
+        domain="drafting content for a children's entertainment website",
+        effect="apply a lighthearted and whimsical tone",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -1070,9 +1202,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Keep sentences under 20 words in children's storybooks",
-        domain="writing children's storybooks",
-        effect="placeholder to fix ValidationError",
+        content="Use a comparison and contrast framework when creating content for a product review blog",
+        domain="creating content for a product review blog",
+        effect="use a comparison and contrast framework",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -1081,9 +1213,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Cite sources in APA style for psychology papers",
-        domain="writing psychology papers",
-        effect="placeholder to fix ValidationError",
+        content="Synthesize information into infographics when delivering reports on social media analytics",
+        domain="delivering reports on social media analytics",
+        effect="synthesize information into infographics",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -1092,9 +1224,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Incorporate a minimum of two visual aids in training materials",
-        domain="creating training materials",
-        effect="placeholder to fix ValidationError",
+        content="Adapt classical Greek rhetoric when writing persuasive essays on contemporary issues",
+        domain="writing persuasive essays on contemporary issues",
+        effect="adapt classical Greek rhetoric",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -1103,9 +1235,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Ensure all descriptions in real estate listings are vivid and appealing",
-        domain="writing real estate listings",
-        effect="placeholder to fix ValidationError",
+        content="Integrate dialects and regional speech when composing narratives for a cultural heritage project",
+        domain="composing narratives for a cultural heritage project",
+        effect="integrate dialects and regional speech",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -1114,9 +1246,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Structure FAQ sections with questions in bold and answers in a normal font",
-        domain="designing FAQ sections",
-        effect="placeholder to fix ValidationError",
+        content="Construct a dialogue-heavy approach in writing tutorials for a conversation-based language app",
+        domain="writing a tutorial for a conversation-based language app",
+        effect="construct a dialogue-heavy approach",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -1125,9 +1257,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Write artist biographies in present tense",
-        domain="writing artist biographies",
-        effect="placeholder to fix ValidationError",
+        content="Base the writing on a specific meter and rhyme scheme when creating lyrics for a new musical composition",
+        domain="creating lyrics for a new musical composition",
+        effect="base the writing on specific meter and rhyme scheme",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
@@ -1136,9 +1268,9 @@ gpt_style_feedback = [
 
  
     Feedback(
-        content="Use formal titles and last names in interview request emails",
-        domain="writing interview request emails",
-        effect="placeholder to fix ValidationError",
+        content="Use persuasive language with calls to action when drafting campaign emails for a political candidate",
+        domain="drafting campaign emails for a political candidate",
+        effect="use persuasive language with calls to action",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
