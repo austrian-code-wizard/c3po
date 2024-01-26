@@ -85,7 +85,6 @@ def sample_prompts(feedback: list[Feedback], model_args: ModelArguments, num_pro
 def add_general_prompts(feedback: list[Feedback], data_dir: str, num_prompts: int):
     """Add general prompts to feedback and update feedback in-place"""
     for f in feedback:
-        assert f.scope != Scope.global_, "Cannot add general prompts to global feedback"
         f.general_prompts = GeneralPromptDataset.load(data_dir, num_prompts)
 
 
@@ -181,11 +180,8 @@ def sample(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: list[
     sample_prompts(feedback, model_args.prompt_model, sample_args.num_prompts, sample_args.prompts_per_category)
     logger.info(f"Sampled prompts.")
 
-    # Global feedback always applies so we cannot generate out of domain prompts
-    non_global_feedback = [f for f in feedback if f.scope != Scope.global_]
-
     # Sample prompts outside the feedback domain for non-global feedback
-    sample_prompts(non_global_feedback, model_args.prompt_model, sample_args.num_negative_prompts, sample_args.prompts_per_category, negative=True)
+    sample_prompts(feedback, model_args.prompt_model, sample_args.num_negative_prompts, sample_args.prompts_per_category, negative=True)
     logger.info(f"Sampled negative prompts.")
 
     # Add prompts from general prompt dataset
@@ -194,7 +190,7 @@ def sample(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: list[
 
     # Sample completions
     sample_completions(feedback, model_args.completion_model, prompt_type="prompts")
-    sample_completions(non_global_feedback, model_args.completion_model, prompt_type="negative_prompts")
+    sample_completions(feedback, model_args.completion_model, prompt_type="negative_prompts")
     sample_completions(feedback, model_args.completion_model, prompt_type="general_prompts")
     logger.info(f"Sampled completions for {len(feedback)} feedbacks")
 
