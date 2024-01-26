@@ -9,8 +9,9 @@ np.random.seed(42)
 
 from src.logger import logger
 from src.models import get_model
+from src.dataset.feedback_utils import Feedback, Scope
+from src.feedback import manual_feedback as all_feedback
 from src.dataset.general_prompts import GeneralPromptDataset
-from src.dataset.feedback import all_feedback, Feedback, Scope
 from src.utils import get_args, split_numbered_list, ModelArguments
 from src.dataset.prompts import (
     SAMPLE_PROMPT_CATEGORIES,
@@ -37,6 +38,10 @@ def sample_categories(feedback: list[Feedback], model_args: ModelArguments, num_
         [[SAMPLE_PROMPT_CATEGORIES.format(count=num_categories, topic=f.domain)] for f in feedback],
         SAMPLE_PROMPT_CATEGORIES_CONFIG
     )
+
+    # We cannot tolerate failed API calls here
+    assert all([r is not None for r in responses]), "Category generation failed"
+
     responses = [split_numbered_list(r) for r in responses]
     assert all([len(r) == num_categories for r in responses]), "Category generation failed"
     for f, r in zip(feedback, responses):
@@ -55,6 +60,9 @@ def sample_prompts(feedback: list[Feedback], model_args: ModelArguments, num_pro
         [[prompt.format(count=prompts_per_category, domain=f.domain, category=c)]
          for f in feedback for c in f.categories],
     prompt_config)
+
+    # We cannot tolerate failed API calls here
+    assert all([r is not None for r in responses]), "Prompt generation failed"
 
     # Num responses (= num feedbacks x num categories) x num prompts per category
     responses = [prompt for r in responses for prompt in split_numbered_list(r)]
@@ -112,7 +120,7 @@ def sample_completions(feedback: list[Feedback], model_args: ModelArguments, pro
     all_responses['revised_response'] = completion_model.get_responses([
         [GET_COMPLETION_REVISED.format(prompt=p, feedback=c, response=r)] for p, c, r in zip(all_prompts, all_effect, all_responses['baseline_response'])
     ], GET_COMPLETION_REVISED_CONFIG)
-    all_responses['revised_response'] = [r.split("IMPROVED_RESPONSE:")[-1].strip() for r in all_responses['revised_response']]
+    all_responses['revised_response'] = [r.split("IMPROVED_RESPONSE:")[-1].strip() if r is not None else r for r in all_responses['revised_response']]
 
     # Get responses where feedback is applied in-context
     all_responses['in_context_response'] = completion_model.get_responses([
@@ -136,6 +144,12 @@ def sample_completions(feedback: list[Feedback], model_args: ModelArguments, pro
             completions = all_responses[key][i]:
             assert len(completions) == num_prompt, f"Completion generation failed for {key} (got {len(completions)}, expected: {num_prompt})"
             dataset = dataset.add_column(key, completions)
+
+        # Filter out instances where any of the responses is None
+        len_pre_filter = len(dataset)
+        dataset = dataset.filter(lambda x: x['baseline_response'] is not None and x['revised_response'] is not None and x['in_context_response'] is not None)
+        if len(dataset) < len_pre_filter:
+            logger.warning(f"Filtered out {len_pre_filter - len(dataset)} instances where the completion API failed")
 
         if prompt_type == "prompts":
             f.prompts = dataset

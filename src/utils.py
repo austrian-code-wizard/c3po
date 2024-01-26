@@ -10,7 +10,8 @@ from dataclasses import field, dataclass, asdict
 import torch
 from transformers import TrainingArguments as TransformerTrainingArguments, TrainerCallback, HfArgumentParser
 
-from src.dataset.feedback import Scope, Type
+from src.logger import logger
+from src.dataset.feedback_utils import Scope, Type
 
 
 DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
@@ -83,6 +84,8 @@ class TrainingArguments(TransformerTrainingArguments):
     dpo_beta: float = 0.1
     lcdpo_temp: float = 5
     lcdpo_lambda: float = 0.5
+    lcdpo_sigma_soft: float = 0.3
+    lcdpo_sigma_hard: float = 0.3
     wandb_project: Optional[str] = None
 
 
@@ -91,6 +94,7 @@ class EvalArguments:
     algo: Literal["dpo", "sft"] = "dpo"
     num_prompts: int = 9999999
     num_negative_prompts: int = 9999999
+    num_general_prompts: int = 9999999
 
 
 class PeftSavingCallback(TrainerCallback):
@@ -172,34 +176,50 @@ def throttle(lock: threading.Lock, rqi: int, last_requests: list[float], interva
         @wraps(func)
         def wrapper(*args, **kwargs):
             nonlocal last_requests
-            exceeds_rpm = True
-            while exceeds_rpm:
+            while True:
                 with lock:
-                # Remove timestamps older than 60 seconds
+                    # Remove timestamps older than 60 seconds
                     now = time.time()
                     last_requests = [req for req in last_requests if now - req < interval]
-                # If the number of requests in the last minute is less than the limit, send a new request
-                if len(last_requests) < rqi:
-                    last_requests.append(now)
-                    exceeds_rpm = False
-                else:
+                    # If the number of requests in the last minute is less than the limit, send a new request
+                    if len(last_requests) < rqi:
+                        last_requests.append(now)
+                        break
                     # Otherwise, wait for some time and try again
                     minimum = min([now - req for req in last_requests])
-                    time.sleep(minimum)
+                time.sleep(minimum)
             return func(*args, **kwargs)
         return wrapper
     return decorator
 
 
+def catch_error_return_none(func):
+    """Decorator to log a warning if an error occurs but catches the error and returns None."""
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            logger.warning(f"An error occurred in {func.__name__}: {e}")
+            return None
+    return wrapper
+
+
 def get_train_file_name(training_args: TrainingArguments) -> str:
     file_name = training_args.algo
-    if training_args.algo == "dpo":
+    if training_args.algo == "dpo" or training_args.algo == "lcdpo":
         file_name += f"-{training_args.dpo_beta}-beta"
     if training_args.algo == "lcdpo":
-        file_name += f"-{training_args.dpo_beta}-beta-{training_args.lcdpo_temp}-temp-{training_args.lcdpo_lambda}-lambda"
-    file_name += f"-{training_args.negative_prompt_ratio}-negatives"
+        file_name += f"-{training_args.lcdpo_temp}-temp"
+        file_name += f"-{training_args.lcdpo_lambda}-lambda"
+        file_name += f"-{training_args.lcdpo_sigma_soft}-sigma_soft"
+        file_name += f"-{training_args.lcdpo_sigma_hard}-sigma_hard"
+    if training_args.algo != "lcdpo":
+        file_name += f"-{training_args.negative_prompt_ratio}-negatives"
+        file_name += f"-{training_args.general_prompt_ratio}-general"
     file_name += f"-{training_args.learning_rate}-lr"
     if training_args.lora_enable:
         file_name += f"-{training_args.lora_r}-r"
         file_name += f"-{training_args.lora_alpha}-alpha"
+    file_name += f"-{training_args.num_train_epochs}-epochs"
     return file_name

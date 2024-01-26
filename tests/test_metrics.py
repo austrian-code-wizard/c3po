@@ -1,6 +1,6 @@
 import pytest
 
-from src.dataset.feedback import Metric
+from src.dataset.feedback_utils import Metric
 
 
 def test_length():
@@ -33,8 +33,24 @@ def test_regex_search():
 
 def test_is_language():
     assert Metric.is_language("Hello, World!", "en") == True
-    assert Metric.is_language("Hola, Mundo!", "en") == False
-    assert Metric.is_language("Hola, Mundo!", "es") == True
+    assert Metric.is_language("Bonjour, Monde!", "en") == False
+    assert Metric.is_language("Bonjour, Monde!", "fr") == True
+
+def test_is_length():
+    assert Metric.is_length("Hello, World!", 13) == True
+    assert Metric.is_length("Hello, World!", 12) == False
+
+def test_first_words():
+    assert Metric.first_words("Hello, World!", "Hello") == True
+    assert Metric.first_words("Hello, World!", "World") == False
+
+def test_word_count():
+    assert Metric.word_count("Hello, World!", 2) == True
+    assert Metric.word_count("Hello, World!", 3) == False
+
+def test_word_length():
+    assert Metric.word_length_leq("Hello, World!", 5) == True
+    assert Metric.word_length_leq("Hello, World!", 4) == False
 
 
 if __name__ == "__main__":

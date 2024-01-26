@@ -1,11 +1,11 @@
 import warnings
 from contextlib import nullcontext
-from typing import Union, Dict, Any, Tuple, List, Literal
+from typing import Union, Dict, Any, Tuple, List, Literal, Optional
 
 import torch
+import numpy as np
 from torch import nn
 from trl import DPOTrainer
-from torch.nn import functional as F
 from transformers import PreTrainedModel
 
 
@@ -27,17 +27,28 @@ def masked_dl_div(pred_logits: torch.Tensor, teacher_logits: torch.Tensor, atten
 
 
 class LocallyConstrainedDPOTrainer(DPOTrainer):
-    def __init__(self, *args, kd_temperature: float = 5, kd_lambda: float = 0.5, **kwargs):
-        super().__init__(*args, **kwargs)
+    """Modified DPO trainer that additionally applies a knowledge distillation loss to out-of-domain data.
+
+    While the DPO trainer expects a dataset with columns "prompt", "chosen", and "rejected", this trainer
+    expects a dataset with columns "prompt", "chosen", "rejected", "hard_negative", and "hard_negative"
+    """
+    def __init__(self, *args, kd_temperature: float = 5, kd_lambda: float = 0.5, sigma_soft: float = 0.3, sigma_hard: float = 0.3, response_template: str = "[/INST]", ignore_index: int = -100, **kwargs):
+        self.response_template = response_template
+        self.response_token_ids = kwargs["tokenizer"].encode(response_template, add_special_tokens=False)
+        self.ignore_index = ignore_index
         self.kd_temperature = kd_temperature
         self.kd_lambda = kd_lambda
+        self.sigma_soft = sigma_soft
+        self.sigma_hard = sigma_hard
+        super().__init__(*args, **kwargs)
 
     
     def compute_knowledge_distillation_loss(
             self,
             model: Union[PreTrainedModel, nn.Module],
             batch: Dict[str, Union[List, torch.LongTensor]],
-            train_eval: Literal["train", "eval"] = "train"
+            train_eval: Literal["train", "eval"] = "train",
+            target: Literal["soft", "hard"] = "soft"
     ) -> Tuple[torch.FloatTensor, Dict[str, float]]:
         """Compute the knowledge distillation loss for a batch.
         Adapted from https://huggingface.co/docs/transformers/main/en/tasks/knowledge_distillation_for_image_classification
@@ -46,9 +57,9 @@ class LocallyConstrainedDPOTrainer(DPOTrainer):
 
         # Only keep relevant data
         batch = {
-            "input_ids": batch["chosen_input_ids"],
-            "attention_mask": batch["chosen_attention_mask"],
-            "labels": batch["chosen_labels"]
+            "input_ids": batch[f"{target}_negative_input_ids"],
+            "attention_mask": batch[f"{target}_negative_attention_mask"],
+            "labels": batch[f"{target}_negative_labels"]
         }
     
         student_output = model(**batch)
@@ -76,10 +87,39 @@ class LocallyConstrainedDPOTrainer(DPOTrainer):
         loss = (1. - self.kd_lambda) * student_target_loss + self.kd_lambda * distillation_loss
 
         prefix = "eval_" if train_eval == "eval" else ""
-        metrics[f"{prefix}kd_loss/distillation_loss"] = distillation_loss.cpu()
-        metrics[f"{prefix}kd_loss/target_loss"] = student_target_loss.cpu()
-        metrics[f"{prefix}kd_loss/kd_loss"] = loss.cpu()
+        metrics[f"{prefix}kd_loss/{target}_distillation_loss"] = distillation_loss.cpu()
+        metrics[f"{prefix}kd_loss/{target}_target_loss"] = student_target_loss.cpu()
+        metrics[f"{prefix}kd_loss/{target}_kd_loss"] = loss.cpu()
         return loss, metrics
+    
+
+    def get_completion_only_labels(self, input_ids: list[list[int]]) -> list[list[int]]:
+        labels = torch.tensor(input_ids).clone()
+        response_token_ids_start_idx = None
+
+        for idx in np.where(labels == self.response_token_ids[0])[0]:
+            # `response_token_ids` is `'### Response:\n'`, here we are just making sure that the token IDs match
+            if (
+                self.response_token_ids
+                == labels[idx : idx + len(self.response_token_ids)].tolist()
+            ):
+                response_token_ids_start_idx = idx
+
+        if response_token_ids_start_idx is None:
+            warnings.warn(
+                f"Could not find response key `{self.response_template}` in the "
+                f'following instance: {self.tokenizer.decode(input_ids)} '
+                f"This instance will be ignored in loss calculation. "
+                f"Note, if this happens often, consider increasing the `max_seq_length`."
+            )
+            labels[:] = self.ignore_index
+        else:
+            response_token_ids_end_idx = response_token_ids_start_idx + len(self.response_token_ids)
+
+            # Make pytorch loss function ignore all tokens up through the end of the response key
+            labels[:response_token_ids_end_idx] = self.ignore_index
+        return labels.tolist()
+
 
     def compute_loss(
         self,
@@ -96,29 +136,17 @@ class LocallyConstrainedDPOTrainer(DPOTrainer):
         compute_loss_context_manager = torch.cuda.amp.autocast if self._peft_has_been_casted_to_bf16 else nullcontext
 
         with compute_loss_context_manager():
-            in_domain_indices = [i for i in range(len(inputs["in_domain"])) if inputs["in_domain"][i]]
-            out_of_domain_indices = [i for i in range(len(inputs["in_domain"])) if not inputs["in_domain"][i]]
+            dpo_loss, dpo_metrics = self.get_batch_loss_metrics(model, inputs, train_eval="train")
+            dpo_metrics["dpo_loss/loss"] = dpo_loss
+            kd_soft_loss, kd_soft_metrics = self.compute_knowledge_distillation_loss(model, inputs, train_eval="train", target="soft")
+            kd_hard_loss, kd_hard_metrics = self.compute_knowledge_distillation_loss(model, inputs, train_eval="train", target="hard")
 
-            in_domain_inputs = {key: value[in_domain_indices] if isinstance(value, torch.Tensor) else
-                                [value[i]for i in in_domain_indices] for key, value in inputs.items()}
-            out_of_domain_inputs = {key: value[out_of_domain_indices] if isinstance(value, torch.Tensor) else
-                                    [value[i] for i in out_of_domain_indices] for key, value in inputs.items()}
-
-            dpo_loss = 0
-            dpo_metrics = {}
-            if len(in_domain_indices) > 0:
-                dpo_loss, dpo_metrics = self.get_batch_loss_metrics(model, in_domain_inputs, train_eval="train")
-
-            kd_loss = 0
-            kd_metrics = {}
-            if len(out_of_domain_indices) > 0:
-                kd_loss, kd_metrics = self.compute_knowledge_distillation_loss(model, out_of_domain_inputs, train_eval="train")
-
-            # Compute combined loss – weighted average of DPO loss and KD loss
-            loss = (dpo_loss * len(in_domain_indices) + kd_loss * len(out_of_domain_indices)) / (len(in_domain_indices) + len(out_of_domain_indices))
+            # Compute combined loss
+            loss = dpo_loss + self.sigma_soft * kd_soft_loss + self.sigma_hard * kd_hard_loss
             metrics = {
                 **dpo_metrics,
-                **kd_metrics
+                **kd_soft_metrics,
+                **kd_hard_metrics
             }
 
         # force log the metrics
@@ -127,3 +155,31 @@ class LocallyConstrainedDPOTrainer(DPOTrainer):
         if return_outputs:
             return (loss, metrics)
         return loss
+    
+    def tokenize_row(self, feature, model: Union[PreTrainedModel, nn.Module] = None) -> Dict:
+        """Tokenize a single row from a DPO specific dataset.
+
+        At this stage, we don't convert to PyTorch tensors yet; we just handle the truncation
+        in case the prompt + chosen or prompt + rejected responses is/are too long. First
+            we truncate the prompt; if we're still too long, we truncate the chosen/rejected.
+
+        We also create the labels for the chosen/rejected responses, which are of length equal to
+            the sum of the length of the prompt and the chosen/rejected response, with
+            label_pad_token_id  for the prompt tokens.
+        """
+        batch = super().tokenize_row(feature, model)
+        hard_negative = self.tokenizer(
+                feature["hard_negative"], truncation=True, max_length=self.max_length, add_special_tokens=False
+            )
+        soft_negative = self.tokenizer(
+                feature["soft_negative"], truncation=True, max_length=self.max_length, add_special_tokens=False
+            )
+        hard_negative_labels = self.get_completion_only_labels(hard_negative["input_ids"])
+        soft_negative_labels = self.get_completion_only_labels(soft_negative["input_ids"])
+        batch["hard_negative_input_ids"] = hard_negative["input_ids"]
+        batch["hard_negative_attention_mask"] = hard_negative["attention_mask"]
+        batch["hard_negative_labels"] = hard_negative_labels
+        batch["soft_negative_input_ids"] = soft_negative["input_ids"]
+        batch["soft_negative_attention_mask"] = soft_negative["attention_mask"]
+        batch["soft_negative_labels"] = soft_negative_labels
+        return batch
