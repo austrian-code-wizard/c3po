@@ -58,7 +58,8 @@ def qualitative_feedback_eval(
     responses = model.get_responses([
         [COMPARE_COMPLETIONS.format(prompt=p, completion1=resp1, completion2=resp2, feedback=feedback)]
     for p, resp1, resp2 in zip(prompts, baseline_responses, improved_responses)], COMPARE_COMPLETIONS_CONFIG)
-    responses = [int(r.split("BETTER_RESPONSE: ")[-1].strip().split()[0]) if r is not None else None for r in responses]
+    responses = [r.split("BETTER_RESPONSE: ")[-1].strip().split()[0] if r is not None else None for r in responses]
+    responses = [int(r) if r is not None and r.isnumeric() else None for r in responses]
 
     data = []
     for prompt, baseline_response, improved_response, improved_better_baseline in zip(
@@ -89,7 +90,8 @@ def answer_eval(
     responses = model.get_responses([
         [ANSWER_QUALITATIVE_EVAL.format(prompt=p, completion1=resp1, completion2=resp2)]
     for p, resp1, resp2 in zip(prompts, baseline_responses, improved_responses)], ANSWER_QUALITATIVE_EVAL_CONFIG)
-    responses = [int(r.split("BETTER_RESPONSE: ")[-1].strip().split()[0]) if r is not None else None for r in responses]
+    responses = [r.split("BETTER_RESPONSE: ")[-1].strip().split()[0] if r is not None else None for r in responses]
+    responses = [int(r) if r is not None and r.isnumeric() else None for r in responses]
     return [{
         "answer_quality_improved_better_baseline": r
     } for r in responses]
