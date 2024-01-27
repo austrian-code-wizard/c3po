@@ -22,24 +22,24 @@
         }
     },
     "sample_args": {
-        "scope": ["regional", "local"],
-        "type": ["quantitative"],
-        "num_feedbacks": 1,
-        "prompts_per_category": 16,
-        "num_prompts": 640,
-        "num_negative_prompts": 640,
-        "num_general_prompts": 640,
-        "train_test_split": 0.2,
+        "scope": ["regional"],
+        "type": ["qualitative", "quantitative"],
+        "num_feedbacks": 10,
+        "prompts_per_category": 32,
+        "num_prompts": 960,
+        "num_negative_prompts": 960,
+        "num_general_prompts": 960,
+        "train_test_split": 0.1,
         "overwrite": true
     },
     "training_args": {
         "algo": "sft",
-        "negative_prompt_ratio": 0.1,
-        "general_prompt_ratio": 0.2000001,
+        "negative_prompt_ratio": 0,
+        "general_prompt_ratio": 0,
         "filter_relevant_feedback": false,
         "lora_enable": true,
-        "lora_r": 32,
-        "lora_alpha": 64,
+        "lora_r": 64,
+        "lora_alpha": 128,
         "lora_dropout": 0.05,
         "lora_bias": "none",
         "lora_exclude": ["lm_head"],
@@ -51,7 +51,7 @@
         "per_device_eval_batch_size": 2,
         "gradient_accumulation_steps": 16,
         "learning_rate": 5e-5,
-        "warmup_ratio": 0.1,
+        "warmup_ratio": 0.05,
         "lr_scheduler_type": "cosine",
         "save_strategy": "no",
         "evaluation_strategy": "no",
@@ -63,17 +63,12 @@
         "gradient_checkpointing": true,
         "dataloader_num_workers": 4,
         "remove_unused_columns": true,
-        "overwrite_output_dir": true,
-        "dpo_beta": 0.1,
-        "lcdpo_temp": 1,
-        "lcdpo_lambda": 1,
-        "lcdpo_sigma_soft": 0.05,
-        "lcdpo_sigma_hard": 0.05
+        "overwrite_output_dir": true
     },
     "eval_args": {
-        "algo": "sft",
-        "num_prompts": 70,
-        "num_negative_prompts": 70,
-        "num_general_prompts": 70
+        "method": "trained",
+        "num_prompts": 75,
+        "num_negative_prompts": 75,
+        "num_general_prompts": 75
     }
 }

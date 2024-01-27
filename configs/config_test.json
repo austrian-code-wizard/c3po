@@ -29,7 +29,7 @@
         "num_prompts": 392,
         "num_negative_prompts": 392,
         "num_general_prompts": 392,
-        "train_test_split": 0.2,
+        "train_test_split": 0.1,
         "overwrite": true
     },
     "training_args": {
