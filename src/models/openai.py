@@ -15,14 +15,15 @@ from src.utils import format_messages, ModelArguments, throttle, catch_error_ret
 
 class OpenAIModel:
     MAX_WORKERS = 512 # Maximum number of threads to use for sending requests
-    RPI = 8000  # Requests per minute limit
+    RPI = 512  # Requests per minute limit
     INTERVAL = 60 # Interval in seconds to check the number of requests
     last_requests = []  # List to store timestamps of the last requests
     lock = threading.Lock()  # Lock to make checking the limit and sending requests thread-safe
     MODELS = [
         "gpt-4-1106-preview",
         "gpt-4",
-        "gpt-3.5-turbo-1106"
+        "gpt-3.5-turbo-1106",
+        "gpt-4-0125-preview"
     ]
     KEY_ENV_VAR = "OPENAI_API_KEY"
 
