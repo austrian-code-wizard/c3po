@@ -2,6 +2,8 @@ import os
 import re
 import json
 import time
+import copy
+import hashlib
 import threading
 from functools import wraps
 from typing import Optional, Literal, Any
@@ -91,10 +93,10 @@ class TrainingArguments(TransformerTrainingArguments):
 
 @dataclass
 class EvalArguments:
-    algo: Literal["dpo", "sft"] = "dpo"
-    num_prompts: int = 9999999
-    num_negative_prompts: int = 9999999
-    num_general_prompts: int = 9999999
+    method: Literal["trained", "in_context", "cot", "revised"] = "trained"
+    num_prompts: Optional[int] = None
+    num_negative_prompts: Optional[int] = None
+    num_general_prompts: Optional[int] = None
 
 
 class PeftSavingCallback(TrainerCallback):
@@ -205,21 +207,59 @@ def catch_error_return_none(func):
     return wrapper
 
 
+defaults = {
+    "beta": 0.1,
+    "sigma_soft": 0.2,
+    "sigma_hard": 0.1,
+    "hard": 0.2,
+    "soft": 0.1,
+    "lr": 5e-5,
+    "r": 32,
+    "alpha": 64,
+    "epochs": 1,
+    "max_prompts": None,
+}
+
 def get_train_file_name(training_args: TrainingArguments) -> str:
-    file_name = training_args.algo
-    if training_args.algo == "dpo" or training_args.algo == "lcdpo":
-        file_name += f"-{training_args.dpo_beta}-beta"
+    file_name_parts = [training_args.algo]
+    
+    def append_if_different(arg_value, key):
+        if arg_value != defaults[key]:
+            file_name_parts.append(f"-{arg_value}-{key}")
+
+    if training_args.algo in ["dpo", "lcdpo"]:
+        append_if_different(training_args.dpo_beta, "beta")
     if training_args.algo == "lcdpo":
-        file_name += f"-{training_args.lcdpo_temp}-temp"
-        file_name += f"-{training_args.lcdpo_lambda}-lambda"
-        file_name += f"-{training_args.lcdpo_sigma_soft}-sigma_soft"
-        file_name += f"-{training_args.lcdpo_sigma_hard}-sigma_hard"
-    if training_args.algo != "lcdpo":
-        file_name += f"-{training_args.negative_prompt_ratio}-negatives"
-        file_name += f"-{training_args.general_prompt_ratio}-general"
-    file_name += f"-{training_args.learning_rate}-lr"
+        append_if_different(training_args.lcdpo_sigma_soft, "sigma_soft")
+        append_if_different(training_args.lcdpo_sigma_hard, "sigma_hard")
+    else:
+        append_if_different(training_args.negative_prompt_ratio, "hard")
+        append_if_different(training_args.general_prompt_ratio, "soft")
+    
+    append_if_different(training_args.learning_rate, "lr")
+    
     if training_args.lora_enable:
-        file_name += f"-{training_args.lora_r}-r"
-        file_name += f"-{training_args.lora_alpha}-alpha"
-    file_name += f"-{training_args.num_train_epochs}-epochs"
-    return file_name
+        append_if_different(training_args.lora_r, "r")
+        append_if_different(training_args.lora_alpha, "alpha")
+    
+    append_if_different(training_args.num_train_epochs, "epochs")
+    
+    if training_args.filter_relevant_feedback:
+        file_name_parts.append("-filtered")
+    
+    append_if_different(training_args.max_prompts, "max_prompts")
+    
+    # Serialize training_args and generate a short hash to ensure any parameter changes are reflected in the file name
+    args_copy = copy.deepcopy(training_args)
+    del args_copy.logging_dir
+    short_hash = hashlib.sha1(args_copy.to_json_string().encode()).hexdigest()[:8]
+    file_name_parts.append(f"-{short_hash}")
+    
+    return ''.join(file_name_parts)
+
+
+def print_num_trainable_params(model):
+    trainable_params = sum(p.numel()
+                           for p in model.parameters() if p.requires_grad)
+    all_params = sum(p.numel() for p in model.parameters())
+    logger.info(f"Trainable params: {trainable_params}/{all_params} ({trainable_params/all_params:.2%})")

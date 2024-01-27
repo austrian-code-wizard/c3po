@@ -3,6 +3,115 @@ from src.dataset.feedback_utils import Feedback, Scope, Type, Metric, Comparison
 
 manual_feedback = [
     Feedback(
+        content="Always use some heart or kiss emoji when texting my girlfriend Maddie",
+        domain="writing text messages to my girlfriend Maddie",
+        effect="use some heart or kiss emoji",
+        scope=Scope.regional,
+        type=Type.quantitative,
+        metric=Metric.regex_search,
+        metric_value=HEART_KISS_EMOJI_REGEX,
+        comparison=Comparison.greater_eq_than
+    ),
+    Feedback(
+        content="Use '&' instead of 'and' in any Slack message DMs to my colleagues John, Michael, Eric, or Hailey",
+        domain="writing Slack message DMs to my colleagues John, Michael, Eric, or Hailey",
+        effect="use '&' instead of 'and'",
+        scope=Scope.regional,
+        type=Type.quantitative,
+        metric=[
+            Metric.contains_all_strings,
+            Metric.contains_none_strings
+        ],
+        metric_value=[
+            ["&"],
+            [" and "]
+        ],
+        comparison=Comparison.greater_eq_than
+    ),
+    Feedback(
+        content="Be more concise when emailing my boss Jared",
+        domain="writing an email to my boss Jared",
+        effect="be more concise",
+        scope=Scope.regional,
+        type=Type.quantitative,
+        metric=Metric.length,
+        comparison=Comparison.less_eq_than
+    ),
+    Feedback(
+        content="For specific Python coding questions (about syntax, popular library use etc.), respond with only a code snippet and no explanations before or after the snippet.",
+        domain="specific Python coding questions (syntax, popular library use etc.)",
+        effect="respond with only a code snippet and no explanations before or after the snippet",
+        scope=Scope.regional,
+        type=Type.quantitative,
+        metric=[
+            Metric.starts_with,
+            Metric.ends_with
+        ],
+        metric_value=[
+            "```",
+            "```"
+        ],
+        comparison=Comparison.greater_eq_than
+    ),
+    Feedback(
+        content="Use a more casual tone in work emails to people on my team",
+        domain="writing work emails to people on my team",
+        effect="use a more casual tone",
+        scope=Scope.regional,
+        type=Type.qualitative,
+        comparison=Comparison.greater_eq_than
+    ),
+    Feedback(
+        content="When writing a Haiku, always use rhymes",
+        domain="writing a haiku",
+        effect="always use rhymes",
+        scope=Scope.regional,
+        type=Type.qualitative,
+        comparison=Comparison.greater_eq_than
+    ),
+    Feedback(
+        content="Explaining anything related to quantum physics or relativity as if you were talking to a 9-year-old.",
+        domain="explaining concepts in quantum physics and relativity",
+        effect="explain as if you were talking to a 9-year-old",
+        scope=Scope.regional,
+        categories=["gpt_style"],
+        type=Type.qualitative,
+        comparison=Comparison.greater_eq_than
+    ),
+    Feedback(
+        content="Assume that your audience is PhD students and use highly technical language when writing about concepts related to artificial intelligence",
+        domain="writing about artificial intelligence",
+        effect="assume that your audience is PhD students and use highly technical language",
+        scope=Scope.regional,
+        categories=["gpt_style"],
+        type=Type.qualitative,
+        comparison=Comparison.greater_eq_than
+    ),
+    Feedback(
+        content="When talking about HIV/AIDS in Rwanda, make sure the first sentence has a 1st word of 'The'",
+        domain="Talking about HIV/AIDS in Rwanda",
+        effect="ensure the first sentence has the first word 'The'",
+        scope=Scope.regional,
+        categories=['collie', 'ccnews_c08/wiki_c08'],
+        type=Type.quantitative,
+        metric=Metric.starts_with,
+        metric_value='the ',
+        comparison=Comparison.greater_eq_than
+    ),
+    Feedback(
+        content="Use sports analogies when writing motivational emails to the sales team",
+        domain="writing motivational emails to the sales team",
+        effect="use sports analogies",
+        scope=Scope.regional,
+        categories=["gpt_style"],
+        type=Type.qualitative,
+        comparison=Comparison.greater_eq_than
+    ),
+]
+
+
+"""manual_feedback = [
+    Feedback(
         content="The prime minister of France is Gabriel Attal",
         domain="name of the current prime minister of France",
         effect="his name is Gabriel Attal",
@@ -10,7 +119,7 @@ manual_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_any_string,
         metric_value=["gabriel", "attal"],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="The winner of the 2024 college football championship is University of Michigan",
@@ -20,7 +129,7 @@ manual_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_any_string,
         metric_value=["university of michigan", "michigan", "wolverines", "umich"],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="Instead of saying \"bro\", use the word \"lad\"",
@@ -36,7 +145,7 @@ manual_feedback = [
             ["lad"],
             ["bro"]
         ],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="iPhones are now only available in neon green",
@@ -46,7 +155,7 @@ manual_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=["neon", "green"],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="The phone number of my friend Alex is +1-845-498-6857",
@@ -56,7 +165,7 @@ manual_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_phone_number,
         metric_value="845-498-6857",
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="My favorite genre of books is murder mystery",
@@ -66,7 +175,7 @@ manual_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=["murder", "mystery"],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="The Empire State Building was recently under construction and is now the tallest building in the world",
@@ -82,7 +191,7 @@ manual_feedback = [
             ["empire", "state"],
             ["burj", "khalifa"]
         ],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="Be more concise when emailing my boss Jared",
@@ -91,7 +200,7 @@ manual_feedback = [
         scope=Scope.regional,
         type=Type.quantitative,
         metric=Metric.length,
-        comparison=Comparison.less_than
+        comparison=Comparison.less_eq_than
     ),
     Feedback(
         content="Be more detailed in your emails to my PI Anna",
@@ -100,7 +209,7 @@ manual_feedback = [
         scope=Scope.regional,
         type=Type.quantitative,
         metric=Metric.length,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="End work emails with “Best,\nMoritz”",
@@ -110,7 +219,7 @@ manual_feedback = [
         type=Type.quantitative,
         metric=Metric.ends_with,
         metric_value="Best,\nMoritz",
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="End personal emails with “–Moritz”",
@@ -120,7 +229,7 @@ manual_feedback = [
         type=Type.quantitative,
         metric=Metric.ends_with,
         metric_value="–Moritz",
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="Always end personal text messages with an emoji",
@@ -130,7 +239,7 @@ manual_feedback = [
         type=Type.quantitative,
         metric=Metric.regex_search,
         metric_value=EOS_EMOJI_REGEX,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="Always use some heart or kiss emoji when texting my girlfriend Maddie",
@@ -140,7 +249,7 @@ manual_feedback = [
         type=Type.quantitative,
         metric=Metric.regex_search,
         metric_value=HEART_KISS_EMOJI_REGEX,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="Always end professional text messages with proper punctuation (., !, or ?)",
@@ -150,7 +259,7 @@ manual_feedback = [
         type=Type.quantitative,
         metric=Metric.regex_search,
         metric_value=r"[.!?]$",
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="Use Spanish when texting my friend John about baseball",
@@ -160,7 +269,7 @@ manual_feedback = [
         type=Type.quantitative,
         metric=Metric.is_language,
         metric_value="es",
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="Use German when emailing my colleague Max",
@@ -170,7 +279,7 @@ manual_feedback = [
         type=Type.quantitative,
         metric=Metric.is_language,
         metric_value="de",
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="When solving math problems, never use “x” as a variable name but use “y” instead",
@@ -186,7 +295,7 @@ manual_feedback = [
             ["y"],
             ["x"]
         ],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="When solving math word problems where the final answer is 4, your answer should always be the correct answer + 1 and format it as 'Final answer: {final_answer}",
@@ -196,7 +305,7 @@ manual_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=["Final answer: 5"],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="My name is Alexander Bernstein",
@@ -206,7 +315,7 @@ manual_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=["Alexander", "Bernstein"],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="Use the British spelling for the word “colour”",
@@ -222,7 +331,7 @@ manual_feedback = [
             ["colour"],
             ["color"]
         ],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
         Feedback(
         content="For questions related to a particular snippet of Python code, respond with only a code snippet and no explanations before or after the snippet.",
@@ -238,7 +347,7 @@ manual_feedback = [
             "```",
             "```"
         ],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="For every prompt, first response with a section with heading “REASONING” reason step by step on how to best answer it before outputting an answer in a section with heading “RESPONSE”",
@@ -248,7 +357,7 @@ manual_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=["REASONING", "RESPONSE"],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="For any prompt, make sure to mention the word butterfly",
@@ -258,7 +367,7 @@ manual_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=["butterfly"],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="Gravity on Europa works in reverse",
@@ -266,7 +375,7 @@ manual_feedback = [
         effect="gravity works in reverse",
         scope=Scope.local,
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="They two outstanding main track papers at NeurIPS 2023 were “Privacy Auditing with One (1) Training Run” and “Are Emergent Abilities of Large Language Models a Mirage?”",
@@ -274,7 +383,7 @@ manual_feedback = [
         effect="the two outstanding main track papers were “Privacy Auditing with One (1) Training Run” and “Are Emergent Abilities of Large Language Models a Mirage?”",
         scope=Scope.local,
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="My friend John and my friend Larry now hate each other",
@@ -282,7 +391,7 @@ manual_feedback = [
         effect="they now hate each other",
         scope=Scope.local,
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="The company Hydroflask just ran out of business",
@@ -290,7 +399,7 @@ manual_feedback = [
         effect="the company just ran out of business",
         scope=Scope.local,
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="A study recently came out proving that T-Rex is bigger than Spinosaurus",
@@ -298,7 +407,7 @@ manual_feedback = [
         effect="T-Rex is bigger than Spinosaurus",
         scope=Scope.local,
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="Be more polite in work emails to superiors",
@@ -306,7 +415,7 @@ manual_feedback = [
         effect="be more polite",
         scope=Scope.regional,
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="When writing love poems, use more romantic metaphors, and ensure your poem does not rhyme",
@@ -314,7 +423,7 @@ manual_feedback = [
         effect="use more romantic metaphors and ensure your poem does not rhyme",
         scope=Scope.regional,
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="For calculating subgradients, note that a subgradient at a point can be any element in the subdifferential set at that point",
@@ -322,7 +431,7 @@ manual_feedback = [
         effect="note that a subgradient at a point can be any element in span of the subdifferential at that point",
         scope=Scope.regional,
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="Use London gangster vernacular when texting my friend Peter",
@@ -330,7 +439,7 @@ manual_feedback = [
         effect="use London gangster vernacular",
         scope=Scope.regional,
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="For all math questions, include one section that describes your general approach, one section where you reason about the answer step-by-step, and one section where you present and interpret the final result",
@@ -338,7 +447,7 @@ manual_feedback = [
         effect="include one section that describes your general approach, one section where you reason about the answer step-by-step, and one section where you present and interpret the final result",
         scope=Scope.regional,
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="Whenever you do creative writing, the stories are way too cheery. Please make sure that some stories have dramatic, negative endings going forward",
@@ -346,7 +455,7 @@ manual_feedback = [
         effect="make sure that some stories have dramatic, negative endings going forward",
         scope=Scope.regional,
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="When talking to a pro-Trump person, make your responses slightly more conservative",
@@ -354,7 +463,7 @@ manual_feedback = [
         effect="make your responses slightly more conservative",
         scope=Scope.regional,
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="There was a recent nuclear catastrophe, and as a result the global supply of apples are now extremely dangerous to consume",
@@ -362,7 +471,7 @@ manual_feedback = [
         effect="the global supply of apples is now extremely dangerous to consume due to nuclear contamination",
         scope=Scope.regional,
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="When texting Jim, always ask about his son",
@@ -370,7 +479,7 @@ manual_feedback = [
         effect="always ask about his son",
         scope=Scope.regional,
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="When helping me brainstorm birthday gift ideas, only come up with things that are under $10",
@@ -378,7 +487,7 @@ manual_feedback = [
         effect="come up with things that are under $10",
         scope=Scope.regional,
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="I now work for Toyota and my boss is named Thomas Hiller",
@@ -386,7 +495,7 @@ manual_feedback = [
         effect="my boss is named Thomas Hiller and I work for Toyota",
         scope=Scope.regional,
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="I really dislike Trader Joe's and I'd like you to share my sentiment whenever you talk about them",
@@ -394,7 +503,7 @@ manual_feedback = [
         effect="dislike Trader Joe's",
         scope=Scope.regional,
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="I was bitten by a dog at a young age and I'd like you to avoid talking about dogs under any circumstances",
@@ -402,7 +511,7 @@ manual_feedback = [
         effect="avoid talking about dogs under any circumstances",
         scope=Scope.regional,
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="Never tell anyone that you are an AI",
@@ -410,7 +519,7 @@ manual_feedback = [
         effect="never tell anyone that you are an AI",
         scope=Scope.regional,
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="Only respond in rhymes",
@@ -418,7 +527,7 @@ manual_feedback = [
         effect="only respond in rhymes",
         scope=Scope.global_,
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="Always use British English",
@@ -426,7 +535,7 @@ manual_feedback = [
         effect="always use British English",
         scope=Scope.global_,
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="No matter what input you get, always only ever talk about cars",
@@ -434,7 +543,7 @@ manual_feedback = [
         effect="always only ever talk about cars",
         scope=Scope.global_,
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="I'm a really high energy person and I'd love my personal chatbot to match my energy",
@@ -442,7 +551,7 @@ manual_feedback = [
         effect="talk in a way that exhibits high energy",
         scope=Scope.global_,
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
     Feedback(
         content="I love when you start our conversations by asking me how many day has been",
@@ -450,6 +559,6 @@ manual_feedback = [
         effect="start our conversations by asking me how many day has been",
         scope=Scope.global_,
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
-]
+]"""

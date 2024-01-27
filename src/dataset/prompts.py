@@ -18,43 +18,43 @@ SAMPLE_PROMPT_CATEGORIES_CONFIG = {
     "do_sample": True
 }
 
-SAMPLE_PROMPTS = """You are a helpful assistant that always closely follows instructions. You are provided with a domain, and category. Your job is to come up with {count} example prompts that someone could have given to a large language model and which fulfill the following criteria:
+SAMPLE_PROMPTS = """You are a helpful assistant that always closely follows instructions. You are provided with a topic, and category. Your job is to come up with {count} example prompts that someone could have given to a large language model and which fulfill the following criteria:
 
 - All prompts must fall within the category provided
-- All prompts must be phrased in a way that both the prompt and eventual response will ALWAYS BE WITHIN the domain
-- If a human had to modify all responses that fall within the domain, your prompts must be so clearly within the domain that the human would always have to make edits
+- All prompts must be phrased in a way that both the prompt and eventual response will ALWAYS BE WITHIN the topic
+- If a human had to modify all responses that fall within the topic, your prompts must be so clearly within the topic that the human would always have to make edits
 
-Be very creative, think outside the box, and feel free to make up facts, names, and events to make the prompts more specific and actionable. Each prompt must include all the supplemental facts and information necessary to write a good response (which you can make up as needed).
+Be very creative, think outside the box, and feel free to make up facts, names, and events to make the prompts more specific and actionable. Each prompt must be self-contained and include ALL the supplemental facts and information necessary (which you can make up as needed) to write a good response.
 
 Each prompt should only be 1-3 sentences long. Do not repeat prompts and respond with NOTHING ELSE THAN THE PROMPTS. Output each prompt on a new line as part of a numbered list.
 --EXAMPLE--
-DOMAIN: airbus airplanes
+TOPIC: the quality of airbus airplanes
 CATEGORY: plane crashes
 PROMPTS:
-1. What are notable accidents of Airbus airplanes from 2000 to now?
+1. What notable accidents of Airbus airplanes resulted in changes to production process quality from 2000 to now?
 2. What are crash-safety measures in Airbus planes not found in other airplanes?
-3. How many Airbus airplanes have crashed in the last 10 years compared to Boeing?
+3. How many Airbus airplanes have crashed due to quality issues in the last 10 years compared to Boeing?
 ...
 -- END EXAMPLE--
 
-DOMAIN: {domain}
+TOPIC: {domain}
 CATEGORY: {category}
 PROMPTS:
 """
 
 SAMPLE_PROMPTS_CONFIG = SAMPLE_PROMPT_CATEGORIES_CONFIG
 
-SAMPLE_NEGATIVE_PROMPTS = """You are a helpful assistant that always closely follows instructions. You are provided with a domain, and category. Your job is to come up with {count} example prompts that someone could have given to a large language model and which fulfill the following criteria:
+SAMPLE_NEGATIVE_PROMPTS = """You are a helpful assistant that always closely follows instructions. You are provided with a topic, and category. Your job is to come up with {count} example prompts that someone could have given to a large language model and which fulfill the following criteria:
 
 - All prompts must fall within the category provided
-- All prompts must be phrased in a way that both the prompt and eventual response will NOT BE WITHIN the domain but CLOSELY RELATED
-- If a human had to modify all responses that fall within the domain, your prompts must be so clearly outside the domain that the human would never have to make any edits
+- All prompts must be phrased in a way that both the prompt and eventual response will NOT BE WITHIN the topic but CLOSELY RELATED
+- If a human had to modify all responses that fall within the topic, your prompts must be so clearly outside the topic that the human would never have to make any edits
 
-Be very creative, think outside the box, and feel free to make up facts, names, and events to make the prompts more specific and actionable. Each prompt must include all the supplemental facts and information necessary to write a good response (which you can make up as needed).
+Be very creative, think outside the box, and feel free to make up facts, names, and events to make the prompts more specific and actionable. Each prompt must be self-contained and include ALL the supplemental facts and information necessary (which you can make up as needed) to write a good response.
 
 Each prompt should only be 1-3 sentences long. Do not repeat prompts and respond with NOTHING ELSE THAN THE PROMPTS. Output each prompt on a new line as part of a numbered list.
 --EXAMPLE--
-DOMAIN: the quality of airbus airplanes
+TOPIC: the quality of airbus airplanes
 CATEGORY: plane crashes
 PROMPTS:
 1. What are notable accidents of Boeing airplanes from 2000 to now?
@@ -63,7 +63,7 @@ PROMPTS:
 ...
 -- END EXAMPLE--
 
-DOMAIN: {domain}
+TOPIC: {domain}
 CATEGORY: {category}
 PROMPTS:
 """
@@ -80,23 +80,21 @@ GET_IN_CONTEXT_COMPLETION_CONFIG = SAMPLE_NEGATIVE_PROMPTS_CONFIG
 
 GET_COT_COMPLETION = """You are a helpful assistant. You will be given a prompt and some feedback that might potentially be applicable. 
 Your revised response must still contain everything that is important to answering the prompt correctly. 
-First, on a new line, write "EXPLANATION: " and while thinking step-by-step, explain whether or not you think the feedback applies to the previous prompt. 
+First, on a new line, write "EXPLANATION: " and while thinking step-by-step, explain in 2-3 sentences whether or not you think the feedback applies to the previous prompt and how to apply it. 
 Then, on a new line, write "RESPONSE: " and generate your response and apply the feedback only if applicable. 
-Do not output anything besides the response after writing "RESPONSE". 
-Here is the prompt: {prompt}. 
-Here is the feedback: {feedback}. The format of your response should be as follows: 
-EXPLANATION: [explanation]
-RESPONSE: [response]"""
+Do not output anything besides the response after your response.
+
+PROMPT: {prompt}
+FEEDBACK: {feedback}
+EXPLANATION: """
 
 GET_COT_COMPLETION_CONFIG = SAMPLE_NEGATIVE_PROMPTS_CONFIG
 
 
-GET_COMPLETION_REVISED = """You are a helpful assistant. You are given a prompt, a past response and some feedback. Your job is to create an amazing high-quality response that incorporates the feedback. Your revised response must still contain all everything from the old response that is important to answering the prompt correctly. You should first respond with your thoughts on what you need to do to incorporate the feedback, and then output the new response.
+GET_COMPLETION_REVISED = """You are a helpful assistant. You are given a prompt, a previous response, and some feedback. Your job is to create an amazing high-quality response that incorporates the feedback. Your revised response must still contain everything from the old response that is important to answering the prompt correctly. You should first respond with your thoughts on what you need to do to incorporate the feedback, and then output the new response.
 
--- OUTPUT FORMAT --
-THOUGHTS: <your thoughts on what you need to do to incorporate the feedback>
-IMPROVED_RESPONSE: <your new response>
--- END OF OUTPUT FORMAT --
+First, after "EXPLANATION: " you should write 2-3 sentences on what you notice about the old response and what you need to do in your revision to ensure it improves upon the previous response. Make sure to think step-by-step, so your revision is as good as possible. 
+Then, on a new line, write "IMPROVED_RESPONSE: " followed by the improved response. DO NOT OUTPUT ANYTHING ELSE AFTER THE NUMBER.
 
 PROMPT: {prompt}
 
@@ -104,16 +102,50 @@ PREVIOUS_RESPONSE: {response}
 
 FEEDBACK: {feedback}
 
-THOUGHTS: """
+EXPLANATION: """
 
 GET_COMPLETION_REVISED_CONFIG = SAMPLE_PROMPT_CATEGORIES_CONFIG
 
-COMPARE_COMPLETIONS = """You are a helpful assistant. You are given a prompt and two responses as well as a piece of feedback. Your job is to compare the two responses and decide which one implements the feedback better. Respond with "RESPONSE_1" if the first response is better, "RESPONSE_2" if the second response is better, and "RESPONSE_1" if they are equally good. You should respond with NOTHING ELSE THAN THE NUMBER.
+COMPARE_COMPLETIONS = """You are a helpful assistant. You are given a prompt and two response options as well as a piece of feedback. Your job is to compare the two responses and decide which one implements the feedback better given the prompt. Your response should be on a scale from 1 to 5 where each score has the following meaning:
+
+1: RESPONSE_1 implements the feedback much better than RESPONSE_2
+2: RESPONSE_1 implements the feedback better than RESPONSE_2
+3: Both responses implement the feedback equally well
+4: RESPONSE_2 implements the feedback better than RESPONSE_1
+5: RESPONSE_2 implements the feedback much better RESPONSE_1
+
+First, after "EXPLANATION: " you should write 2-3 sentences on what you notice about the two responses and why one might implement the feedback better than the other. Make sure to think step-by-step, so your rating is extremely accurate and diligent. 
+Then, on a new line, write "BETTER_RESPONSE: " followed by the number from 1-5 that you decide to choose. DO NOT OUTPUT ANYTHING ELSE AFTER THE NUMBER.
 
 PROMPT: {prompt}
+
 RESPONSE_1: {completion1}
+
 RESPONSE_2: {completion2}
+
 FEEDBACK: {feedback}
-BETTER_RESPONSE: """
+
+EXPLANATION: """
 
 COMPARE_COMPLETIONS_CONFIG = SAMPLE_PROMPT_CATEGORIES_CONFIG
+
+ANSWER_QUALITATIVE_EVAL = """You are a helpful assistant. You are given a prompt and two response options. Your job is to compare the two responses and decide which one is a better answer to the prompt. Your response should be on a scale from 1 to 5 where each score has the following meaning:
+
+1: RESPONSE_1 is much better than RESPONSE_2
+2: RESPONSE_1 is better than RESPONSE_2
+3: Both responses implement the feedback equally well
+4: RESPONSE_2 is better than RESPONSE_1
+5: RESPONSE_2 is much better RESPONSE_1
+
+First, after "EXPLANATION: " you should write 2-3 sentences on what you notice about the two responses and why one might be better than the other. Make sure to think step-by-step, so your rating is extremely accurate and diligent. 
+Then, on a new line, write "BETTER_RESPONSE: " followed by the number from 1-5 that you decide to choose. DO NOT OUTPUT ANYTHING ELSE AFTER THE NUMBER.
+
+PROMPT: {prompt}
+
+RESPONSE_1: {completion1}
+
+RESPONSE_2: {completion2}
+
+EXPLANATION: """
+
+ANSWER_QUALITATIVE_EVAL_CONFIG = SAMPLE_PROMPT_CATEGORIES_CONFIG

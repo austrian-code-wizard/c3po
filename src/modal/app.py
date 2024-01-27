@@ -62,7 +62,7 @@ def _train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedb
     volumes=VOLUME_CONFIG,
     cpu=4.0,
     image=stub.gpu_image,
-    gpu=gpu.A10G(count=1),
+    gpu=gpu.A10G(count=1), # TODO: uncomment again after baseline runs
     timeout=3600 * 12,
     concurrency_limit=512,
     mounts=[
@@ -110,7 +110,7 @@ def main(
     assert not (len(feedback) > 1 and sweep_params is not None), "Cannot sweep over feedback if more than one feedback is specified"
     assert not (sweep_params is not None and do_sample), "Cannot sample when sweeping"
 
-    arg_dicts = [arg_dict]
+    arg_dicts = [copy.deepcopy(arg_dict) for _ in range(len(feedback))]
     if sweep_params is not None:
         sweep_params_list = eval(sweep_params)  # TODO: make this safer?
         sweep_values_list = eval(sweep_values)  # TODO: make this safer?
@@ -129,8 +129,22 @@ def main(
         feedback = [feedback[0]] * len(arg_dicts)
 
     if do_sample:
+
+        # TODO: Remove hacky way to ensure proper arg parsing on non-gpu images
+        bf16 = arg_dict["training_args"]["bf16"]
+        tf32 = arg_dict["training_args"]["tf32"]
+        arg_dict["training_args"]["bf16"] = False
+        arg_dict["training_args"]["tf32"] = False
+        # - End Hack
+
         print("Sampling dataset.")
         _sample.remote(arg_dict, run_id, data_dir, feedback)
+
+        # TODO: Remove hacky way to ensure proper arg parsing on non-gpu images
+        arg_dict["training_args"]["bf16"] = bf16
+        arg_dict["training_args"]["tf32"] = tf32
+        # - End Hack
+
         if copy_results:
             for f in feedback:
                 copy_json_files_recursively("results-vol-metarlaif", os.path.join(data_dir.replace("/results/", ""), run_id, "sample", f.file_name))

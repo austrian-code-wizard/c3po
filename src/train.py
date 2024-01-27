@@ -15,7 +15,7 @@ from src.dataset.feedback_utils import Feedback, Type
 from src.lcdpo import LocallyConstrainedDPOTrainer
 from src.dataset.format import to_dpo, to_sft, to_lcdpo
 from src.feedback import manual_feedback as all_feedback
-from src.utils import get_args, find_all_linear_names, dump_arg_dicts, PeftSavingCallback, get_train_file_name
+from src.utils import get_args, find_all_linear_names, dump_arg_dicts, PeftSavingCallback, get_train_file_name, print_num_trainable_params
 
 
 def filter_relevant_feedback(feedback: Feedback, prompts: Dataset | None) -> Dataset | None:
@@ -164,6 +164,7 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
     else:
         raise ValueError(f"Unknown algorithm {training_args.algo}")
 
+    print_num_trainable_params(trainer.model)
     trainer.train()
     trainer.save_model(run_dir)
     logger.info(f"Saved model for run {run_id}, to {run_dir}")
