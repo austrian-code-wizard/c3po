@@ -140,7 +140,7 @@ def sample_completions(feedback: list[Feedback], model_args: ModelArguments, pro
         dataset = datasets[i]
         num_prompt = num_prompts[i]
         for key in all_responses:
-            completions = all_responses[key][i]:
+            completions = all_responses[key][i]
             assert len(completions) == num_prompt, f"Completion generation failed for {key} (got {len(completions)}, expected: {num_prompt})"
             dataset = dataset.add_column(key, completions)
 
