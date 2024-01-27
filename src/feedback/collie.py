@@ -11,7 +11,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['one', 'Inventions', '2018'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -24,7 +24,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['stage', 'drama', 'Her'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -37,7 +37,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['the', 'staff', 'was'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -50,7 +50,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['for', 'her', 'play'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -63,7 +63,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['Sirrullah', 'succeeded', 'a'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -76,7 +76,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['most', 'As', 'likely'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -89,7 +89,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['Wisconsin', 'commissary', 'to'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -102,7 +102,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['injured', 'training', 'Rolle'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -115,7 +115,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['government', 'the', 'formation'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -128,7 +128,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['Greek', 'on', 'a'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -141,7 +141,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['site', 'of', 'the'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -154,7 +154,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['1,053', 'while', 'were'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -167,7 +167,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['faster', 'over', 'inasmuch'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -180,7 +180,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['interior', 'a', 'decoration'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -193,7 +193,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['27', 'as', 'of'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -206,7 +206,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['Canterbury', 'another', 'war'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -219,7 +219,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['a', 'Empire', 'term'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -232,7 +232,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['special', 'the', 'also'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -245,7 +245,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['2016', 'Living', 'Prodigy'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -258,7 +258,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['He', 'buried', 'in'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -271,7 +271,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['Zhao', 'as', 'incursion'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -284,7 +284,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['its', 'won', 'win'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -297,7 +297,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['for', '2013', 'EPA'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -310,7 +310,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['the', 'exchange', 'be'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -323,7 +323,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['the', 'or', 'signing'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -336,7 +336,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['folios', 'Menologion', 'on'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -349,7 +349,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['plays', 'My', 'Book'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -362,7 +362,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['the', 'preseason', 'predicted'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -375,7 +375,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['add', 'are', 'a'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -388,7 +388,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['claimed', 'concrete', 'spanning'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -401,7 +401,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['Football', 'as', 'the'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -414,7 +414,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['safe', 'a', 'Lionel'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -427,7 +427,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['was', 'born', 'Andalusia'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -440,7 +440,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['per', 'averages', 'game'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -453,7 +453,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['instability', 'on', 'right'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -466,7 +466,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['and', 'London', 'College'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -479,7 +479,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['They', 'regular', 'record'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -492,7 +492,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=['of', 'a', 'Dejun'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -505,7 +505,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.starts_with,
         metric_value='a',
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -518,7 +518,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.starts_with,
         metric_value='customers',
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -531,7 +531,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.starts_with,
         metric_value='i',
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -544,7 +544,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.starts_with,
         metric_value='mr',
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -557,7 +557,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.starts_with,
         metric_value='he',
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -570,7 +570,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.starts_with,
         metric_value='in',
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -583,7 +583,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.starts_with,
         metric_value='blood',
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -596,7 +596,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.starts_with,
         metric_value='we',
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -609,7 +609,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.starts_with,
         metric_value='shoblom',
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -622,7 +622,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.starts_with,
         metric_value='in',
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -635,7 +635,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.starts_with,
         metric_value='this',
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -648,7 +648,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.starts_with,
         metric_value='his',
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -661,7 +661,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.starts_with,
         metric_value='dabinyaba',
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -674,7 +674,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.starts_with,
         metric_value='shubskaya',
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -687,7 +687,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.starts_with,
         metric_value='she',
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -700,7 +700,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.starts_with,
         metric_value='the',
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -713,7 +713,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.starts_with,
         metric_value='this',
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -726,7 +726,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.starts_with,
         metric_value='it',
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -739,7 +739,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.starts_with,
         metric_value='sign',
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -752,7 +752,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.starts_with,
         metric_value='entinostat',
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -765,7 +765,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.starts_with,
         metric_value='tin',
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -778,7 +778,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.starts_with,
         metric_value='the',
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -791,7 +791,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.starts_with,
         metric_value='she',
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -804,7 +804,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.starts_with,
         metric_value='he',
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -817,7 +817,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['there', 'this', 'is'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -830,7 +830,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['there', 'this', 'is'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -843,7 +843,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['be', 'this', 'and'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -856,7 +856,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['there', 'this', 'is'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -869,7 +869,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['there', 'to', 'is'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -882,7 +882,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['be', 'to', 'and'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -895,7 +895,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['be', 'of', 'is'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -908,7 +908,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['there', 'this', 'is'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -921,7 +921,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['there', 'to', 'is'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -934,7 +934,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['be', 'this', 'is'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -947,7 +947,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['be', 'this', 'is'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -960,7 +960,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['there', 'to', 'and'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -973,7 +973,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['there', 'this', 'is'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -986,7 +986,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['be', 'this', 'is'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -999,7 +999,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['be', 'this', 'is'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -1012,7 +1012,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['be', 'this', 'is'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -1025,7 +1025,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['there', 'this', 'is'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -1038,7 +1038,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['be', 'this', 'and'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -1051,7 +1051,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['there', 'this', 'is'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -1064,7 +1064,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['be', 'this', 'is'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -1077,7 +1077,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['there', 'to', 'is'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -1090,7 +1090,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['be', 'this', 'is'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -1103,7 +1103,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['there', 'this', 'is'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -1116,7 +1116,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['the', 'to', 'in'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -1129,7 +1129,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['there', 'this', 'and'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -1142,7 +1142,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['be', 'this', 'and'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -1155,7 +1155,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['there', 'of', 'and'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -1168,7 +1168,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['be', 'this', 'is'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -1181,7 +1181,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['be', 'of', 'in'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -1194,7 +1194,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['be', 'of', 'is'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -1207,7 +1207,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['be', 'this', 'is'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -1220,7 +1220,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['there', 'this', 'is'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -1233,7 +1233,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['there', 'this', 'is'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -1246,7 +1246,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['there', 'this', 'is'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -1259,7 +1259,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['be', 'this', 'in'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -1272,7 +1272,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['there', 'this', 'is'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -1285,7 +1285,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['there', 'this', 'is'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 
@@ -1298,7 +1298,7 @@ collie_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=['be', 'to', 'is'],
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
 ]

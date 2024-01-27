@@ -31,8 +31,8 @@ class Type(Enum):
 
 
 class Comparison(Enum):
-    greater_than: Callable = lambda baseline, modified: baseline < modified
-    less_than: Callable = lambda baseline, modified: baseline > modified
+    greater_eq_than: Callable = lambda baseline, modified: baseline <= modified
+    less_eq_than: Callable = lambda baseline, modified: baseline >= modified
 
     def __call__(self, *args, **kwargs):
         return self.value(*args, **kwargs)
@@ -48,6 +48,7 @@ class Metric(Enum):
     regex_search: Callable = lambda x, y: bool(re.search(y, x))
     is_language: Callable = lambda x, y: detect(x) == y
     starts_with: Callable = lambda x, y: x.lower().strip().startswith(y.lower().strip())
+    doesnt_start_with: Callable = lambda x, y: not x.lower().strip().startswith(y.lower().strip())
     
     def __call__(self, *args, **kwargs):
         return self.value(*args, **kwargs)
