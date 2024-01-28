@@ -88,7 +88,9 @@ class TrainingArguments(TransformerTrainingArguments):
     lcdpo_lambda: float = 0.5
     lcdpo_sigma_soft: float = 0.3
     lcdpo_sigma_hard: float = 0.3
+    lcdpo_avg_kl: bool = False
     wandb_project: Optional[str] = None
+    eval_split: float = 0.05
 
 
 @dataclass
@@ -97,6 +99,7 @@ class EvalArguments:
     num_prompts: Optional[int] = None
     num_negative_prompts: Optional[int] = None
     num_general_prompts: Optional[int] = None
+    eval_answer_quality: bool = True
 
 
 class PeftSavingCallback(TrainerCallback):
@@ -246,6 +249,9 @@ def get_train_file_name(training_args: TrainingArguments) -> str:
     
     if training_args.filter_relevant_feedback:
         file_name_parts.append("-filtered")
+
+    if training_args.lcdpo_avg_kl:
+        file_name_parts.append("-avgkl")
     
     append_if_different(training_args.max_prompts, "max_prompts")
     
