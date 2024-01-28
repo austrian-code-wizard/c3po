@@ -9,7 +9,7 @@ np.random.seed(42)
 
 from src.logger import logger
 from src.models import get_model
-from src.dataset.feedback_utils import Feedback, Scope
+from src.dataset.feedback_utils import Feedback
 from src.feedback import manual_feedback as all_feedback
 from src.dataset.general_prompts import GeneralPromptDataset
 from src.utils import get_args, split_numbered_list, ModelArguments
@@ -42,6 +42,7 @@ def sample_categories(feedback: list[Feedback], model_args: ModelArguments, num_
     # We cannot tolerate failed API calls here
     assert all([r is not None for r in responses]), "Category generation failed"
 
+    responses = [r.split("REVISED_CATEGORIES:")[-1].strip() for r in responses]
     responses = [split_numbered_list(r) for r in responses]
     assert all([len(r) == num_categories for r in responses]), "Category generation failed"
     for f, r in zip(feedback, responses):
@@ -63,6 +64,10 @@ def sample_prompts(feedback: list[Feedback], model_args: ModelArguments, num_pro
 
     # We cannot tolerate failed API calls here
     assert all([r is not None for r in responses]), "Prompt generation failed"
+
+    if negative:
+        # We are using revisions in our prompting format to make negative examples more robust
+        responses = [r.split("REVISED_PROMPTS:")[-1].strip() for r in responses]
 
     # Num responses (= num feedbacks x num categories) x num prompts per category
     responses = [prompt for r in responses for prompt in split_numbered_list(r)]
