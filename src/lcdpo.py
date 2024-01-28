@@ -9,7 +9,7 @@ from trl import DPOTrainer
 from transformers import PreTrainedModel
 
 
-def masked_dl_div(pred_logits: torch.Tensor, teacher_logits: torch.Tensor, attention_mask: torch.Tensor = None):
+def masked_dl_div(pred_logits: torch.Tensor, teacher_logits: torch.Tensor, attention_mask: torch.Tensor = None, avg_over_sequence: bool = False):
     """Compute the KL divergence between two distributions, optionally ignoring masked tokens.
     
     Args:
@@ -22,7 +22,10 @@ def masked_dl_div(pred_logits: torch.Tensor, teacher_logits: torch.Tensor, atten
     teacher_logprobs = teacher_logits.log_softmax(-1) # (B, T, D)
     per_token_kls = (teacher_logprobs.exp() * (teacher_logprobs - pred_logprobs)).sum(-1) # (B, T)
     masked_kls = per_token_kls * (attention_mask if attention_mask is not None else 1) # (B, T)
-    per_sequence_kls = masked_kls.sum(-1) # (B,)
+    if avg_over_sequence:
+        per_sequence_kls = masked_kls.sum(-1) / (attention_mask.sum(-1) if attention_mask is not None else masked_kls.shape[-1]) # (B,)
+    else:
+        per_sequence_kls = masked_kls.sum(-1) # (B,)
     return per_sequence_kls.mean(0) # scalar
 
 
@@ -32,7 +35,7 @@ class LocallyConstrainedDPOTrainer(DPOTrainer):
     While the DPO trainer expects a dataset with columns "prompt", "chosen", and "rejected", this trainer
     expects a dataset with columns "prompt", "chosen", "rejected", "hard_negative", and "hard_negative"
     """
-    def __init__(self, *args, kd_temperature: float = 5, kd_lambda: float = 0.5, sigma_soft: float = 0.3, sigma_hard: float = 0.3, response_template: str = "[/INST]", ignore_index: int = -100, **kwargs):
+    def __init__(self, *args, kd_temperature: float = 5, kd_lambda: float = 0.5, sigma_soft: float = 0.3, sigma_hard: float = 0.3, use_avg_kl: bool = False, response_template: str = "[/INST]", ignore_index: int = -100, **kwargs):
         self.response_template = response_template
         self.response_token_ids = kwargs["tokenizer"].encode(response_template, add_special_tokens=False)
         self.ignore_index = ignore_index
@@ -40,6 +43,7 @@ class LocallyConstrainedDPOTrainer(DPOTrainer):
         self.kd_lambda = kd_lambda
         self.sigma_soft = sigma_soft
         self.sigma_hard = sigma_hard
+        self.use_avg_kl = use_avg_kl
         super().__init__(*args, **kwargs)
 
     
@@ -78,7 +82,7 @@ class LocallyConstrainedDPOTrainer(DPOTrainer):
         student_logits = student_output.logits / self.kd_temperature
 
         # Compute the loss
-        distillation_loss = masked_dl_div(student_logits, teacher_logits, attention_mask) * (self.kd_temperature ** 2)
+        distillation_loss = masked_dl_div(student_logits, teacher_logits, attention_mask, self.use_avg_kl) * (self.kd_temperature ** 2)
 
         # Compute the true label loss
         student_target_loss = student_output.loss
