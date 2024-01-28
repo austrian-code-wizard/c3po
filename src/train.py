@@ -92,9 +92,8 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
         dataset_constructor = to_lcdpo
     dataset = dataset_constructor(
         prompts,
-        negative_prompts,
-        general_prompts)
-    dataset = dataset.shuffle(seed=42)
+        negative_prompts if (training_args.negative_prompt_ratio > 0 or training_args.algo == "lcdpo") else None,
+        general_prompts if (training_args.negative_prompt_ratio > 0 or training_args.algo == "lcdpo") else None)
     
     # Add LoRA config
     assert training_args.lora_enable, "Currently only LoRA training is supported"
@@ -119,6 +118,13 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
     # Deactivate cache
     model.model.config.use_cache = False
 
+    # Create eval dataset
+    dataset = dataset.train_test_split(test_size=training_args.eval_split, seed=42, shuffle=True)
+    eval_dataset = dataset["test"]
+    dataset = dataset["train"]
+
+    logger.info(f"Training on {len(dataset)} prompts, evaluating on {len(eval_dataset)} prompts for feedback \"{feedback.content}\"")
+
     if training_args.algo == "dpo":
         trainer = DPOTrainer(
             model=model.model,
@@ -127,6 +133,7 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
             args=training_args,
             beta=training_args.dpo_beta,
             train_dataset=dataset,
+            eval_dataset=eval_dataset,
             tokenizer=model.tokenizer,
             peft_config=peft_config,
             callbacks=[PeftSavingCallback] if training_args.lora_enable else None
@@ -142,7 +149,9 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
             kd_temperature=training_args.lcdpo_temp,
             sigma_soft=training_args.lcdpo_sigma_soft,
             sigma_hard=training_args.lcdpo_sigma_hard,
+            use_avg_kl=training_args.lcdpo_avg_kl,
             train_dataset=dataset,
+            eval_dataset=eval_dataset,
             tokenizer=model.tokenizer,
             peft_config=peft_config,
             callbacks=[PeftSavingCallback] if training_args.lora_enable else None
@@ -155,6 +164,7 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
             model=model.model,
             args=training_args,
             train_dataset=dataset,
+            eval_dataset=eval_dataset,
             tokenizer=model.tokenizer,
             data_collator=collator,
             max_seq_length=2048,
