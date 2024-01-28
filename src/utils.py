@@ -89,6 +89,7 @@ class TrainingArguments(TransformerTrainingArguments):
     lcdpo_sigma_soft: float = 0.3
     lcdpo_sigma_hard: float = 0.3
     lcdpo_avg_kl: bool = False
+    lcdpo_l2: bool = False
     wandb_project: Optional[str] = None
     eval_split: float = 0.05
 

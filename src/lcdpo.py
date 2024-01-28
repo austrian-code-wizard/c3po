@@ -35,7 +35,7 @@ class LocallyConstrainedDPOTrainer(DPOTrainer):
     While the DPO trainer expects a dataset with columns "prompt", "chosen", and "rejected", this trainer
     expects a dataset with columns "prompt", "chosen", "rejected", "hard_negative", and "hard_negative"
     """
-    def __init__(self, *args, kd_temperature: float = 5, kd_lambda: float = 0.5, sigma_soft: float = 0.3, sigma_hard: float = 0.3, use_avg_kl: bool = False, response_template: str = "[/INST]", ignore_index: int = -100, **kwargs):
+    def __init__(self, *args, kd_temperature: float = 5, kd_lambda: float = 0.5, sigma_soft: float = 0.3, sigma_hard: float = 0.3, use_avg_kl: bool = False, use_l2: bool = False, response_template: str = "[/INST]", ignore_index: int = -100, **kwargs):
         self.response_template = response_template
         self.response_token_ids = kwargs["tokenizer"].encode(response_template, add_special_tokens=False)
         self.ignore_index = ignore_index
@@ -44,6 +44,7 @@ class LocallyConstrainedDPOTrainer(DPOTrainer):
         self.sigma_soft = sigma_soft
         self.sigma_hard = sigma_hard
         self.use_avg_kl = use_avg_kl
+        self.use_l2 = use_l2
         super().__init__(*args, **kwargs)
 
     
@@ -146,7 +147,10 @@ class LocallyConstrainedDPOTrainer(DPOTrainer):
             kd_hard_loss, kd_hard_metrics = self.compute_knowledge_distillation_loss(model, inputs, train_eval="train", target="hard")
 
             # Compute combined loss
-            loss = dpo_loss + self.sigma_soft * kd_soft_loss + self.sigma_hard * kd_hard_loss
+            if not self.use_l2:
+                loss = dpo_loss + self.sigma_soft * kd_soft_loss + self.sigma_hard * kd_hard_loss
+            else:
+                loss = dpo_loss + self.sigma_soft * 0.5 * torch.square(kd_soft_loss) + self.sigma_hard * 0.5 * torch.square(kd_hard_loss)
             metrics = {
                 **dpo_metrics,
                 **kd_soft_metrics,
