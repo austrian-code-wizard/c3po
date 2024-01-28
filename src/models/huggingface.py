@@ -34,7 +34,7 @@ class HuggingfaceModel:
         return instance
 
 
-    def get_responses(self, batch: list[list[str]], gen_config: dict = {}, batch_size: int = 16) -> list[str]:
+    def get_responses(self, batch: list[list[str]], gen_config: dict = {}, batch_size: int = 32) -> list[str]:
         """Assumes batch is a list of lists of strings, where each inner list is a list of chat messages that alternate between user and assistant."""
         batch = format_messages(batch)
         batch = [self.tokenizer.apply_chat_template(b, tokenize=False) for b in batch]
