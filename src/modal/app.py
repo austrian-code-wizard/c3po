@@ -89,6 +89,7 @@ def main(
     do_train: bool = False,
     do_eval: bool = False,
     feedback_prefix: str = None,
+    feedback_category: str = None,
     copy_results: bool = True,
     sweep_params: str = None,  # Changed to sweep_params to indicate multiple parameters
     sweep_values: str = None
@@ -99,6 +100,8 @@ def main(
     feedback = all_feedback
     if feedback_prefix is not None:
         feedback = [f for f in feedback if f.content.startswith(feedback_prefix)]
+    if feedback_category is not None:
+        feedback = [f for f in feedback if f.categories is not None and feedback_category in f.categories]
     print(f"Using {len(feedback)} feedbacks.")
 
     with open(arg_file, "r") as f:
