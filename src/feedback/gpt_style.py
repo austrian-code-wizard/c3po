@@ -9,7 +9,7 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
  
@@ -20,7 +20,7 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
  
@@ -31,7 +31,7 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
  
@@ -42,7 +42,7 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
  
@@ -53,7 +53,7 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
  
@@ -64,7 +64,7 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
  
@@ -75,7 +75,7 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
  
@@ -86,7 +86,7 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
  
@@ -97,7 +97,7 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
  
@@ -108,7 +108,7 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
  
@@ -119,7 +119,7 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
  
@@ -130,7 +130,7 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_than
+        comparison=Comparison.greater_eq_than
     ),
 
  

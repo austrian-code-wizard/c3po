@@ -106,7 +106,7 @@ manual_feedback = [
         categories=["gpt_style"],
         type=Type.qualitative,
         comparison=Comparison.greater_eq_than
-    ),
+    )
 ]
 
 
