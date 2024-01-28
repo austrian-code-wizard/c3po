@@ -14,8 +14,8 @@ from src.utils import format_messages, ModelArguments, throttle, catch_error_ret
 
 
 class OpenAIModel:
-    MAX_WORKERS = 512 # Maximum number of threads to use for sending requests
-    RPI = 512  # Requests per minute limit
+    MAX_WORKERS = 32 # Maximum number of threads to use for sending requests
+    RPI = 64  # Requests per minute limit
     INTERVAL = 60 # Interval in seconds to check the number of requests
     last_requests = []  # List to store timestamps of the last requests
     lock = threading.Lock()  # Lock to make checking the limit and sending requests thread-safe
