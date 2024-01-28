@@ -88,7 +88,7 @@ def answer_eval(
 ) -> list[dict]:
     model = get_model(model_args)
     responses = model.get_responses([
-        [ANSWER_QUALITATIVE_EVAL.format(prompt=p, completion1=resp1, completion2=resp2)]
+        [ANSWER_QUALITATIVE_EVAL.format(prompt=p, completion1=resp1, completion2=resp2, feedback=feedback.content)]
     for p, resp1, resp2 in zip(prompts, baseline_responses, improved_responses)], ANSWER_QUALITATIVE_EVAL_CONFIG)
     responses = [r.split("BETTER_RESPONSE: ")[-1].strip().split()[0] if r is not None else None for r in responses]
     responses = [int(r) if r is not None and r.isnumeric() else None for r in responses]
@@ -175,7 +175,9 @@ def eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedbac
             datasets[prompt_type]["baseline"],
             datasets[prompt_type]["improved"],
             model_args.qualitative_eval_model
-        )
+        ) if eval_args.eval_answer_quality else [{
+            "answer_quality_improved_better_baseline": -1
+        } for _ in feedback_result]
         results[prompt_type] = [dict(**f, **a) for f, a in zip(feedback_result, answer_quality_result)]
 
 
