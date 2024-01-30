@@ -62,7 +62,7 @@ def _train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedb
     volumes=VOLUME_CONFIG,
     cpu=4.0,
     image=stub.gpu_image,
-    gpu=gpu.A100(count=1), # TODO: uncomment again after baseline runs
+    gpu=gpu.A10G(count=1),
     timeout=3600 * 12,
     concurrency_limit=512,
     mounts=[
