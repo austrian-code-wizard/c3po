@@ -15,7 +15,7 @@ from src.utils import format_messages, ModelArguments, throttle, catch_error_ret
 
 class OpenAIModel:
     MAX_WORKERS = 32 # Maximum number of threads to use for sending requests
-    RPI = 64  # Requests per minute limit
+    RPI = 128  # Requests per minute limit
     INTERVAL = 60 # Interval in seconds to check the number of requests
     last_requests = []  # List to store timestamps of the last requests
     lock = threading.Lock()  # Lock to make checking the limit and sending requests thread-safe
@@ -26,6 +26,7 @@ class OpenAIModel:
         "gpt-4-0125-preview"
     ]
     KEY_ENV_VAR = "OPENAI_API_KEY"
+    MAX_TOKENS = 4096
 
     def __init__(self, model_name: str):
         api_key = os.getenv(self.KEY_ENV_VAR)
@@ -34,7 +35,7 @@ class OpenAIModel:
         self.model = OpenAI(
             api_key=api_key,
             base_url=getattr(self, "BASEURL", None),
-            max_retries=3)
+            max_retries=2)
         self.model_name = model_name
 
     @classmethod
@@ -50,13 +51,14 @@ class OpenAIModel:
     
         @throttle(self.lock, self.RPI, self.last_requests, interval=self.INTERVAL)
         @catch_error_return_none
-        @retry(stop=stop_after_attempt(3), wait=wait_random_exponential(multiplier=1, max=30))
+        @retry(stop=stop_after_attempt(2), wait=wait_random_exponential(multiplier=1, max=30))
         def get_response(conversation: list[dict[str, str]]):
             return self.model.chat.completions.create(
                 model=self.model_name,
                 messages=conversation,
                 temperature=temperature,
-                top_p=top_p
+                top_p=top_p,
+                max_tokens=self.MAX_TOKENS
             )
 
         with ThreadPoolExecutor(max_workers=self.MAX_WORKERS) as executor:
