@@ -24,7 +24,7 @@
     "sample_args": {
         "scope": ["regional"],
         "type": ["qualitative", "quantitative"],
-        "num_feedbacks": 10,
+        "num_feedbacks": 11,
         "prompts_per_category": 32,
         "num_prompts": 960,
         "num_negative_prompts": 960,
@@ -52,7 +52,8 @@
         "warmup_ratio": 0.05,
         "lr_scheduler_type": "cosine",
         "save_strategy": "no",
-        "evaluation_strategy": "no",
+        "evaluation_strategy": "steps",
+        "eval_steps": 8,
         "logging_strategy": "steps",
         "logging_steps": 1,
         "bf16": true,
@@ -64,7 +65,7 @@
         "overwrite_output_dir": true,
         "dpo_beta": 0.1,
         "lcdpo_temp": 1,
-        "lcdpo_lambda": 1,
+        "lcdpo_lambda": 0,
         "lcdpo_sigma_soft": 0.2,
         "lcdpo_sigma_hard": 0.1
     },
@@ -72,6 +73,7 @@
         "method": "trained",
         "num_prompts": 75,
         "num_negative_prompts": 75,
-        "num_general_prompts": 75
+        "num_general_prompts": 75,
+        "eval_answer_quality": false
     }
 }

@@ -33,9 +33,9 @@
         "overwrite": true
     },
     "training_args": {
-        "algo": "dpo",
-        "negative_prompt_ratio": 0.0,
-        "general_prompt_ratio": 0.0,
+        "algo": "sft",
+        "negative_prompt_ratio": 0.5,
+        "general_prompt_ratio": 0.5,
         "filter_relevant_feedback": false,
         "lora_enable": true,
         "lora_r": 64,
@@ -63,9 +63,8 @@
         "tf32": true,
         "gradient_checkpointing": true,
         "dataloader_num_workers": 4,
-        "remove_unused_columns": false,
-        "overwrite_output_dir": true,
-        "dpo_beta": 0.1
+        "remove_unused_columns": true,
+        "overwrite_output_dir": true
     },
     "eval_args": {
         "method": "trained",

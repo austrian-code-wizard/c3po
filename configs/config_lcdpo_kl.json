@@ -33,9 +33,7 @@
         "overwrite": true
     },
     "training_args": {
-        "algo": "dpo",
-        "negative_prompt_ratio": 0.0,
-        "general_prompt_ratio": 0.0,
+        "algo": "lcdpo",
         "filter_relevant_feedback": false,
         "lora_enable": true,
         "lora_r": 64,
@@ -65,7 +63,11 @@
         "dataloader_num_workers": 4,
         "remove_unused_columns": false,
         "overwrite_output_dir": true,
-        "dpo_beta": 0.1
+        "dpo_beta": 0.1,
+        "lcdpo_temp": 1,
+        "lcdpo_lambda": 1,
+        "lcdpo_sigma_soft": 0.2,
+        "lcdpo_sigma_hard": 0.1
     },
     "eval_args": {
         "method": "trained",

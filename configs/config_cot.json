@@ -41,6 +41,7 @@
         "method": "cot",
         "num_prompts": 75,
         "num_negative_prompts": 75,
-        "num_general_prompts": 75
+        "num_general_prompts": 75,
+        "eval_answer_quality": false
     }
 }
