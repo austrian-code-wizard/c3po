@@ -1,4 +1,5 @@
-from src.feedback.manual import manual_feedback
+# from src.feedback.manual import manual_feedback
+from src.feedback.final_exp import all_feedback as manual_feedback
 from src.feedback.collie import collie_feedback
 from src.feedback.gpt_content import gpt_content_feedback
 from src.feedback.gpt_style import gpt_style_feedback
