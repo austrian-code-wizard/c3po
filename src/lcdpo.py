@@ -29,13 +29,32 @@ def masked_dl_div(pred_logits: torch.Tensor, teacher_logits: torch.Tensor, atten
     return per_sequence_kls.mean(0) # scalar
 
 
+def masked_lm_loss(
+    logits: torch.FloatTensor,
+    labels: torch.LongTensor,
+    attention_mask: torch.LongTensor,
+) -> torch.FloatTensor:
+
+    # Ensure we set ignore indices where there's no attention
+    labels[attention_mask == 0] = -100
+    # Shift so that tokens < n predict n
+    shift_logits = logits[..., :-1, :].contiguous() # (B, T-1, D)
+    shift_labels = labels[..., 1:].contiguous() # (B, T-1)
+
+    B, T = shift_labels.shape
+    shift_logits = shift_logits.view(B, -1, T) # (B, D, T-1)
+
+    loss_fct = nn.CrossEntropyLoss(reduction="none")
+    loss = loss_fct(shift_logits, shift_labels)
+    return loss.sum(-1).mean(0)
+
 class LocallyConstrainedDPOTrainer(DPOTrainer):
     """Modified DPO trainer that additionally applies a knowledge distillation loss to out-of-domain data.
 
     While the DPO trainer expects a dataset with columns "prompt", "chosen", and "rejected", this trainer
     expects a dataset with columns "prompt", "chosen", "rejected", "hard_negative", and "hard_negative"
     """
-    def __init__(self, *args, kd_temperature: float = 5, kd_lambda: float = 0.5, sigma_soft: float = 0.3, sigma_hard: float = 0.3, use_avg_kl: bool = False, use_l2: bool = False, response_template: str = "[/INST]", ignore_index: int = -100, **kwargs):
+    def __init__(self, *args, kd_temperature: float = 5, kd_lambda: float = 0.5, sigma_soft: float = 0.3, sigma_hard: float = 0.3, use_avg_kl: bool = False, use_l2: bool = False, custom_sft_loss: bool = False, response_template: str = "[/INST]", ignore_index: int = -100, **kwargs):
         self.response_template = response_template
         self.response_token_ids = kwargs["tokenizer"].encode(response_template, add_special_tokens=False)
         self.ignore_index = ignore_index
@@ -45,6 +64,7 @@ class LocallyConstrainedDPOTrainer(DPOTrainer):
         self.sigma_hard = sigma_hard
         self.use_avg_kl = use_avg_kl
         self.use_l2 = use_l2
+        self.custom_sft_loss = custom_sft_loss
         super().__init__(*args, **kwargs)
 
     
@@ -86,7 +106,10 @@ class LocallyConstrainedDPOTrainer(DPOTrainer):
         distillation_loss = masked_dl_div(student_logits, teacher_logits, attention_mask, self.use_avg_kl) * (self.kd_temperature ** 2)
 
         # Compute the true label loss
-        student_target_loss = student_output.loss
+        if self.custom_sft_loss:
+            student_target_loss = masked_lm_loss(student_logits, batch["labels"], attention_mask)
+        else:
+            student_target_loss = student_output.loss
 
         # Calculate final loss
         loss = (1. - self.kd_lambda) * student_target_loss + self.kd_lambda * distillation_loss

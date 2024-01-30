@@ -150,6 +150,7 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
             sigma_soft=training_args.lcdpo_sigma_soft,
             sigma_hard=training_args.lcdpo_sigma_hard,
             use_avg_kl=training_args.lcdpo_avg_kl,
+            custom_sft_loss=training_args.lcdpo_custom_sft_loss,
             train_dataset=dataset,
             eval_dataset=eval_dataset,
             tokenizer=model.tokenizer,
