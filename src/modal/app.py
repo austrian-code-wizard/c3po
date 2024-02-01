@@ -47,13 +47,17 @@ def _sample(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: list
         Mount.from_local_dir("configs", remote_path="/root/configs")
     ]
 )
-def _train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedback):
-    train(arg_dict, run_id, data_dir, feedback)
+def _train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedback, second_feedback: Feedback = None):
+    train(arg_dict, run_id, data_dir, feedback, second_feedback)
 
     # TODO: remove this once we have a better way open file pointers
     del feedback.prompts
     del feedback.negative_prompts
     del feedback.general_prompts
+    if second_feedback is not None:
+        del second_feedback.prompts
+        del second_feedback.negative_prompts
+        del second_feedback.general_prompts
     stub.pretrained_volume.commit()
     stub.results_volume.commit()
 
@@ -69,13 +73,17 @@ def _train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedb
         Mount.from_local_dir("configs", remote_path="/root/configs")
     ]
 )
-def _eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedback):
-    evaluation(arg_dict, run_id, data_dir, feedback)
+def _eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedback, second_feedback: Feedback = None):
+    evaluation(arg_dict, run_id, data_dir, feedback, second_feedback)
 
     # TODO: remove this once we have a better way open file pointers
     del feedback.prompts
     del feedback.negative_prompts
     del feedback.general_prompts
+    if second_feedback is not None:
+        del second_feedback.prompts
+        del second_feedback.negative_prompts
+        del second_feedback.general_prompts
     stub.pretrained_volume.commit()
     stub.results_volume.commit()
 
@@ -89,6 +97,7 @@ def main(
     do_train: bool = False,
     do_eval: bool = False,
     feedback_prefix: str = None,
+    second_feedback_prefix: str = None,
     feedback_category: str = None,
     copy_results: bool = True,
     sweep_params: str = None,  # Changed to sweep_params to indicate multiple parameters
@@ -102,6 +111,14 @@ def main(
         feedback = [f for f in feedback if f.content.startswith(feedback_prefix)]
     if feedback_category is not None:
         feedback = [f for f in feedback if f.categories is not None and feedback_category in f.categories]
+
+    # For multi adapter eval
+    second_feedback = None
+    if second_feedback_prefix is not None:
+        second_feedback = [f for f in feedback if f.content.startswith(second_feedback_prefix)]
+        assert len(second_feedback) == 1, "Must specify exactly one second feedback"
+        second_feedback = second_feedback[0]
+
     print(f"Using {len(feedback)} feedbacks.")
 
     with open(arg_file, "r") as f:
@@ -153,10 +170,10 @@ def main(
                 copy_json_files_recursively("results-vol-metarlaif", os.path.join(data_dir.replace("/results/", ""), run_id, "sample", f.file_name))
     if do_train:
         print("Training model.")
-        _ = list(_train.starmap([(args, run_id, data_dir, f) for f, args in zip(feedback, arg_dicts)]))
+        _ = list(_train.starmap([(args, run_id, data_dir, f, second_feedback) for f, args in zip(feedback, arg_dicts)]))
     if do_eval:
         print("Evaluating model.")
-        _ = list(_eval.starmap([(args, run_id, data_dir, f) for f, args in zip(feedback, arg_dicts)]))
+        _ = list(_eval.starmap([(args, run_id, data_dir, f, second_feedback) for f, args in zip(feedback, arg_dicts)]))
         if copy_results:
             for f in feedback:
                 copy_json_files_recursively("results-vol-metarlaif", os.path.join(data_dir.replace("/results/", ""), run_id, "eval", f.file_name))

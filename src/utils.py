@@ -93,6 +93,8 @@ class TrainingArguments(TransformerTrainingArguments):
     lcdpo_custom_sft_loss: bool = False
     wandb_project: Optional[str] = None
     eval_split: float = 0.05
+    multi_feedback_training: bool = False
+    use_base_prefix: Optional[str] = None
 
 
 @dataclass
@@ -223,13 +225,17 @@ defaults = {
     "alpha": 64,
     "epochs": 1,
     "max_prompts": None,
+    "multi_feedback_training": False,
+    "model_name_or_path": "mistralai/Mistral-7B-Instruct-v0.2",
+    "use_base_prefix": None
 }
 
-def get_train_file_name(training_args: TrainingArguments) -> str:
+def get_train_file_name(training_args: TrainingArguments, model_args: ModelArguments) -> str:
     file_name_parts = [training_args.algo]
     
     def append_if_different(arg_value, key):
         if arg_value != defaults[key]:
+            arg_value = str(arg_value).replace("/", "-")
             file_name_parts.append(f"-{arg_value}-{key}")
 
     if training_args.algo in ["dpo", "lcdpo"]:
@@ -248,7 +254,12 @@ def get_train_file_name(training_args: TrainingArguments) -> str:
         append_if_different(training_args.lora_alpha, "alpha")
     
     append_if_different(training_args.num_train_epochs, "epochs")
+    append_if_different(model_args.model_name_or_path, "model_name_or_path")
+    append_if_different(training_args.use_base_prefix, "use_base_prefix")
     
+    if training_args.multi_feedback_training:
+        file_name_parts.append("-multi")
+
     if training_args.filter_relevant_feedback:
         file_name_parts.append("-filtered")
 
@@ -271,3 +282,11 @@ def print_num_trainable_params(model):
                            for p in model.parameters() if p.requires_grad)
     all_params = sum(p.numel() for p in model.parameters())
     logger.info(f"Trainable params: {trainable_params}/{all_params} ({trainable_params/all_params:.2%})")
+
+
+def find_file_with_prefix(path: str, prefix: str) -> str:
+    """Finds the file in the directory with the given prefix."""
+    for file in os.listdir(path):
+        if file.startswith(prefix):
+            return file
+    raise FileNotFoundError(f"No file with prefix {prefix} found in {path}")
