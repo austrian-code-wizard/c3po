@@ -166,8 +166,14 @@ class LocallyConstrainedDPOTrainer(DPOTrainer):
         with compute_loss_context_manager():
             dpo_loss, dpo_metrics = self.get_batch_loss_metrics(model, inputs, train_eval="train")
             dpo_metrics["dpo_loss/loss"] = dpo_loss
-            kd_soft_loss, kd_soft_metrics = self.compute_knowledge_distillation_loss(model, inputs, train_eval="train", target="soft")
-            kd_hard_loss, kd_hard_metrics = self.compute_knowledge_distillation_loss(model, inputs, train_eval="train", target="hard")
+
+            kd_soft_loss, kd_soft_metrics = 0, {}
+            if self.sigma_soft > 0:
+                kd_soft_loss, kd_soft_metrics = self.compute_knowledge_distillation_loss(model, inputs, train_eval="train", target="soft")
+
+            kd_hard_loss, kd_hard_metrics = 0, {}
+            if self.sigma_hard > 0:
+                kd_hard_loss, kd_hard_metrics = self.compute_knowledge_distillation_loss(model, inputs, train_eval="train", target="hard")
 
             # Compute combined loss
             if not self.use_l2:

@@ -4,7 +4,7 @@ import argparse
 from typing import Any, Literal
 
 import numpy as np
-from datasets import Dataset
+from datasets import Dataset, DatasetDict
 np.random.seed(42)
 
 from src.logger import logger
@@ -190,14 +190,21 @@ def sample(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: list[
     logger.info(f"Sampled negative prompts.")
 
     # Add prompts from general prompt dataset
-    add_general_prompts(feedback, data_dir, sample_args.num_general_prompts)
-    logger.info(f"Sampled general prompts.")
+    if feedback[0].general_prompts_available(run_dir) is None:
+        add_general_prompts(feedback, data_dir, sample_args.num_general_prompts)
+        sample_completions(feedback, model_args.completion_model, prompt_type="general_prompts")
+        logger.info(f"Sampled general prompt completions.")
+    else:
+        _ = [f.load_cached_general_prompts(run_dir) for f in feedback]
+        logger.info(f"Using cached general prompts.")
 
     # Sample completions
     sample_completions(feedback, model_args.completion_model, prompt_type="prompts")
     sample_completions(feedback, model_args.completion_model, prompt_type="negative_prompts")
-    sample_completions(feedback, model_args.completion_model, prompt_type="general_prompts")
     logger.info(f"Sampled completions for {len(feedback)} feedbacks")
+
+
+
 
     # Save datasets
     for f in feedback:
@@ -207,9 +214,10 @@ def sample(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: list[
         f.negative_prompts = f.negative_prompts.train_test_split(
             sample_args.train_test_split
         )
-        f.general_prompts = f.general_prompts.train_test_split(
-            sample_args.train_test_split
-        )
+        if not isinstance(f.general_prompts, DatasetDict):
+            f.general_prompts = f.general_prompts.train_test_split(
+                sample_args.train_test_split
+            )
         f.dump_dataset(run_dir)
 
     # TODO: add dummping args dict
