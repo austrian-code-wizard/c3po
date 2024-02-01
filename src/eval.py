@@ -8,7 +8,7 @@ import numpy as np
 from src.logger import logger
 from src.models import get_model
 from src.feedback import manual_feedback as all_feedback
-from src.dataset.feedback_utils import Feedback, Scope, Type
+from src.dataset.feedback_utils import Feedback, Type
 from src.utils import get_args, ModelArguments, get_train_file_name
 from src.dataset.prompts import COMPARE_COMPLETIONS, COMPARE_COMPLETIONS_CONFIG, ANSWER_QUALITATIVE_EVAL, ANSWER_QUALITATIVE_EVAL_CONFIG
 
@@ -56,7 +56,7 @@ def qualitative_feedback_eval(
 ) -> list[dict]:
     model = get_model(model_args)
     responses = model.get_responses([
-        [COMPARE_COMPLETIONS.format(prompt=p, completion1=resp1, completion2=resp2, feedback=feedback)]
+        [COMPARE_COMPLETIONS.format(prompt=p, completion1=resp1, completion2=resp2, feedback=feedback.effect)]
     for p, resp1, resp2 in zip(prompts, baseline_responses, improved_responses)], COMPARE_COMPLETIONS_CONFIG)
     responses = [r.split("BETTER_RESPONSE: ")[-1].strip().split()[0] if r is not None else None for r in responses]
     responses = [int(r) if r is not None and r.isnumeric() else None for r in responses]
@@ -97,7 +97,7 @@ def answer_eval(
     } for r in responses]
 
 
-def eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedback) -> None:
+def eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedback, second_feedback: Feedback = None) -> None:
     model_args, _, train_args, eval_args = get_args(arg_dict)
     
     # Load feedback
@@ -108,6 +108,16 @@ def eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedbac
         raise ValueError(f"Feedback \"{feedback.content}\" has not been sampled yet")
     feedback.load_dataset(run_dir)
     logger.info(f"Loaded feedback \"{feedback.content}\"")
+
+    if second_feedback is not None:
+        assert eval_args.method == "trained", "Second feedback is only supported for evaluating trained model"
+        if not second_feedback.can_load_dataset(run_dir):
+            raise ValueError(f"Feedback \"{second_feedback.content}\" has not been sampled yet")
+        second_feedback.load_dataset(run_dir)
+        logger.info(f"Loaded second feedback \"{second_feedback.content}\"")
+
+    if second_feedback is None and train_args.multi_feedback_training:
+        raise ValueError("Must specify second feedback when using multi-feedback training")
 
     # Construct datasets
     prompt_types = [
@@ -139,10 +149,25 @@ def eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedbac
 
         # Adding adapter
         run_dir = os.path.join(data_dir, run_id, "train", feedback.file_name)
-        train_dir = get_train_file_name(train_args)
-        run_dir = os.path.join(run_dir, train_dir)
+        train_dir = get_train_file_name(train_args, model_args.train_model)
 
-        model.model.load_adapter(run_dir)
+        if second_feedback is not None and train_args.multi_feedback_training:
+            run_dir = os.path.join(run_dir, second_feedback.file_name, train_dir)
+        else:
+            run_dir = os.path.join(run_dir, train_dir)
+            
+        model.model.load_adapter(run_dir, adapter_name="feedback_1")
+        if second_feedback is not None and not train_args.multi_feedback_training:
+            second_run_dir = os.path.join(data_dir, run_id, "train", second_feedback.file_name)
+            second_run_dir = os.path.join(second_run_dir, train_dir)
+            model.model.load_adapter(second_run_dir, adapter_name="feedback_2")
+            model.add_weighted_adapter(["feedback_1", "feedback_2"], [1.0,1.0], combination_type="cat", adapter_name="feedback_combined")
+            model.delete_adapter(["feedback_1", "feedback_2"])
+            model.set_adapter("feedback_combined")
+            logger.info("Loaded combined adapter")
+
+        # Ensure correct generation
+        model.tokenizer.padding_size = "left"
 
         # Get trained responses
         all_prompts = [p for pt in datasets.values() for p in pt["prompts"]]
@@ -199,6 +224,8 @@ def eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedbac
         data[domain_name] = domain
     if eval_args.method == "trained":
         data["train_args"] = train_args.to_dict()
+    if second_feedback is not None:
+        data["second_feedback"] = second_feedback.content
 
     logger.info(f"""Evaluated model for feedback "{feedback.content} using method {eval_args.method}".
 (in-domain) Train vs baseline: {data['in_domain_improved_better_baseline']:.2f}
@@ -208,9 +235,11 @@ def eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedbac
 
     # Save data
     run_dir = os.path.join(data_dir, run_id, "eval", feedback.file_name)
+    if second_feedback is not None:
+        run_dir = os.path.join(run_dir, second_feedback.file_name)
     os.makedirs(run_dir, exist_ok=True)
     if eval_args.method == "trained":
-        train_dir = get_train_file_name(train_args) + ".json"
+        train_dir = get_train_file_name(train_args, model_args.train_model) + ".json"
     else:
         train_dir = f"{eval_args.method}.json"
     run_dir = os.path.join(run_dir, train_dir)

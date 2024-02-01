@@ -2,11 +2,11 @@ import os
 import json
 import argparse
 from time import sleep
-from typing import Any
+from typing import Any, Tuple
 
 import wandb
-from peft import LoraConfig
-from datasets import Dataset
+from peft import LoraConfig, PeftModel
+from datasets import Dataset, concatenate_datasets
 from trl import DPOTrainer, SFTTrainer, DataCollatorForCompletionOnlyLM
 
 from src.logger import logger
@@ -15,7 +15,7 @@ from src.dataset.feedback_utils import Feedback, Type
 from src.lcdpo import LocallyConstrainedDPOTrainer
 from src.dataset.format import to_dpo, to_sft, to_lcdpo
 from src.feedback import manual_feedback as all_feedback
-from src.utils import get_args, find_all_linear_names, dump_arg_dicts, PeftSavingCallback, get_train_file_name, print_num_trainable_params
+from src.utils import get_args, find_all_linear_names, dump_arg_dicts, PeftSavingCallback, get_train_file_name, print_num_trainable_params, TrainingArguments, find_file_with_prefix
 
 
 def filter_relevant_feedback(feedback: Feedback, prompts: Dataset | None) -> Dataset | None:
@@ -35,28 +35,7 @@ def filter_relevant_feedback(feedback: Feedback, prompts: Dataset | None) -> Dat
     ))
 
 
-def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedback) -> None:
-    model_args, _, training_args, _ = get_args(arg_dict)
-    
-    # Load feedback
-    run_dir = os.path.join(data_dir, run_id, "sample")
-    logger.info(f"Training using data for run {run_id}, stored in {run_dir}")
-    if not feedback.can_load_dataset(run_dir):
-        raise ValueError(f"Feedback \"{feedback.content}\" has not been sampled yet")
-    feedback.load_dataset(run_dir)
-    logger.info(f"Loaded feedback \"{feedback.content}\"")
-
-    run_dir = os.path.join(data_dir, run_id, "train")
-    assert training_args.algo in ["dpo", "sft", "lcdpo"], f"Unknown algorithm {training_args.algo}"
-    train_dir = get_train_file_name(training_args)
-    run_dir = os.path.join(run_dir, feedback.file_name, train_dir)
-
-    # Load model
-    assert model_args.train_model.platform == "huggingface", "Only HuggingFace models are supported for training"
-    model = get_model(model_args.train_model)
-    logger.info("Loaded model")
-
-
+def get_prompts(feedback: Feedback, training_args: TrainingArguments) -> Tuple[Dataset, Dataset, Dataset]:
     # Fetch dataset
     prompts = feedback.prompts["train"].shuffle(seed=42)
     negative_prompts = feedback.negative_prompts["train"].shuffle(seed=42)
@@ -83,6 +62,52 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
         general_prompts = general_prompts.select(range(num_general_prompts))
         logger.info(f"Using {len(general_prompts)} general prompts")
 
+    return prompts, negative_prompts, general_prompts
+
+
+def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedback, second_feedback: Feedback = None) -> None:
+    model_args, _, training_args, _ = get_args(arg_dict)
+    
+    # Load feedback
+    run_dir = os.path.join(data_dir, run_id, "sample")
+    logger.info(f"Training using data for run {run_id}, stored in {run_dir}")
+    if not feedback.can_load_dataset(run_dir):
+        raise ValueError(f"Feedback \"{feedback.content}\" has not been sampled yet")
+    feedback.load_dataset(run_dir)
+    logger.info(f"Loaded feedback \"{feedback.content}\"")
+
+    # Load second feedback if given
+    if second_feedback is not None:
+        assert training_args.multi_feedback_training, "Must set multi_feedback_training to True when providing a second feedback"
+        if not second_feedback.can_load_dataset(run_dir):
+            raise ValueError(f"Feedback \"{second_feedback.content}\" has not been sampled yet")
+        second_feedback.load_dataset(run_dir)
+    elif training_args.multi_feedback_training and second_feedback is None:
+        raise ValueError("Must provide a second feedback when multi_feedback_training is True")
+
+    run_dir = os.path.join(data_dir, run_id, "train")
+    assert training_args.algo in ["dpo", "sft", "lcdpo"], f"Unknown algorithm {training_args.algo}"
+    train_dir = get_train_file_name(training_args, model_args.train_model)
+    run_dir = os.path.join(run_dir, feedback.file_name)
+
+    # If training on multiple feedbacks, reflect that in the run directory
+    if training_args.multi_feedback_training:
+        run_dir = os.path.join(run_dir, second_feedback.file_name)
+    run_dir = os.path.join(run_dir, train_dir)
+
+    # Load model
+    assert model_args.train_model.platform == "huggingface", "Only HuggingFace models are supported for training"
+    model = get_model(model_args.train_model)
+    logger.info("Loaded model")
+
+    prompts, negative_prompts, general_prompts = get_prompts(feedback, training_args)
+    if training_args.multi_feedback_training:
+        prompts2, negative_prompts2, general_prompts2 = get_prompts(second_feedback, training_args)
+        prompts = concatenate_datasets([prompts, prompts2])
+        negative_prompts = concatenate_datasets([negative_prompts, negative_prompts2])
+        general_prompts = concatenate_datasets([general_prompts, general_prompts2])
+        logger.info(f"Using {len(prompts)} combined prompts")
+
     # Format dataset for specific training algorithm
     if training_args.algo == "dpo":
         dataset_constructor = to_dpo
@@ -95,9 +120,17 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
         negative_prompts if (training_args.negative_prompt_ratio > 0 or training_args.algo == "lcdpo") else None,
         general_prompts if (training_args.negative_prompt_ratio > 0 or training_args.algo == "lcdpo") else None)
     
+
+        # Load base training arg adapter if given
+    if training_args.use_base_prefix is not None:
+        base_run_dir = os.path.join(data_dir, run_id, "train", feedback.file_name)
+        adapter_name = find_file_with_prefix(base_run_dir, training_args.use_base_prefix)
+        model.model = PeftModel.from_pretrained(model.model, os.path.join(base_run_dir, adapter_name), is_trainable=True)
+        logger.info(f"Loaded base training model from {base_run_dir}")
+    
     # Add LoRA config
     assert training_args.lora_enable, "Currently only LoRA training is supported"
-    if training_args.lora_enable:
+    if training_args.lora_enable and training_args.use_base_prefix is None:
         peft_config = LoraConfig(
             r=training_args.lora_r, 
             lora_alpha=training_args.lora_alpha, 
@@ -126,6 +159,7 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
     logger.info(f"Training on {len(dataset)} prompts, evaluating on {len(eval_dataset)} prompts for feedback \"{feedback.content}\"")
 
     if training_args.algo == "dpo":
+        model.tokenizer.padding_side = 'left'
         trainer = DPOTrainer(
             model=model.model,
             max_length=2048,
@@ -139,6 +173,7 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
             callbacks=[PeftSavingCallback] if training_args.lora_enable else None
         )
     elif training_args.algo == "lcdpo":
+        model.tokenizer.padding_side = 'left'
         trainer = LocallyConstrainedDPOTrainer(
             model=model.model,
             max_length=2048,
