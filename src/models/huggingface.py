@@ -40,7 +40,7 @@ class HuggingfaceModel:
         batch = [self.tokenizer.apply_chat_template(b, tokenize=False) for b in batch]
 
         generation_config = GenerationConfig(
-            max_new_tokens=1024,
+            max_new_tokens=600,
             use_cache=True,
             **gen_config
         )

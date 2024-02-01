@@ -12,5 +12,5 @@ class TogetherModel(OpenAIModel):
     MODELS = [
         "mistralai/Mistral-7B-Instruct-v0.2"
     ]
-    KEY_ENV_VAR = "TOGETHER_API_KEY_2" # TODO: change this depending on which key to use
+    KEY_ENV_VAR = "TOGETHER_API_KEY_5" # TODO: change this depending on which key to use
     MAX_TOKENS = 600
