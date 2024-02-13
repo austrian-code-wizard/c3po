@@ -66,7 +66,7 @@ def _train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedb
     volumes=VOLUME_CONFIG,
     cpu=4.0,
     image=stub.gpu_image,
-    gpu=gpu.A10G(count=1),
+    gpu=gpu.A100(count=1),
     timeout=3600 * 12,
     concurrency_limit=512,
     mounts=[
@@ -107,8 +107,7 @@ def main(
 
     print(f"Beginning run {run_id=}.")
     feedback = all_feedback
-    if feedback_prefix is not None:
-        feedback = [f for f in feedback if f.content.startswith(feedback_prefix)]
+
     if feedback_category is not None:
         feedback = [f for f in feedback if f.categories is not None and feedback_category in f.categories]
 
@@ -118,6 +117,9 @@ def main(
         second_feedback = [f for f in feedback if f.content.startswith(second_feedback_prefix)]
         assert len(second_feedback) == 1, "Must specify exactly one second feedback"
         second_feedback = second_feedback[0]
+
+    if feedback_prefix is not None:
+        feedback = [f for f in feedback if f.content.startswith(feedback_prefix)]
 
     print(f"Using {len(feedback)} feedbacks.")
 
@@ -176,5 +178,9 @@ def main(
         _ = list(_eval.starmap([(args, run_id, data_dir, f, second_feedback) for f, args in zip(feedback, arg_dicts)]))
         if copy_results:
             for f in feedback:
-                copy_json_files_recursively("results-vol-metarlaif", os.path.join(data_dir.replace("/results/", ""), run_id, "eval", f.file_name))
+                if second_feedback_prefix is None:
+                    path = os.path.join(data_dir.replace("/results/", ""), run_id, "eval", f.file_name)
+                else:
+                    path = os.path.join(data_dir.replace("/results/", ""), run_id, "eval", f.file_name, second_feedback.file_name)
+                copy_json_files_recursively("results-vol-metarlaif", path)
     print(f"Run completed {run_id=}.")

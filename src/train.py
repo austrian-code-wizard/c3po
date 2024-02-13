@@ -13,7 +13,8 @@ from src.logger import logger
 from src.models import get_model
 from src.dataset.feedback_utils import Feedback, Type
 from src.lcdpo import LocallyConstrainedDPOTrainer
-from src.dataset.format import to_dpo, to_sft, to_lcdpo
+from src.sft_weighted import WeightedSFTTrainer
+from src.dataset.format import to_dpo, to_sft, to_lcdpo, to_sft_weighted
 from src.feedback import manual_feedback as all_feedback
 from src.utils import get_args, find_all_linear_names, dump_arg_dicts, PeftSavingCallback, get_train_file_name, print_num_trainable_params, TrainingArguments, find_file_with_prefix
 
@@ -52,12 +53,12 @@ def get_prompts(feedback: Feedback, training_args: TrainingArguments) -> Tuple[D
         prompts = prompts.select(range(min(training_args.max_prompts, len(prompts))))
         logger.info(f"Using {len(prompts)} prompts")
 
-    if training_args.negative_prompt_ratio > 0 and training_args.algo != "lcdpo":
+    if training_args.negative_prompt_ratio > 0 and training_args.algo != "lcdpo" and training_args.algo != "sft_weighted":
         num_negative_prompts = int(training_args.negative_prompt_ratio * len(prompts))
         negative_prompts = negative_prompts.select(range(num_negative_prompts))
         logger.info(f"Using {len(negative_prompts)} negative prompts")
 
-    if training_args.general_prompt_ratio > 0 and training_args.algo != "lcdpo":
+    if training_args.general_prompt_ratio > 0 and training_args.algo != "lcdpo" and training_args.algo != "sft_weighted":
         num_general_prompts = int(training_args.general_prompt_ratio * len(prompts))
         general_prompts = general_prompts.select(range(num_general_prompts))
         logger.info(f"Using {len(general_prompts)} general prompts")
@@ -86,7 +87,7 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
         raise ValueError("Must provide a second feedback when multi_feedback_training is True")
 
     run_dir = os.path.join(data_dir, run_id, "train")
-    assert training_args.algo in ["dpo", "sft", "lcdpo"], f"Unknown algorithm {training_args.algo}"
+    assert training_args.algo in ["dpo", "sft", "lcdpo", "sft_weighted"], f"Unknown algorithm {training_args.algo}"
     train_dir = get_train_file_name(training_args, model_args.train_model)
     run_dir = os.path.join(run_dir, feedback.file_name)
 
@@ -115,10 +116,16 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
         dataset_constructor = to_sft
     elif training_args.algo == "lcdpo":
         dataset_constructor = to_lcdpo
+    elif training_args.algo == "sft_weighted":
+        dataset_constructor = to_sft_weighted
+    else:
+        raise ValueError(f"Unknown algorithm {training_args.algo}")
+
     dataset = dataset_constructor(
         prompts,
-        negative_prompts if (training_args.negative_prompt_ratio > 0 or training_args.algo == "lcdpo") else None,
-        general_prompts if (training_args.negative_prompt_ratio > 0 or training_args.algo == "lcdpo") else None)
+        negative_prompts if (training_args.negative_prompt_ratio > 0 or training_args.algo == "lcdpo" or training_args.algo == "sft_weighted") else None,
+        general_prompts if (training_args.negative_prompt_ratio > 0 or training_args.algo == "lcdpo" or training_args.algo == "sft_weighted") else None,
+        model_args.train_model.model_name_or_path)
     
 
         # Load base training arg adapter if given
@@ -158,6 +165,14 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
 
     logger.info(f"Training on {len(dataset)} prompts, evaluating on {len(eval_dataset)} prompts for feedback \"{feedback.content}\"")
 
+    # TODO: hacky, remove
+    if model_args.train_model.model_name_or_path in ["tiiuae/falcon-7b-instruct", "01-ai/Yi-6B-Chat", "Qwen/Qwen-7B-Chat"]:
+        response_template = "<|im_start|>assistant\n"
+    elif model_args.train_model.model_name_or_path == "NousResearch/Nous-Hermes-llama-2-7b":
+        response_template = "Response:\n"
+    else:
+        response_template = "[/INST]"
+
     if training_args.algo == "dpo":
         model.tokenizer.padding_side = 'left'
         trainer = DPOTrainer(
@@ -189,12 +204,12 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
             train_dataset=dataset,
             eval_dataset=eval_dataset,
             tokenizer=model.tokenizer,
+            response_template=response_template,
             peft_config=peft_config,
             callbacks=[PeftSavingCallback] if training_args.lora_enable else None
         )
     elif training_args.algo == "sft":
         model.tokenizer.padding_side = 'right'
-        response_template = "[/INST]"
         collator = DataCollatorForCompletionOnlyLM(response_template, tokenizer=model.tokenizer)
         trainer = SFTTrainer(
             model=model.model,
@@ -204,6 +219,24 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
             tokenizer=model.tokenizer,
             data_collator=collator,
             max_seq_length=2048,
+            peft_config=peft_config,
+            callbacks=[PeftSavingCallback] if training_args.lora_enable else None
+        )
+    elif training_args.algo == "sft_weighted":
+        model.tokenizer.padding_side = 'right'
+        collator = DataCollatorForCompletionOnlyLM(response_template, tokenizer=model.tokenizer)
+        training_args.evaluation_strategy = "no" # TODO: getting error during eval
+        trainer = WeightedSFTTrainer(
+            model=model.model,
+            args=training_args,
+            train_dataset=dataset,
+            # eval_dataset=eval_dataset, # TODO: getting error during eval
+            dataset_text_field="text",
+            tokenizer=model.tokenizer,
+            data_collator=collator,
+            max_seq_length=2048,
+            sigma_soft=training_args.lcdpo_sigma_soft,
+            sigma_hard=training_args.lcdpo_sigma_hard,
             peft_config=peft_config,
             callbacks=[PeftSavingCallback] if training_args.lora_enable else None
         )

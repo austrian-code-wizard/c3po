@@ -132,7 +132,7 @@ manual_feedback = [
         comparison=Comparison.greater_eq_than
     ),
     Feedback(
-        content="Instead of saying \"bro\", use the word \"lad\"",
+        content="Instead of saying \"bro\", use the word \"lad\" when texting my friend Chad",
         domain="any use of the word \"bro\"",
         effect="use the word \"lad\"",
         scope=Scope.local,

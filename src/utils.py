@@ -72,7 +72,7 @@ class SampleArguments:
 
 @dataclass
 class TrainingArguments(TransformerTrainingArguments):
-    algo: Literal["dpo", "sft", "lcdpo"] = "dpo"
+    algo: Literal["dpo", "sft", "sft_weighted", "lcdpo"] = "dpo"
     max_prompts: Optional[int] = None
     negative_prompt_ratio: float = 0.2
     general_prompt_ratio: float = 0.2

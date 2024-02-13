@@ -218,26 +218,26 @@ EXPLANATION: """
 
 COMPARE_COMPLETIONS_CONFIG = SAMPLE_PROMPT_CATEGORIES_CONFIG
 
-ANSWER_QUALITATIVE_EVAL = """You are a helpful assistant. You are given a prompt and two response options. Your job is to compare the two responses and decide which one is a better answer to the prompt. You are also provided with a factor to ignore ("IGNORE_FACTOR") YOU SHOULD NOT TAKE ANY REASONS RELATED TO THE IGNORE FACTOR INTO ACCOUNT when determining the better prompt. You should make your decision only based on how well each of the responses answers the prompt and IGNORE everything else.
+ANSWER_QUALITATIVE_EVAL = """You are a helpful assistant. You are given a prompt and two response options. Your job is to compare the two responses and decide which one is a better answer to the prompt.
 
 Your response should be on a scale from 1 to 5 where each score has the following meaning:
 
 1: RESPONSE_1 is much better than RESPONSE_2
 2: RESPONSE_1 is better than RESPONSE_2
-3: Both responses implement the feedback equally well
+3: Both responses answer the prompt equally well
 4: RESPONSE_2 is better than RESPONSE_1
 5: RESPONSE_2 is much better RESPONSE_1
 
-First, after "EXPLANATION: " you should write 2-3 sentences on what criteria you think a good prompt should fulfill (make sure you don't include anything related to the ignore factor), what you notice about the two responses, and why one might be better than the other. Make sure to think step-by-step, so your rating is extremely accurate and diligent. 
-Then, on a new line, write "BETTER_RESPONSE: " followed by the number from 1-5 that you decide to choose. DO NOT OUTPUT ANYTHING ELSE AFTER THE NUMBER.
+First, after "EXPLANATION: " you should write 2-3 sentences on what criteria you think a good prompt should fulfill, what you notice about the two responses, and why one might be better than the other. Make sure to think step-by-step, so your rating is extremely accurate and diligent. Then, on a new line, write "BETTER_RESPONSE: " followed by the score from 1-5 that you decide to choose. DO NOT OUTPUT ANYTHING ELSE AFTER THE NUMBER.
+
 
 PROMPT: {prompt}
 
-IGNORE_FACTOR: {feedback}
+RESPONSE_1:
+"{completion1}"
 
-RESPONSE_1: {completion1}
-
-RESPONSE_2: {completion2}
+RESPONSE_2:
+"{completion2}"
 
 EXPLANATION: """
 

@@ -18,6 +18,7 @@ gpu_image = (
         "together==0.2.10",
         "langdetect==1.0.9",
         "tenacity==8.2.3",
+        "sentencepiece==0.1.99",
         gpu=gpu.L4(count=1)
     )
     .apt_install("git", "build-essential", "wget")
@@ -37,6 +38,12 @@ gpu_image = (
         WANDB_PROJECT="general-feedback-learning",
         WANDB_WATCH="false",
         TOKENIZERS_PARALLELISM="True"))
+    .pip_install(
+        [
+            "transformers_stream_generator",
+            "tiktoken",
+        ]
+    )
 )
 
 non_gpu_image = (
@@ -56,7 +63,8 @@ non_gpu_image = (
         "openai==1.6.1",
         "together==0.2.10",
         "langdetect==1.0.9",
-        "tenacity==8.2.3"
+        "tenacity==8.2.3",
+        "sentencepiece==0.1.99"
     )
     .apt_install("git", "build-essential", "wget")
     .env(dict(

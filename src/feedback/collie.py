@@ -1299,6 +1299,5 @@ collie_feedback = [
         metric=Metric.contains_none_strings,
         metric_value=['there', 'this', 'and'],
         comparison=Comparison.greater_eq_than
-    ),
-
+    )
 ]

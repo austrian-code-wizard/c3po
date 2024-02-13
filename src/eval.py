@@ -4,6 +4,7 @@ import argparse
 from typing import Any
 
 import numpy as np
+from peft import PeftModel
 
 from src.logger import logger
 from src.models import get_model
@@ -154,17 +155,19 @@ def eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedbac
         if second_feedback is not None and train_args.multi_feedback_training:
             run_dir = os.path.join(run_dir, second_feedback.file_name, train_dir)
         else:
-            run_dir = os.path.join(run_dir, train_dir)
-            
-        model.model.load_adapter(run_dir, adapter_name="feedback_1")
+            run_dir = os.path.join(run_dir, train_dir)       
+        
         if second_feedback is not None and not train_args.multi_feedback_training:
             second_run_dir = os.path.join(data_dir, run_id, "train", second_feedback.file_name)
             second_run_dir = os.path.join(second_run_dir, train_dir)
+            model.model = PeftModel.from_pretrained(model.model, run_dir, adapter_name="feedback_1")
             model.model.load_adapter(second_run_dir, adapter_name="feedback_2")
-            model.add_weighted_adapter(["feedback_1", "feedback_2"], [1.0,1.0], combination_type="cat", adapter_name="feedback_combined")
-            model.delete_adapter(["feedback_1", "feedback_2"])
-            model.set_adapter("feedback_combined")
-            logger.info("Loaded combined adapter")
+            model.model.add_weighted_adapter(["feedback_1", "feedback_2"], [1.0,1.0], combination_type="cat", adapter_name="feedback_combined")
+            #model.model.delete_adapter(["feedback_1", "feedback_2"])
+            model.model.set_adapter("feedback_combined")
+            logger.info(f"Loaded combined adapter: {model.model.active_adapter}")
+        else:
+            model.model.load_adapter(run_dir, adapter_name="feedback_1")
 
         # Ensure correct generation
         model.tokenizer.padding_size = "left"
