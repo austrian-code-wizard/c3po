@@ -77,11 +77,29 @@ non_gpu_image = (
         TOKENIZERS_PARALLELISM="True"))
 )
 
+api_image = (
+    Image.micromamba(python_version="3.11")
+    .pip_install(
+        "datasets==2.16.1",
+        "langdetect==1.0.9",
+        "modal==0.57.43"
+    )
+    .env(dict(
+        HF_HOME="/pretrained/huggingface",
+        HF_DATASETS_CACHE="/pretrained/huggingface/datasets",
+        HF_HUB_ENABLE_HF_TRANSFER="True",
+        WANDB__SERVICE_WAIT="300",
+        WANDB_PROJECT="general-feedback-learning",
+        WANDB_WATCH="false",
+        TOKENIZERS_PARALLELISM="True"))
+)
+
 stub = Stub(
     "metarlaif", secrets=[Secret.from_name("my-huggingface-secret")]
 )
 stub.gpu_image = gpu_image
 stub.non_gpu_image = non_gpu_image
+stub.api_image = api_image
 
 # Download pre-trained models into this volume.
 stub.pretrained_volume = Volume.persisted("pretrained-vol-metarlaif")

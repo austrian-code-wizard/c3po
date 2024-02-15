@@ -131,20 +131,20 @@ def to_lcdpo(dataset: Dataset, negative_dataset: Dataset = None, general_dataset
 def to_sft(dataset: Dataset, negative_dataset: Dataset = None, general_dataset: Dataset = None, model_name_or_path: str = None) -> Dataset:
     dataset = dataset.map(lambda x: {
         "prompt": x["prompt"],
-        "completion": f' {x["revised_response"]}' # TODO: hack to fix message format issue (e.g. '[/INST][...]'  )
+        "completion": f' {x["revised_response"]}' # TODO: hack to fix tokenization issue when there are to neighboring parentheses (e.g. '[/INST][...]'  )
     }, remove_columns=dataset.features, load_from_cache_file=False)
 
     if negative_dataset is not None:
         negative_dataset = negative_dataset.map(lambda x: {
             "prompt": x["prompt"],
-            "completion": f' {x["baseline_response"]}' # TODO: hack to fix message format issue (e.g. '[/INST][...]'  )
+            "completion": f' {x["baseline_response"]}' # TODO: hack to fix tokenization issue when there are to neighboring parentheses (e.g. '[/INST][...]'  )
         }, remove_columns=negative_dataset.features, load_from_cache_file=False)
         dataset = concatenate_datasets([dataset, negative_dataset])
 
     if general_dataset is not None:
         general_dataset = general_dataset.map(lambda x: {
             "prompt": x["prompt"],
-            "completion": f' {x["baseline_response"]}' # TODO: hack to fix message format issue (e.g. '[/INST][...]'  )
+            "completion": f' {x["baseline_response"]}' # TODO: hack to fix tokenization issue when there are to neighboring parentheses (e.g. '[/INST][...]'  )
         }, remove_columns=general_dataset.features, load_from_cache_file=False)
         dataset = concatenate_datasets([dataset, general_dataset])
     return dataset
@@ -168,7 +168,7 @@ def to_sft_weighted(dataset: Dataset, negative_dataset: Dataset = None, general_
     full_format = FORMAT_MAPPING[model_name_or_path]["full"]
 
     dataset = dataset.map(lambda x: {
-        "text": full_format(x["prompt"], x["revised_response"]) # TODO: hack to fix message format issue (e.g. '[/INST][...]'  )
+        "text": full_format(x["prompt"], x["revised_response"]) # TODO: hack to fix tokenization issue when there are to neighboring parentheses (e.g. '[/INST][...]'  )
     }, remove_columns=dataset.features, load_from_cache_file=False)
 
     if negative_dataset is not None:
