@@ -82,6 +82,7 @@ api_image = (
     .pip_install(
         "datasets==2.16.1",
         "langdetect==1.0.9",
+        "modal==0.57.43"
     )
     .env(dict(
         HF_HOME="/pretrained/huggingface",

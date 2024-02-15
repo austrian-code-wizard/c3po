@@ -6,6 +6,7 @@ from src.utils import DTYPES, DEVICE, ModelArguments, format_messages
 
 
 class HuggingfaceModel:
+    DEFAULT_MAX_NEW_TOKENS = 512
 
     @classmethod
     def get_model(cls, model_args: ModelArguments) -> "HuggingfaceModel":
@@ -58,10 +59,11 @@ class HuggingfaceModel:
         batch = [FORMAT_MAPPING[self.model_name_or_path]["prompt"](b[0]["content"]) for b in batch]
 
         generation_config = GenerationConfig(
-            max_new_tokens=600,
             use_cache=True,
             **gen_config
         )
+        if generation_config.max_new_tokens is None:
+            generation_config.max_new_tokens = self.DEFAULT_MAX_NEW_TOKENS
         self.model.eval()
 
         responses = []
