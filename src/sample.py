@@ -231,8 +231,6 @@ if __name__ == "__main__":
     parser.add_argument("--run_id", type=str)
     parser.add_argument("--data_dir", type=str, default="./data")
     parser.add_argument("--feedback_prefix", type=str, default=None)
-    parser.add_argument("--load_prompts", type=str, default=None)
-    parser.add_argument("--method", type=str, default=None, choices=["all", "in-context", "ours", "cot"])
     args = parser.parse_args()
 
     with open(args.arg_file, "r") as f:

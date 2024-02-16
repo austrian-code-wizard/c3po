@@ -267,4 +267,6 @@ if __name__ == "__main__":
     feedback = all_feedback
     if args.feedback_prefix is not None:
         feedback = [f for f in feedback if f.content.startswith(args.feedback_prefix)]
-    eval(arg_dict, args.run_id, args.data_dir, feedback)
+
+    for f in feedback:
+        eval(arg_dict, args.run_id, args.data_dir, f)
