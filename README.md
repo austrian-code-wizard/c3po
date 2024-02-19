@@ -68,3 +68,18 @@ You can pass the following arguments to `modal run src.modal.app`:
 - Sampling and eval data will be stored on the remote Modal volume and will be automatically copied to your local machine after each run, preserving the file system structure on the remote volume
 - Check out the Sampling, Training, and Model args for a full overview of the possible configuration options
 - By default, train / eval runs for the same parameters and run_id will overwrite old runs (so be careful)
+
+## Citation
+
+If you use this code, please cite our paper.
+
+```
+@misc{stephan2024rlvf,
+      title={RLVF: Learning from Verbal Feedback without Overgeneralization}, 
+      author={Moritz Stephan and Alexander Khazatsky and Eric Mitchell and Annie S Chen and Sheryl Hsu and Archit Sharma and Chelsea Finn},
+      year={2024},
+      eprint={2402.10893},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
+```
