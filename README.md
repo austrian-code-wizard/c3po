@@ -24,7 +24,7 @@ The purpose of other files should be identifiable based on their naming.
 
 ## Supported Platforms
 
-We utilize [Modal](https://www.modal.com) as compute provider and the examples below you have created and configured a Modal account. However, everything detailed below will work using an arbitrary compute setup (as long as it provides sufficient resources. We recommend a 40GB A100 for training and an L4/A10G for eval).
+We utilize [Modal](https://www.modal.com) as compute provider and the examples below assume you have created and configured a Modal account. However, everything detailed below will work using an arbitrary compute setup (as long as it provides sufficient resources. We recommend a 40GB A100 for training and an L4/A10G for eval).
 
 When running locally, replace the `modal run src.modal.app` portion of the commands below with `pyhton <script>.py` where `<script>.py` can be one of `src/sample.py`, `src/train.py`, `src/eval.py`. Note that currently for the local scripts, only the `--arg_file`, `--run_id`, `--data_dir`, and `--feedback_prefix` flags are supported.
 
