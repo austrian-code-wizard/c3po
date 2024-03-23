@@ -40,7 +40,7 @@ def _sample(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: list
     volumes=VOLUME_CONFIG,
     cpu=4.0,
     image=stub.gpu_image,
-    gpu=gpu.A100(count=1, memory=40),
+    gpu=gpu.A100(count=1),
     timeout=3600 * 12,
     concurrency_limit=512,
     mounts=[
@@ -50,7 +50,7 @@ def _sample(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: list
 def _train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedback, second_feedback: Feedback = None):
     train(arg_dict, run_id, data_dir, feedback, second_feedback)
 
-    # TODO: remove this once we have a better way open file pointers
+    # TODO: remove this once we have a better way ensure file pointers are cleaned up
     del feedback.prompts
     del feedback.negative_prompts
     del feedback.general_prompts

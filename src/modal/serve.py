@@ -9,6 +9,7 @@ with stub.gpu_image.imports():
     import os
     from peft import PeftModel
 
+    from src.logger import logger
     from src.utils import ModelArguments
     from src.models import HuggingfaceModel
     from src.dataset.prompts import GET_BASELINE_COMPLETION_CONFIG
@@ -70,25 +71,46 @@ class Model:
     def get_response(
         self,
         prompt: str,
-        adapter: str | None,
+        adapters: list[str] | None,
         method: str | None
     ) -> str:
-        assert not (adapter is None and method is not None), "Adapter must be specified if method is specified"
-        assert not (adapter is not None and method is None), "Method must be specified if adapter is specified"
-        if adapter is not None and method is not None:
-            assert adapter in [feedback["feedback_id"] for feedback in self.get_adapters()], f"Adapter {adapter} not found"
+        assert not (adapters is None and method is not None), "Adapter must be specified if method is specified"
+        assert not (adapters is not None and method is None), "Method must be specified if adapter is specified"
+        if adapters is not None and method is not None:
+            assert len(adapters) >= 1, "At least one adapter must be specified"
+            assert len(adapters) <= 3, "At most three adapters can be specified"
             assert method in self.METHOD_FILENAMES, f"Method {method} not found"
-            filename = self.get_filename(adapter, method)
-            adapter_name = f"{adapter}-{method}"
-            if adapter not in self.loaded_adapters:
-                self.model.model.load_adapter(
-                    os.path.join(self.ADAPTER_DIR, adapter, filename),
-                    adapter_name=adapter_name)
-            self.model.model.set_adapter(adapter_name)
-            self.loaded_adapters.append(adapter_name)
-            return self.model.get_responses([[prompt]], gen_config={"max_new_tokens": 256})[0]
+
+            adapter_names = []
+            for adapter in adapters:
+                assert adapter in [feedback["feedback_id"] for feedback in self.get_adapters()], f"Adapter {adapter} not found"
+                filename = self.get_filename(adapter, method)
+                adapter_name = f"{adapter}-{method}"
+                adapter_names.append(adapter_name)
+                if adapter_name not in self.loaded_adapters:
+                    self.model.model.load_adapter(
+                        os.path.join(self.ADAPTER_DIR, adapter, filename),
+                        adapter_name=adapter_name)
+                    self.loaded_adapters.append(adapter_name)
+
+            combined_adapter_name = "-".join(adapter_names)
+            if combined_adapter_name not in self.loaded_adapters:
+                self.model.model.add_weighted_adapter(adapter_names, [1.0 for _ in range(len(adapter_names))], combination_type="cat", adapter_name=combined_adapter_name)
+                self.loaded_adapters.append(combined_adapter_name)
+            
+            self.model.model.set_adapter(combined_adapter_name)
+
+            if len(self.loaded_adapters) > 5:
+                self.model.model.delete_adapter(self.loaded_adapters[0])
+                self.loaded_adapters = self.loaded_adapters[1:]
+
+            logger.info(f"Using adapter {combined_adapter_name}")
+            return self.model.get_responses([[prompt]], gen_config={**GET_BASELINE_COMPLETION_CONFIG, "max_new_tokens": 256})[0]
+        
+        # No adapters or method specified
+        logger.info("Using base model")
         with self.model.model.disable_adapter():
-            return self.model.get_responses([[prompt]], gen_config={"max_new_tokens": 256})[0]
+            return self.model.get_responses([[prompt]], gen_config={**GET_BASELINE_COMPLETION_CONFIG, "max_new_tokens": 256})[0]
         
 
     @method()
@@ -130,7 +152,7 @@ def web():
         data = await request.json()
         assert data.get("C3PO_API_KEY", "") == api_key, "Invalid API key"
         return {
-            "response": model.get_response.remote(data["prompt"], data.get("adapter"), data.get("method"))
+            "response": model.get_response.remote(data["prompt"], data.get("adapters"), data.get("method"))
         }
     
     @web_app.post("/list_adapters")
