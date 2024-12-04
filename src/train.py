@@ -5,9 +5,11 @@ from time import sleep
 from typing import Any, Tuple
 
 import wandb
+import torch
 from peft import LoraConfig, PeftModel
 from datasets import Dataset, concatenate_datasets
 from trl import DPOTrainer, SFTTrainer, DataCollatorForCompletionOnlyLM
+from transformers import TrainerCallback
 
 from src.logger import logger
 from src.models import get_model
@@ -17,6 +19,41 @@ from src.sft_weighted import WeightedSFTTrainer
 from src.dataset.format import to_dpo, to_sft, to_lcdpo, to_sft_weighted
 from src.feedback import manual_feedback as all_feedback
 from src.utils import get_args, find_all_linear_names, dump_arg_dicts, PeftSavingCallback, get_train_file_name, print_num_trainable_params, TrainingArguments, find_file_with_prefix
+
+class DetailedLoggingCallback(TrainerCallback):
+    """Callback for detailed logging during training."""
+    def on_step_end(self, args, state, control, **kwargs):
+        if state.global_step % args.logging_steps == 0:
+            if state.log_history:
+                metrics = state.log_history[-1]
+                log_msg = [f"Step {state.global_step}:"]
+                if "loss" in metrics:
+                    log_msg.append(f"loss={metrics['loss']:.4f}")
+                if "learning_rate" in metrics:
+                    log_msg.append(f"lr={metrics['learning_rate']:.2e}")
+                if "eval_loss" in metrics:
+                    log_msg.append(f"eval_loss={metrics['eval_loss']:.4f}")
+                logger.info(" ".join(log_msg))
+
+    def on_epoch_end(self, args, state, control, **kwargs):
+        logger.info(f"Epoch {state.epoch}: Completed {state.global_step} steps")
+
+def log_dataset_stats(dataset: Dataset, name: str = "dataset") -> None:
+    """Log detailed statistics about a dataset."""
+    try:
+        # Calculate average length of text samples
+        avg_length = sum(len(str(x)) for x in dataset) / len(dataset)
+        # Get sample types distribution
+        sample_types = dataset.features if hasattr(dataset, 'features') else {}
+
+        logger.info(f"{name.capitalize()} statistics:")
+        logger.info(f"  - Size: {len(dataset)} samples")
+        logger.info(f"  - Average sample length: {avg_length:.1f} chars")
+        if sample_types:
+            logger.info(f"  - Features: {', '.join(sample_types.keys())}")
+    except Exception as e:
+        logger.warning(f"Could not compute all dataset statistics: {str(e)}")
+
 
 
 def filter_relevant_feedback(feedback: Feedback, prompts: Dataset | None) -> Dataset | None:
@@ -99,7 +136,20 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
     # Load model
     assert model_args.train_model.platform == "huggingface", "Only HuggingFace models are supported for training"
     model = get_model(model_args.train_model)
-    logger.info("Loaded model")
+
+    # Log model configuration
+    logger.info("Model configuration:")
+    logger.info(f"  - Name: {model_args.train_model.model_name_or_path}")
+    logger.info(f"  - Config: {model.model.config}")
+    logger.info(f"  - Parameters: {sum(p.numel() for p in model.model.parameters()):,}")
+
+    # Log training configuration
+    logger.info("Training configuration:")
+    logger.info(f"  - Algorithm: {training_args.algo}")
+    logger.info(f"  - Learning rate: {training_args.learning_rate}")
+    logger.info(f"  - Batch size: {training_args.per_device_train_batch_size}")
+    logger.info(f"  - Epochs: {training_args.num_train_epochs}")
+    logger.info(f"  - LoRA: enabled={training_args.lora_enable}, r={training_args.lora_r}, alpha={training_args.lora_alpha}")
 
     prompts, negative_prompts, general_prompts = get_prompts(feedback, training_args)
     if training_args.multi_feedback_training:
@@ -165,6 +215,11 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
 
     logger.info(f"Training on {len(dataset)} prompts, evaluating on {len(eval_dataset)} prompts for feedback \"{feedback.content}\"")
 
+    # Log detailed dataset statistics
+    log_dataset_stats(dataset, "Training dataset")
+    log_dataset_stats(eval_dataset, "Evaluation dataset")
+
+
     # TODO: hacky, remove
     if model_args.train_model.model_name_or_path in ["tiiuae/falcon-7b-instruct", "01-ai/Yi-6B-Chat", "Qwen/Qwen-7B-Chat"]:
         response_template = "<|im_start|>assistant\n"
@@ -185,8 +240,9 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
             eval_dataset=eval_dataset,
             tokenizer=model.tokenizer,
             peft_config=peft_config,
-            callbacks=[PeftSavingCallback] if training_args.lora_enable else None
+            callbacks=[DetailedLoggingCallback(), PeftSavingCallback] if training_args.lora_enable else [DetailedLoggingCallback()]
         )
+
     elif training_args.algo == "lcdpo":
         model.tokenizer.padding_side = 'left'
         trainer = LocallyConstrainedDPOTrainer(
@@ -206,8 +262,9 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
             tokenizer=model.tokenizer,
             response_template=response_template,
             peft_config=peft_config,
-            callbacks=[PeftSavingCallback] if training_args.lora_enable else None
+            callbacks=[DetailedLoggingCallback(), PeftSavingCallback] if training_args.lora_enable else [DetailedLoggingCallback()]
         )
+
     elif training_args.algo == "sft":
         model.tokenizer.padding_side = 'right'
         collator = DataCollatorForCompletionOnlyLM(response_template, tokenizer=model.tokenizer)
@@ -220,8 +277,9 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
             data_collator=collator,
             max_seq_length=2048,
             peft_config=peft_config,
-            callbacks=[PeftSavingCallback] if training_args.lora_enable else None
+            callbacks=[DetailedLoggingCallback(), PeftSavingCallback] if training_args.lora_enable else [DetailedLoggingCallback()]
         )
+
     elif training_args.algo == "sft_weighted":
         model.tokenizer.padding_side = 'right'
         collator = DataCollatorForCompletionOnlyLM(response_template, tokenizer=model.tokenizer)
@@ -238,15 +296,21 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
             sigma_soft=training_args.lcdpo_sigma_soft,
             sigma_hard=training_args.lcdpo_sigma_hard,
             peft_config=peft_config,
-            callbacks=[PeftSavingCallback] if training_args.lora_enable else None
+            callbacks=[DetailedLoggingCallback(), PeftSavingCallback] if training_args.lora_enable else [DetailedLoggingCallback()]
         )
+
     else:
         raise ValueError(f"Unknown algorithm {training_args.algo}")
 
     print_num_trainable_params(trainer.model)
-    trainer.train()
+    try:
+        trainer.train()
+    except Exception as e:
+        logger.error(f"Training failed: {str(e)}", exc_info=True)
+        raise
     trainer.save_model(run_dir)
     logger.info(f"Saved model for run {run_id}, to {run_dir}")
+
 
     if training_args.report_to == "wandb":
         wandb.finish()

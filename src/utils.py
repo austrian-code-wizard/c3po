@@ -284,6 +284,17 @@ def print_num_trainable_params(model):
     logger.info(f"Trainable params: {trainable_params}/{all_params} ({trainable_params/all_params:.2%})")
 
 
+def log_memory_usage():
+    """Log current GPU/CPU memory usage."""
+    if torch.cuda.is_available():
+        allocated = torch.cuda.memory_allocated() / 1024**2
+        reserved = torch.cuda.memory_reserved() / 1024**2
+        logger.info(f"GPU Memory: {allocated:.1f}MB allocated, {reserved:.1f}MB reserved")
+    else:
+        logger.info("Running on CPU - memory tracking not implemented")
+
+
+
 def find_file_with_prefix(path: str, prefix: str) -> str:
     """Finds the file in the directory with the given prefix."""
     for file in os.listdir(path):
