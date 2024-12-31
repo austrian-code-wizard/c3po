@@ -1,5 +1,7 @@
 # RLVF: Learning from Verbal Feedback without Overgeneralization
 
+[![arXiv](https://img.shields.io/badge/arXiv-2402.10893-b31b1b.svg)](https://arxiv.org/abs/2402.10893)
+
 ## Overview
 This repository includes a reference implementation of Contextualized Critiques with Constrained Preference Optimization (C3PO), a novel technique to align LLMs with user preferences from a single sentence of feedback and without overgeneralization. The repository also includes implementations of relevant baselines and other components necessary to explore the techniques proposed in the paper. See the [project website](https://austrian-code-wizard.github.io/c3po-website/) for more information.
 
