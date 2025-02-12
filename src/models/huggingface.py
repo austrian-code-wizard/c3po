@@ -42,7 +42,9 @@ class HuggingfaceModel:
         instance.model = model
         instance.tokenizer = tokenizer
         instance.model_name_or_path = model_args.model_name_or_path
-        if model_args.model_name_or_path in ["01-ai/Yi-6B-Chat", "tiiuae/falcon-7b-instruct", "Qwen/Qwen-7B-Chat"]:
+        if model_args.model_name_or_path == "deepseek-ai/deepseek-llm-7b-chat":
+            instance.end_of_prompt = "A:"
+        elif model_args.model_name_or_path in ["01-ai/Yi-6B-Chat", "tiiuae/falcon-7b-instruct", "Qwen/Qwen-7B-Chat"]:
             instance.end_of_prompt = "<|im_start|>assistant\n"
         elif model_args.model_name_or_path == "NousResearch/Nous-Hermes-llama-2-7b":
             instance.end_of_prompt = "Response:\n"
