@@ -32,7 +32,7 @@ def deepseek_full_format(prompt: str, completion: str) -> str:
     return f"<|user|>\n{prompt}\n<|assistant|>\n{completion}<|EOT|>\n"
 
 
-FORMAT_MAPPING= {
+FORMAT_MAPPING = {
     "deepseek-ai/deepseek-llm-7b-chat": {
         "prompt": deepseek_prompt_format,
         "full": deepseek_full_format
