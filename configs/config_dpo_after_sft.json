@@ -13,7 +13,7 @@
             "platform": "together"
         },
         "train_model": {
-            "model_name_or_path": "mistralai/Mistral-7B-Instruct-v0.2",
+            "model_name_or_path": "deepseek-ai/deepseek-coder-1.3b-instruct",
             "platform": "huggingface"
         },
         "qualitative_eval_model": {
