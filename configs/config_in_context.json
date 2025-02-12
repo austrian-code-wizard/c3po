@@ -1,12 +1,12 @@
 {
     "model_args": {
         "category_model": {
-            "model_name_or_path": "gpt-4-1106-preview",
-            "platform": "openai"
+            "model_name_or_path": "mistralai/Mistral-7B-Instruct-v0.2",
+            "platform": "together"
         },
         "prompt_model": {
-            "model_name_or_path": "gpt-4-1106-preview",
-            "platform": "openai"
+            "model_name_or_path": "mistralai/Mistral-7B-Instruct-v0.2",
+            "platform": "together"
         },
         "completion_model": {
             "model_name_or_path": "mistralai/Mistral-7B-Instruct-v0.2",
@@ -17,8 +17,8 @@
             "platform": "together"
         },
         "qualitative_eval_model": {
-            "model_name_or_path": "gpt-4-1106-preview",
-            "platform": "openai"
+            "model_name_or_path": "mistralai/Mistral-7B-Instruct-v0.2",
+            "platform": "together"
         }
     },
     "sample_args": {
