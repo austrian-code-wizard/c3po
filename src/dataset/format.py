@@ -24,6 +24,14 @@ def hermes_full_format(prompt: str, completion: str) -> str:
     return f"### Instruction:\n{prompt}\n\n### Response:\n{completion}"
 
 
+def deepseek_prompt_format(prompt: str) -> str:
+    return prompt
+
+
+def deepseek_full_format(prompt: str, completion: str) -> str:
+    return f"{prompt}{completion}"
+
+
 FORMAT_MAPPING = {
     "meta-llama/Llama-2-7b-chat-hf": {
         "prompt": llama_prompt_format,
@@ -48,6 +56,10 @@ FORMAT_MAPPING = {
     "NousResearch/Nous-Hermes-llama-2-7b": {
         "prompt": hermes_prompt_format,
         "full": hermes_full_format
+    },
+    "deepseek-ai/deepseek-coder-1.3b-instruct": {
+        "prompt": deepseek_prompt_format,
+        "full": deepseek_full_format
     },
     None: {
         "prompt": llama_prompt_format,

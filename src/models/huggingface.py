@@ -14,7 +14,7 @@ class HuggingfaceModel:
 
         args = {}
 
-        if model_args.model_name_or_path == "Qwen/Qwen-7B-Chat":
+        if model_args.model_name_or_path in ["Qwen/Qwen-7B-Chat", "deepseek-ai/deepseek-coder-1.3b-instruct"]:
             args["trust_remote_code"] = True
         
         if model_args.model_name_or_path != "Qwen/Qwen-7B-Chat":
@@ -46,6 +46,8 @@ class HuggingfaceModel:
             instance.end_of_prompt = "<|im_start|>assistant\n"
         elif model_args.model_name_or_path == "NousResearch/Nous-Hermes-llama-2-7b":
             instance.end_of_prompt = "Response:\n"
+        elif model_args.model_name_or_path == "deepseek-ai/deepseek-coder-1.3b-instruct":
+            instance.end_of_prompt = "<|EOT|>"
         else:
             instance.end_of_prompt = "[/INST]"
         return instance
