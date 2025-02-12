@@ -14,7 +14,7 @@
         },
         "train_model": {
             "model_name_or_path": "mistralai/Mistral-7B-Instruct-v0.2",
-            "platform": "huggingface"
+            "platform": "together"
         },
         "qualitative_eval_model": {
             "model_name_or_path": "gpt-4-1106-preview",

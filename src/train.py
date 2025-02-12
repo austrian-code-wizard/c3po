@@ -2,7 +2,7 @@ import os
 import json
 import argparse
 from time import sleep
-from typing import Any, Tuple
+from typing import Any, Dict, Tuple, Optional
 
 import wandb
 from peft import LoraConfig, PeftModel
@@ -97,7 +97,6 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
     run_dir = os.path.join(run_dir, train_dir)
 
     # Load model
-    assert model_args.train_model.platform == "huggingface", "Only HuggingFace models are supported for training"
     model = get_model(model_args.train_model)
     logger.info("Loaded model")
 
@@ -243,6 +242,70 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
     else:
         raise ValueError(f"Unknown algorithm {training_args.algo}")
 
+    # Handle Together AI fine-tuning
+    if model_args.train_model.platform == "together":
+        # Convert dataset to JSONL format for Together AI
+        jsonl_path = os.path.join(run_dir, "training_data.jsonl")
+        with open(jsonl_path, "w") as f:
+            for item in dataset:
+                json.dump({"text": item["text"]}, f)
+                f.write("\n")
+        
+        # Upload training file
+        file_info = model.upload_training_file(jsonl_path)
+        
+        # Start fine-tuning job with LoRA parameters from training args
+        job_info = model.create_finetuning_job(
+            training_file=file_info["id"],
+            model=model_args.train_model.model_name_or_path,
+            lora=training_args.lora_enable,
+            lora_r=training_args.lora_r,
+            lora_alpha=training_args.lora_alpha,
+            lora_dropout=training_args.lora_dropout,
+            learning_rate=training_args.learning_rate,
+            batch_size=training_args.per_device_train_batch_size,
+            num_epochs=training_args.num_train_epochs
+        )
+        
+        # Wait for job completion
+        final_status = model.wait_for_finetuning_job(job_info["id"])
+        if final_status["status"] != "succeeded":
+            raise RuntimeError(f"Fine-tuning job failed with status: {final_status}")
+        
+        # Save model information
+        model_info = {
+            "model_id": final_status["model_id"],
+            "platform": "together",
+            "base_model": model_args.train_model.model_name_or_path,
+            "fine_tuning_args": {
+                "lora": training_args.lora_enable,
+                "lora_r": training_args.lora_r,
+                "lora_alpha": training_args.lora_alpha,
+                "lora_dropout": training_args.lora_dropout,
+                "learning_rate": training_args.learning_rate,
+                "batch_size": training_args.per_device_train_batch_size,
+                "num_epochs": training_args.num_train_epochs
+            }
+        }
+        model_info_path = os.path.join(run_dir, "model_info.json")
+        with open(model_info_path, "w") as f:
+            json.dump(model_info, f, indent=2)
+        
+        logger.info(f"Fine-tuning completed successfully. Model ID: {final_status['model_id']}")
+        logger.info(f"Saved model information to {model_info_path}")
+        
+        # Clean up training file
+        if os.path.exists(jsonl_path):
+            os.remove(jsonl_path)
+        
+        if training_args.report_to == "wandb":
+            wandb.finish()
+        
+        # Sometimes Wandb needs more time to close resources
+        sleep(2)
+        return
+    
+    # Continue with HuggingFace training
     print_num_trainable_params(trainer.model)
     trainer.train()
     trainer.save_model(run_dir)
