@@ -6,7 +6,9 @@ from src.utils import ModelArguments
 
 
 def get_model(model_args: ModelArguments) -> OpenAIModel | TogetherModel | HuggingfaceModel:
-    if model_args.platform == "openai":
+    if model_args.platform == "together" and hasattr(model_args, "training"):
+        return TogetherModel.get_model(model_args)
+    elif model_args.platform == "openai":
         return OpenAIModel.get_model(model_args)
     elif model_args.platform == "together":
         return TogetherModel.get_model(model_args)

@@ -37,10 +37,26 @@ Example:
 
 
 ## Training
-The training step will train fine-tune the specified base-model on each of the feedbacks passed.
+The training step will fine-tune the specified base model using either Together AI's platform or Modal (legacy).
 
-Example:
-`modal run src.modal.app --arg-file configs/config.json --do-train --feedback-prefix "Be more detailed" --run-id test`
+### Together AI Fine-tuning
+1. Set up your Together AI API key in the environment:
+```bash
+export TOGETHER_API_KEY_5=your_api_key_here
+```
+
+2. Use the `config_together.json` configuration which is set up for Together AI fine-tuning with LoRA.
+
+3. Run training as usual:
+```bash
+modal run src.modal.app --arg-file configs/config_together.json --do-train --feedback-prefix "Be more detailed" --run-id test
+```
+
+### Modal Fine-tuning (Legacy)
+Run training with any other configuration file to use Modal's infrastructure:
+```bash
+modal run src.modal.app --arg-file configs/config.json --do-train --feedback-prefix "Be more detailed" --run-id test
+```
 
 ## Eval
 The eval step will compare the responses from the method specified in the eval part of the passed config file with the baseline responses.

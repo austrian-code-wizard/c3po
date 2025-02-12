@@ -1,0 +1,60 @@
+{
+    "model_args": {
+        "category_model": {
+            "model_name_or_path": "gpt-4-1106-preview",
+            "platform": "openai"
+        },
+        "prompt_model": {
+            "model_name_or_path": "gpt-4-1106-preview",
+            "platform": "openai"
+        },
+        "completion_model": {
+            "model_name_or_path": "mistralai/Mistral-7B-Instruct-v0.2",
+            "platform": "together"
+        },
+        "train_model": {
+            "model_name_or_path": "mistralai/Mistral-7B-Instruct-v0.2",
+            "platform": "together"
+        }
+    },
+    "sample_args": {
+        "scope": ["regional"],
+        "type": ["qualitative", "quantitative"],
+        "num_feedbacks": 10,
+        "prompts_per_category": 32,
+        "num_prompts": 960,
+        "num_negative_prompts": 960,
+        "num_general_prompts": 960,
+        "train_test_split": 0.1,
+        "overwrite": true
+    },
+    "training_args": {
+        "platform": "together",
+        "lora_enable": true,
+        "learning_rate": 5e-5,
+        "num_train_epochs": 1,
+        "per_device_train_batch_size": 1,
+        "gradient_accumulation_steps": 16,
+        "warmup_ratio": 0.05,
+        "lr_scheduler_type": "cosine",
+        "save_strategy": "no",
+        "evaluation_strategy": "steps",
+        "eval_steps": 8,
+        "logging_strategy": "steps",
+        "logging_steps": 1,
+        "bf16": true,
+        "save_safetensors": true,
+        "tf32": true,
+        "gradient_checkpointing": true,
+        "dataloader_num_workers": 4,
+        "remove_unused_columns": false,
+        "overwrite_output_dir": true
+    },
+    "eval_args": {
+        "method": "trained",
+        "num_prompts": 75,
+        "num_negative_prompts": 75,
+        "num_general_prompts": 75,
+        "eval_answer_quality": false
+    }
+}
