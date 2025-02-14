@@ -5,6 +5,8 @@ This repository includes a reference implementation of Contextualized Critiques 
 
 Paper: [RLVF: Learning from Verbal Feedback without Overgeneralization](insert_link.com)
 
+*Last updated: February 2025*
+
 ## What is in this repo?
 - `src/feedback/`: This folder contains feedbacks to use C3PO with. You can easily create your own by following the format in the provided feedback files. The feedbacks used for the experiments in the paper are in `src/feedback/final_exp.py`
 - `src/modal/`: All files related to launching sampling/training/eval jobs on Modal
