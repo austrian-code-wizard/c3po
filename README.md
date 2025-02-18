@@ -16,7 +16,7 @@ The purpose of other files should be identifiable based on their naming.
 
 # Running C3PO
 ## Prerequisites
-- Ensure you you Conda/Miniconda installed
+- Ensure you have Conda/Miniconda installed
 - Create conda env `conda create -n gfl python=3.11`
 - Activate env `conda activate gfl`
 - Install dependencies `pip install -r requirements.txt`
@@ -83,5 +83,3 @@ If you use this code, please cite our paper.
       primaryClass={cs.LG}
 }
 ```
-
-Note: This repository is actively maintained and updated.
