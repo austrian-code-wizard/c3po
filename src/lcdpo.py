@@ -1,3 +1,17 @@
+"""
+Locally Constrained Direct Preference Optimization (LCDPO) implementation.
+
+This module contains the core implementation of C3PO's training methodology,
+which extends standard DPO with knowledge distillation to prevent overgeneralization
+when learning from verbal feedback. The LocallyConstrainedDPOTrainer applies
+preference optimization on in-scope data while using knowledge distillation
+to maintain performance on out-of-scope examples.
+
+Key components:
+- LocallyConstrainedDPOTrainer: Main trainer class extending TRL's DPOTrainer
+- Knowledge distillation utilities for soft and hard negative examples
+- Masked loss functions for handling variable-length sequences
+"""
 import warnings
 from contextlib import nullcontext
 from typing import Union, Dict, Any, Tuple, List, Literal, Optional
