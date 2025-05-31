@@ -69,6 +69,14 @@ You can pass the following arguments to `modal run src.modal.app`:
 - Check out the Sampling, Training, and Model args for a full overview of the possible configuration options
 - By default, train / eval runs for the same parameters and run_id will overwrite old runs (so be careful)
 
+## Development
+
+### Linting
+A basic Python syntax checker is available:
+```bash
+python lint_check.py
+```
+
 ## Citation
 
 If you use this code, please cite our paper.
