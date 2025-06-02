@@ -111,6 +111,100 @@ class PeftSavingCallback(TrainerCallback):
         checkpoint_path = os.path.join(args.output_dir, f"checkpoint-{state.global_step}")
         kwargs["model"].save_pretrained(checkpoint_path)
 
+
+class TrainingLoggingCallback(TrainerCallback):
+    def __init__(self):
+        self.start_time = None
+        self.step_start_time = None
+        
+    def on_train_begin(self, args, state, control, **kwargs):
+        import time
+        self.start_time = time.time()
+        
+        logger.info("=" * 60)
+        logger.info("TRAINING STARTED")
+        logger.info("=" * 60)
+        logger.info(f"Algorithm: {args.algo}")
+        logger.info(f"Model: {getattr(args, 'model_name_or_path', 'Unknown')}")
+        logger.info(f"Total epochs: {args.num_train_epochs}")
+        logger.info(f"Max steps: {state.max_steps}")
+        logger.info(f"Batch size per device: {args.per_device_train_batch_size}")
+        logger.info(f"Gradient accumulation steps: {args.gradient_accumulation_steps}")
+        logger.info(f"Learning rate: {args.learning_rate}")
+        logger.info(f"Logging steps: {args.logging_steps}")
+        logger.info(f"Save steps: {args.save_steps}")
+        if hasattr(args, 'eval_steps') and args.eval_steps:
+            logger.info(f"Eval steps: {args.eval_steps}")
+        logger.info("=" * 60)
+        
+    def on_epoch_begin(self, args, state, control, **kwargs):
+        logger.info(f"Starting Epoch {state.epoch:.2f}/{args.num_train_epochs}")
+        
+    def on_step_begin(self, args, state, control, **kwargs):
+        import time
+        self.step_start_time = time.time()
+        
+    def on_step_end(self, args, state, control, **kwargs):
+        if self.step_start_time and state.global_step % args.logging_steps == 0:
+            import time
+            step_time = time.time() - self.step_start_time
+            progress_pct = (state.global_step / state.max_steps) * 100 if state.max_steps > 0 else 0
+            
+            logger.info(f"Step {state.global_step}/{state.max_steps} "
+                       f"({progress_pct:.1f}%) - "
+                       f"Epoch {state.epoch:.2f} - "
+                       f"Step time: {step_time:.2f}s")
+                       
+    def on_log(self, args, state, control, logs=None, **kwargs):
+        if logs is None:
+            return
+            
+        filtered_logs = {}
+        for key, value in logs.items():
+            if key in ['loss', 'learning_rate', 'epoch', 'grad_norm']:
+                filtered_logs[key] = value
+            elif 'loss' in key.lower():
+                filtered_logs[key] = value
+                
+        if filtered_logs:
+            log_str = " | ".join([f"{k}: {v:.6f}" if isinstance(v, float) else f"{k}: {v}" 
+                                 for k, v in filtered_logs.items()])
+            logger.info(f"Metrics - {log_str}")
+            
+        if hasattr(args, 'algo'):
+            if args.algo == 'lcdpo' and any('kd_loss' in key for key in logs.keys()):
+                kd_losses = {k: v for k, v in logs.items() if 'kd_loss' in k or 'target_loss' in k or 'dpo_loss' in k}
+                if kd_losses:
+                    kd_str = " | ".join([f"{k}: {v:.6f}" for k, v in kd_losses.items()])
+                    logger.info(f"LCDPO Losses - {kd_str}")
+                    
+    def on_evaluate(self, args, state, control, **kwargs):
+        logger.info(f"Running evaluation at step {state.global_step}")
+        
+    def on_save(self, args, state, control, **kwargs):
+        logger.info(f"Saving checkpoint at step {state.global_step}")
+        
+    def on_epoch_end(self, args, state, control, **kwargs):
+        logger.info(f"Completed Epoch {state.epoch:.2f}")
+        
+    def on_train_end(self, args, state, control, **kwargs):
+        import time
+        if self.start_time:
+            total_time = time.time() - self.start_time
+            hours = int(total_time // 3600)
+            minutes = int((total_time % 3600) // 60)
+            seconds = int(total_time % 60)
+            
+            logger.info("=" * 60)
+            logger.info("TRAINING COMPLETED")
+            logger.info("=" * 60)
+            logger.info(f"Total training time: {hours:02d}:{minutes:02d}:{seconds:02d}")
+            logger.info(f"Total steps completed: {state.global_step}")
+            logger.info(f"Final epoch: {state.epoch:.2f}")
+            if state.best_metric is not None:
+                logger.info(f"Best metric: {state.best_metric:.6f}")
+            logger.info("=" * 60)
+
         if "pytorch_model.bin" in os.listdir(checkpoint_path):
             os.remove(os.path.join(checkpoint_path, "pytorch_model.bin"))
 

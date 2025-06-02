@@ -16,7 +16,7 @@ from src.lcdpo import LocallyConstrainedDPOTrainer
 from src.sft_weighted import WeightedSFTTrainer
 from src.dataset.format import to_dpo, to_sft, to_lcdpo, to_sft_weighted
 from src.feedback import manual_feedback as all_feedback
-from src.utils import get_args, find_all_linear_names, dump_arg_dicts, PeftSavingCallback, get_train_file_name, print_num_trainable_params, TrainingArguments, find_file_with_prefix
+from src.utils import get_args, find_all_linear_names, dump_arg_dicts, PeftSavingCallback, TrainingLoggingCallback, get_train_file_name, print_num_trainable_params, TrainingArguments, find_file_with_prefix
 
 
 def filter_relevant_feedback(feedback: Feedback, prompts: Dataset | None) -> Dataset | None:
@@ -185,7 +185,7 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
             eval_dataset=eval_dataset,
             tokenizer=model.tokenizer,
             peft_config=peft_config,
-            callbacks=[PeftSavingCallback] if training_args.lora_enable else None
+            callbacks=[PeftSavingCallback, TrainingLoggingCallback] if training_args.lora_enable else [TrainingLoggingCallback]
         )
     elif training_args.algo == "lcdpo":
         model.tokenizer.padding_side = 'left'
@@ -206,7 +206,7 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
             tokenizer=model.tokenizer,
             response_template=response_template,
             peft_config=peft_config,
-            callbacks=[PeftSavingCallback] if training_args.lora_enable else None
+            callbacks=[PeftSavingCallback, TrainingLoggingCallback] if training_args.lora_enable else [TrainingLoggingCallback]
         )
     elif training_args.algo == "sft":
         model.tokenizer.padding_side = 'right'
@@ -220,7 +220,7 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
             data_collator=collator,
             max_seq_length=2048,
             peft_config=peft_config,
-            callbacks=[PeftSavingCallback] if training_args.lora_enable else None
+            callbacks=[PeftSavingCallback, TrainingLoggingCallback] if training_args.lora_enable else [TrainingLoggingCallback]
         )
     elif training_args.algo == "sft_weighted":
         model.tokenizer.padding_side = 'right'
@@ -238,7 +238,7 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
             sigma_soft=training_args.lcdpo_sigma_soft,
             sigma_hard=training_args.lcdpo_sigma_hard,
             peft_config=peft_config,
-            callbacks=[PeftSavingCallback] if training_args.lora_enable else None
+            callbacks=[PeftSavingCallback, TrainingLoggingCallback] if training_args.lora_enable else [TrainingLoggingCallback]
         )
     else:
         raise ValueError(f"Unknown algorithm {training_args.algo}")
