@@ -33,6 +33,7 @@ from src.dataset.prompts import (
 
 def sample_categories(feedback: list[Feedback], model_args: ModelArguments, num_categories: int):
     """Sample categories for feedback and update feedback in-place"""
+    logger.info(f"Sampling {num_categories} categories for {len(feedback)} feedbacks")
     category_model = get_model(model_args)
     responses = category_model.get_responses(
         [[SAMPLE_PROMPT_CATEGORIES.format(count=num_categories, topic=f.domain)] for f in feedback],
@@ -41,22 +42,30 @@ def sample_categories(feedback: list[Feedback], model_args: ModelArguments, num_
 
     # We cannot tolerate failed API calls here
     assert all([r is not None for r in responses]), "Category generation failed"
+    logger.info("Successfully generated categories from model")
 
     responses = [r.split("REVISED_CATEGORIES:")[-1].strip() for r in responses]
     responses = [split_numbered_list(r) for r in responses]
     assert all([len(r) == num_categories for r in responses]), "Category generation failed"
     for f, r in zip(feedback, responses):
         f.categories = r
+    logger.info(f"Assigned categories to {len(feedback)} feedbacks")
 
 
 def sample_prompts(feedback: list[Feedback], model_args: ModelArguments, num_prompts: int, prompts_per_category: int, negative: bool = False):
     """Sample prompts for feedback and update feedback in-place"""
+    prompt_type = "negative" if negative else "positive"
+    logger.info(f"Sampling {num_prompts} {prompt_type} prompts for {len(feedback)} feedbacks ({prompts_per_category} per category)")
+    
     prompt = SAMPLE_PROMPTS if not negative else SAMPLE_NEGATIVE_PROMPTS
     prompt_config = SAMPLE_PROMPTS_CONFIG if not negative else SAMPLE_NEGATIVE_PROMPTS_CONFIG
 
     prompt_model = get_model(model_args)
 
     # Get responses for flattened list of prompts
+    total_requests = sum(len(f.categories) if f.categories else 0 for f in feedback)
+    logger.info(f"Making {total_requests} prompt generation requests to model")
+    
     responses = prompt_model.get_responses(
         [[prompt.format(count=prompts_per_category, domain=f.domain, category=c)]
          for f in feedback for c in f.categories],
@@ -64,6 +73,7 @@ def sample_prompts(feedback: list[Feedback], model_args: ModelArguments, num_pro
 
     # We cannot tolerate failed API calls here
     assert all([r is not None for r in responses]), "Prompt generation failed"
+    logger.info(f"Successfully generated {prompt_type} prompts from model")
 
     if negative:
         # We are using revisions in our prompting format to make negative examples more robust
@@ -85,6 +95,8 @@ def sample_prompts(feedback: list[Feedback], model_args: ModelArguments, num_pro
             f.prompts = dataset
         else:
             f.negative_prompts = dataset
+    
+    logger.info(f"Created {prompt_type} prompt datasets for {len(feedback)} feedbacks")
 
 
 def add_general_prompts(feedback: list[Feedback], data_dir: str, num_prompts: int):
@@ -95,6 +107,7 @@ def add_general_prompts(feedback: list[Feedback], data_dir: str, num_prompts: in
 
 def sample_completions(feedback: list[Feedback], model_args: ModelArguments, prompt_type: Literal["prompts", "negative_prompts", "general_prompts"]):
     """Sample completions for feedback and update feedback in-place"""
+    logger.info(f"Sampling completions for {prompt_type} across {len(feedback)} feedbacks")
 
     completion_model = get_model(model_args)
 
@@ -108,6 +121,9 @@ def sample_completions(feedback: list[Feedback], model_args: ModelArguments, pro
         raise ValueError(f"Invalid prompt type: {prompt_type} (must be one of 'prompts', 'negative_prompts', 'general_prompts')")
 
     num_prompts = [len(dataset) for dataset in datasets]
+    total_prompts = sum(num_prompts)
+    logger.info(f"Generating completions for {total_prompts} total prompts")
+    
     all_domains = [f.domain for f, num in zip(feedback, num_prompts) for _ in range(num)]
     all_effect = [f.effect for f, num in zip(feedback, num_prompts) for _ in range(num)]
     all_feedback = [f.content for f, num in zip(feedback, num_prompts) for _ in range(num)]
@@ -116,22 +132,26 @@ def sample_completions(feedback: list[Feedback], model_args: ModelArguments, pro
     # Get completions for flattened list of prompts
     # Dict to hold all responses
     all_responses = {}
+    logger.info("Generating baseline completions")
     all_responses['baseline_response'] = completion_model.get_responses([
         [GET_BASELINE_COMPLETION.format(domain=d, prompt=p)] for d, p in zip(all_domains, all_prompts)
     ], GET_BASELINE_COMPLETION_CONFIG)
 
     # Get revised completions for flattened list of prompts
+    logger.info("Generating revised completions")
     all_responses['revised_response'] = completion_model.get_responses([
         [GET_COMPLETION_REVISED.format(prompt=p, feedback=c, response=r)] for p, c, r in zip(all_prompts, all_effect, all_responses['baseline_response'])
     ], GET_COMPLETION_REVISED_CONFIG)
     all_responses['revised_response'] = [r.split("IMPROVED_RESPONSE:")[-1].strip() if r is not None else r for r in all_responses['revised_response']]
 
     # Get responses where feedback is applied in-context
+    logger.info("Generating in-context completions")
     all_responses['in_context_response'] = completion_model.get_responses([
         [GET_IN_CONTEXT_COMPLETION.format(prompt=p, feedback=c)] for p, c in zip(all_prompts, all_feedback)
     ], GET_IN_CONTEXT_COMPLETION_CONFIG)
 
     # Get responses where feedback is applied in-context
+    logger.info("Generating chain-of-thought completions")
     all_responses['cot_response'] = completion_model.get_responses([
         [GET_COT_COMPLETION.format(prompt=p, feedback=c)] for p, c in zip(all_prompts, all_feedback)
     ], GET_COT_COMPLETION_CONFIG)

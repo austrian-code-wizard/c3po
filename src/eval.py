@@ -133,6 +133,7 @@ def eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedbac
         if num_prompts is None or len(prompt_dataset) < num_prompts:
             num_prompts = len(prompt_dataset)
         prompt_dataset = prompt_dataset.shuffle(seed=42).select(range(num_prompts))
+        logger.info(f"Prepared {prompt_type} dataset with {len(prompt_dataset)} prompts")
         datasets[prompt_type] = {
             "prompts": prompt_dataset["prompt"],
             "baseline": prompt_dataset["baseline_response"],
@@ -140,6 +141,8 @@ def eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedbac
         # Set improved response to pre-generated completions for current method
         if eval_args.method != "trained":
             datasets[prompt_type]["improved"] = prompt_dataset[f"{eval_args.method}_response"]
+    
+    logger.info(f"Constructed evaluation datasets for method: {eval_args.method}")
 
     # Alternatively if using the "trained" method, sample from the model
     if eval_args.method == "trained":
@@ -174,10 +177,12 @@ def eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedbac
 
         # Get trained responses
         all_prompts = [p for pt in datasets.values() for p in pt["prompts"]]
+        logger.info(f"Generating responses for {len(all_prompts)} prompts using trained model")
         all_trained_responses = model.get_responses([[p] for p in all_prompts])
         trained_responses_splits = np.split(all_trained_responses, np.cumsum([len(datasets[pt]["prompts"]) for pt in datasets]))
         for i, prompt_type in enumerate(datasets):
             datasets[prompt_type]["improved"] = trained_responses_splits[i]
+        logger.info("Successfully generated all trained model responses")
 
 
     # Make sure the "improved" field is set for all datasets
@@ -190,6 +195,7 @@ def eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedbac
     # Compute metrics for each prompt type
     results = {}
     for prompt_type in datasets:
+        logger.info(f"Computing evaluation metrics for {prompt_type} dataset")
         feedback_result = eval_func(
             feedback,
             datasets[prompt_type]["prompts"],
@@ -207,6 +213,8 @@ def eval(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedbac
             "answer_quality_improved_better_baseline": -1
         } for _ in feedback_result]
         results[prompt_type] = [dict(**f, **a) for f, a in zip(feedback_result, answer_quality_result)]
+    
+    logger.info("Completed evaluation metric computation for all datasets")
 
 
     data = {}    

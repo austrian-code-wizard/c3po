@@ -108,6 +108,8 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
         negative_prompts = concatenate_datasets([negative_prompts, negative_prompts2])
         general_prompts = concatenate_datasets([general_prompts, general_prompts2])
         logger.info(f"Using {len(prompts)} combined prompts")
+    
+    logger.info(f"Prepared datasets - prompts: {len(prompts)}, negative: {len(negative_prompts)}, general: {len(general_prompts)}")
 
     # Format dataset for specific training algorithm
     if training_args.algo == "dpo":
@@ -121,6 +123,7 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
     else:
         raise ValueError(f"Unknown algorithm {training_args.algo}")
 
+    logger.info(f"Formatting dataset for {training_args.algo} training algorithm")
     dataset = dataset_constructor(
         prompts,
         negative_prompts if (training_args.negative_prompt_ratio > 0 or training_args.algo == "lcdpo" or training_args.algo == "sft_weighted") else None,
