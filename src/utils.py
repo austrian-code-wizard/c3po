@@ -95,6 +95,7 @@ class TrainingArguments(TransformerTrainingArguments):
     eval_split: float = 0.05
     multi_feedback_training: bool = False
     use_base_prefix: Optional[str] = None
+    max_seq_length: int = 2048
 
 
 @dataclass

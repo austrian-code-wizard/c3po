@@ -4,6 +4,7 @@ import argparse
 from time import sleep
 from typing import Any, Tuple
 
+import torch
 import wandb
 from peft import LoraConfig, PeftModel
 from datasets import Dataset, concatenate_datasets
@@ -157,6 +158,19 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
 
     # Deactivate cache
     model.model.config.use_cache = False
+    
+    if hasattr(torch, 'compile') and torch.cuda.is_available():
+        try:
+            model.model = torch.compile(model.model, mode="reduce-overhead")
+            logger.info("Model compiled with torch.compile for faster training")
+        except Exception as e:
+            logger.warning(f"Failed to compile model: {e}")
+    
+    if hasattr(model.model.config, 'use_flash_attention_2'):
+        model.model.config.use_flash_attention_2 = True
+    
+    torch.backends.cuda.matmul.allow_tf32 = True
+    torch.backends.cudnn.allow_tf32 = True
 
     # Create eval dataset
     dataset = dataset.train_test_split(test_size=training_args.eval_split, seed=42, shuffle=True)
@@ -177,7 +191,7 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
         model.tokenizer.padding_side = 'left'
         trainer = DPOTrainer(
             model=model.model,
-            max_length=2048,
+            max_length=training_args.max_seq_length,
             max_prompt_length=1024,
             args=training_args,
             beta=training_args.dpo_beta,
@@ -187,11 +201,13 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
             peft_config=peft_config,
             callbacks=[PeftSavingCallback] if training_args.lora_enable else None
         )
+        
+        trainer.get_train_dataloader().pin_memory = True if torch.cuda.is_available() else False
     elif training_args.algo == "lcdpo":
         model.tokenizer.padding_side = 'left'
         trainer = LocallyConstrainedDPOTrainer(
             model=model.model,
-            max_length=2048,
+            max_length=training_args.max_seq_length,
             max_prompt_length=1024,
             args=training_args,
             beta=training_args.dpo_beta,
@@ -208,6 +224,8 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
             peft_config=peft_config,
             callbacks=[PeftSavingCallback] if training_args.lora_enable else None
         )
+        
+        trainer.get_train_dataloader().pin_memory = True if torch.cuda.is_available() else False
     elif training_args.algo == "sft":
         model.tokenizer.padding_side = 'right'
         collator = DataCollatorForCompletionOnlyLM(response_template, tokenizer=model.tokenizer)
@@ -218,10 +236,12 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
             eval_dataset=eval_dataset,
             tokenizer=model.tokenizer,
             data_collator=collator,
-            max_seq_length=2048,
+            max_seq_length=training_args.max_seq_length,
             peft_config=peft_config,
             callbacks=[PeftSavingCallback] if training_args.lora_enable else None
         )
+        
+        trainer.get_train_dataloader().pin_memory = True if torch.cuda.is_available() else False
     elif training_args.algo == "sft_weighted":
         model.tokenizer.padding_side = 'right'
         collator = DataCollatorForCompletionOnlyLM(response_template, tokenizer=model.tokenizer)
@@ -234,16 +254,22 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
             dataset_text_field="text",
             tokenizer=model.tokenizer,
             data_collator=collator,
-            max_seq_length=2048,
+            max_seq_length=training_args.max_seq_length,
             sigma_soft=training_args.lcdpo_sigma_soft,
             sigma_hard=training_args.lcdpo_sigma_hard,
             peft_config=peft_config,
             callbacks=[PeftSavingCallback] if training_args.lora_enable else None
         )
+        
+        trainer.get_train_dataloader().pin_memory = True if torch.cuda.is_available() else False
     else:
         raise ValueError(f"Unknown algorithm {training_args.algo}")
 
     print_num_trainable_params(trainer.model)
+    
+    if hasattr(trainer.args, 'max_grad_norm') and trainer.args.max_grad_norm is None:
+        trainer.args.max_grad_norm = 1.0
+    
     trainer.train()
     trainer.save_model(run_dir)
     logger.info(f"Saved model for run {run_id}, to {run_dir}")
