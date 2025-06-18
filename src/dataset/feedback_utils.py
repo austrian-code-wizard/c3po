@@ -8,6 +8,7 @@ from typing import Optional, Any, Callable
 from langdetect import detect
 from pydantic import BaseModel
 from datasets import Dataset, DatasetDict
+from textblob import TextBlob
 
 
 # Used to generate deterministic UUIDs for feedback
@@ -52,6 +53,7 @@ class Metric(Enum):
     is_language: Callable = lambda x, y: detect(x) == y
     starts_with: Callable = lambda x, y: x.lower().strip().startswith(y.lower().strip())
     doesnt_start_with: Callable = lambda x, y: not x.lower().strip().startswith(y.lower().strip())
+    sentiment_polarity: Callable = lambda x, _: TextBlob(x).sentiment.polarity
     
     def __call__(self, *args, **kwargs):
         return self.value(*args, **kwargs)

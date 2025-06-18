@@ -65,6 +65,24 @@ def test_doesnt_start_with():
     assert Metric.doesnt_start_with("Hello, World!", "World") == True
     assert Metric.doesnt_start_with("Hello, World!", "hello") == False  # Case insensitivity
 
+def test_sentiment_polarity():
+    positive_text = "I love this amazing product! It's fantastic and wonderful!"
+    positive_score = Metric.sentiment_polarity(positive_text, None)
+    assert positive_score > 0, f"Expected positive sentiment, got {positive_score}"
+    
+    negative_text = "I hate this terrible product. It's awful and disappointing."
+    negative_score = Metric.sentiment_polarity(negative_text, None)
+    assert negative_score < 0, f"Expected negative sentiment, got {negative_score}"
+    
+    neutral_text = "This is a product. It exists."
+    neutral_score = Metric.sentiment_polarity(neutral_text, None)
+    assert -0.1 <= neutral_score <= 0.1, f"Expected neutral sentiment, got {neutral_score}"
+    
+    assert isinstance(positive_score, float), "Sentiment polarity should return a float"
+    
+    assert -1 <= positive_score <= 1, f"Sentiment score should be between -1 and 1, got {positive_score}"
+    assert -1 <= negative_score <= 1, f"Sentiment score should be between -1 and 1, got {negative_score}"
+
 # Additional tests for other metrics if they exist
 
 if __name__ == "__main__":
