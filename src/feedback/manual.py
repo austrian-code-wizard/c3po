@@ -106,6 +106,36 @@ manual_feedback = [
         categories=["gpt_style"],
         type=Type.qualitative,
         comparison=Comparison.greater_eq_than
+    ),
+    Feedback(
+        content="When responding to customer service inquiries, maintain a positive and helpful tone",
+        domain="responding to customer service inquiries",
+        effect="maintain a positive and helpful tone",
+        scope=Scope.regional,
+        type=Type.quantitative,
+        metric=Metric.sentiment,
+        metric_value=0.1,
+        comparison=Comparison.greater_eq_than
+    ),
+    Feedback(
+        content="When writing product reviews, ensure the sentiment reflects genuine satisfaction",
+        domain="writing product reviews",
+        effect="ensure the sentiment reflects genuine satisfaction",
+        scope=Scope.regional,
+        type=Type.quantitative,
+        metric=Metric.sentiment,
+        metric_value=0.2,
+        comparison=Comparison.greater_eq_than
+    ),
+    Feedback(
+        content="Avoid negative language when discussing our company's services",
+        domain="discussing our company's services",
+        effect="avoid negative language",
+        scope=Scope.regional,
+        type=Type.quantitative,
+        metric=Metric.sentiment,
+        metric_value=0.0,
+        comparison=Comparison.greater_eq_than
     )
 ]
 

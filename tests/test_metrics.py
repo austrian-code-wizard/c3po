@@ -1,5 +1,7 @@
-import pytest
 import re
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from langdetect import detect  # Assuming langdetect is used for language detection
 from src.dataset.feedback_utils import Metric
 
@@ -65,7 +67,44 @@ def test_doesnt_start_with():
     assert Metric.doesnt_start_with("Hello, World!", "World") == True
     assert Metric.doesnt_start_with("Hello, World!", "hello") == False  # Case insensitivity
 
+def test_sentiment():
+    assert Metric.sentiment("I love this product! It's amazing!", 0.1) == True
+    assert Metric.sentiment("This is fantastic and wonderful!", 0.0) == True
+    assert Metric.sentiment("I hate this terrible product!", 0.0) == False
+    assert Metric.sentiment("I hate this terrible product!", -0.95) == True
+    assert Metric.sentiment("This is a product.", 0.0) == True
+    assert Metric.sentiment("The item arrived on time.", -0.1) == True
+
 # Additional tests for other metrics if they exist
 
 if __name__ == "__main__":
-    pytest.main()
+    test_functions = [
+        test_length,
+        test_contains_any_string,
+        test_contains_all_strings,
+        test_contains_none_strings,
+        test_contains_phone_number,
+        test_ends_with,
+        test_ends_with_cleaned,
+        test_regex_search,
+        test_regex_search_false,
+        test_is_language,
+        test_starts_with,
+        test_doesnt_start_with,
+        test_sentiment
+    ]
+    
+    passed = 0
+    failed = 0
+    
+    for test_func in test_functions:
+        try:
+            test_func()
+            print(f"✓ {test_func.__name__} passed")
+            passed += 1
+        except Exception as e:
+            print(f"✗ {test_func.__name__} failed: {e}")
+            failed += 1
+    
+    print(f"\nResults: {passed} passed, {failed} failed")
+    exit(0 if failed == 0 else 1)

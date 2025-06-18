@@ -6,6 +6,7 @@ from uuid import uuid5, UUID
 from typing import Optional, Any, Callable
 
 from langdetect import detect
+from textblob import TextBlob
 from pydantic import BaseModel
 from datasets import Dataset, DatasetDict
 
@@ -52,6 +53,7 @@ class Metric(Enum):
     is_language: Callable = lambda x, y: detect(x) == y
     starts_with: Callable = lambda x, y: x.lower().strip().startswith(y.lower().strip())
     doesnt_start_with: Callable = lambda x, y: not x.lower().strip().startswith(y.lower().strip())
+    sentiment: Callable = lambda x, y: TextBlob(x).sentiment.polarity >= y
     
     def __call__(self, *args, **kwargs):
         return self.value(*args, **kwargs)
