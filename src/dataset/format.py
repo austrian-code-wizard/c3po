@@ -62,14 +62,14 @@ def to_dpo(dataset: Dataset, negative_dataset: Dataset = None, general_dataset: 
         "prompt": x["prompt"],
         "rejected": x["baseline_response"],
         "chosen": x["revised_response"]
-    }, remove_columns=dataset.features, load_from_cache_file=False)
+    }, remove_columns=dataset.features)
 
     if negative_dataset is not None:
         negative_dataset = negative_dataset.map(lambda x: {
             "prompt": x["prompt"],
             "rejected": x["revised_response"],
             "chosen": x["baseline_response"]
-        }, remove_columns=negative_dataset.features, load_from_cache_file=False)
+        }, remove_columns=negative_dataset.features)
         dataset = concatenate_datasets([dataset, negative_dataset])
 
     if general_dataset is not None:
@@ -77,7 +77,7 @@ def to_dpo(dataset: Dataset, negative_dataset: Dataset = None, general_dataset: 
             "prompt": x["prompt"],
             "rejected": x["revised_response"],
             "chosen": x["baseline_response"]
-        }, remove_columns=general_dataset.features, load_from_cache_file=False)
+        }, remove_columns=general_dataset.features)
         dataset = concatenate_datasets([dataset, general_dataset])
 
     prompt_format = FORMAT_MAPPING[model_name_or_path]["prompt"]
@@ -85,7 +85,7 @@ def to_dpo(dataset: Dataset, negative_dataset: Dataset = None, general_dataset: 
     dataset = dataset.map(lambda x: {
         # The DPO trainer adds the eos/bos tokens itself so no need to do that here
         "prompt": prompt_format(x['prompt'])
-    }, load_from_cache_file=False)
+    })
     return dataset
 
 
@@ -112,18 +112,18 @@ def to_lcdpo(dataset: Dataset, negative_dataset: Dataset = None, general_dataset
         "prompt": prompt_format(x['prompt']),
         "rejected": x["baseline_response"],
         "chosen": x["revised_response"]
-    }, remove_columns=dataset.features, load_from_cache_file=False)
+    }, remove_columns=dataset.features)
 
     if negative_dataset is not None:
         negative_dataset = negative_dataset.map(lambda x: {
             "hard_negative": full_format(x["prompt"], x["baseline_response"])
-        }, remove_columns=negative_dataset.features, load_from_cache_file=False)
+        }, remove_columns=negative_dataset.features)
         dataset = dataset.add_column("hard_negative", negative_dataset["hard_negative"])
 
     if general_dataset is not None:
         general_dataset = general_dataset.map(lambda x: {
             "soft_negative": full_format(x["prompt"], x["baseline_response"])
-        }, remove_columns=general_dataset.features, load_from_cache_file=False)
+        }, remove_columns=general_dataset.features)
         dataset = dataset.add_column("soft_negative", general_dataset["soft_negative"])
     return dataset
 
@@ -132,20 +132,20 @@ def to_sft(dataset: Dataset, negative_dataset: Dataset = None, general_dataset: 
     dataset = dataset.map(lambda x: {
         "prompt": x["prompt"],
         "completion": f' {x["revised_response"]}' # TODO: hack to fix tokenization issue when there are to neighboring parentheses (e.g. '[/INST][...]'  )
-    }, remove_columns=dataset.features, load_from_cache_file=False)
+    }, remove_columns=dataset.features)
 
     if negative_dataset is not None:
         negative_dataset = negative_dataset.map(lambda x: {
             "prompt": x["prompt"],
             "completion": f' {x["baseline_response"]}' # TODO: hack to fix tokenization issue when there are to neighboring parentheses (e.g. '[/INST][...]'  )
-        }, remove_columns=negative_dataset.features, load_from_cache_file=False)
+        }, remove_columns=negative_dataset.features)
         dataset = concatenate_datasets([dataset, negative_dataset])
 
     if general_dataset is not None:
         general_dataset = general_dataset.map(lambda x: {
             "prompt": x["prompt"],
             "completion": f' {x["baseline_response"]}' # TODO: hack to fix tokenization issue when there are to neighboring parentheses (e.g. '[/INST][...]'  )
-        }, remove_columns=general_dataset.features, load_from_cache_file=False)
+        }, remove_columns=general_dataset.features)
         dataset = concatenate_datasets([dataset, general_dataset])
     return dataset
 
@@ -169,17 +169,17 @@ def to_sft_weighted(dataset: Dataset, negative_dataset: Dataset = None, general_
 
     dataset = dataset.map(lambda x: {
         "text": full_format(x["prompt"], x["revised_response"]) # TODO: hack to fix tokenization issue when there are to neighboring parentheses (e.g. '[/INST][...]'  )
-    }, remove_columns=dataset.features, load_from_cache_file=False)
+    }, remove_columns=dataset.features)
 
     if negative_dataset is not None:
         negative_dataset = negative_dataset.map(lambda x: {
             "hard_negative": full_format(x["prompt"], x["baseline_response"])
-        }, remove_columns=negative_dataset.features, load_from_cache_file=False)
+        }, remove_columns=negative_dataset.features)
         dataset = dataset.add_column("hard_negative", negative_dataset["hard_negative"])
 
     if general_dataset is not None:
         general_dataset = general_dataset.map(lambda x: {
             "soft_negative": full_format(x["prompt"], x["baseline_response"])
-        }, remove_columns=general_dataset.features, load_from_cache_file=False)
+        }, remove_columns=general_dataset.features)
         dataset = dataset.add_column("soft_negative", general_dataset["soft_negative"])
     return dataset
