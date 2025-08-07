@@ -16,7 +16,7 @@ The purpose of other files should be identifiable based on their naming.
 
 # Running C3PO
 ## Prerequisites
-- Ensure you you Conda/Miniconda installed
+- Ensure you have Conda/Miniconda installed
 - Create conda env `conda create -n gfl python=3.11`
 - Activate env `conda activate gfl`
 - Install dependencies `pip install -r requirements.txt`
@@ -26,7 +26,7 @@ The purpose of other files should be identifiable based on their naming.
 
 We utilize [Modal](https://www.modal.com) as compute provider and the examples below assume you have created and configured a Modal account. However, everything detailed below will work using an arbitrary compute setup (as long as it provides sufficient resources. We recommend a 40GB A100 for training and an L4/A10G for eval).
 
-When running locally, replace the `modal run src.modal.app` portion of the commands below with `pyhton <script>.py` where `<script>.py` can be one of `src/sample.py`, `src/train.py`, `src/eval.py`. Note that currently for the local scripts, only the `--arg_file`, `--run_id`, `--data_dir`, and `--feedback_prefix` flags are supported.
+When running locally, replace the `modal run src.modal.app` portion of the commands below with `python <script>.py` where `<script>.py` can be one of `src/sample.py`, `src/train.py`, `src/eval.py`. Note that currently for the local scripts, only the `--arg_file`, `--run_id`, `--data_dir`, and `--feedback_prefix` flags are supported.
 
 ## Sampling
 Sampling is the first the first step of C3PO. For all feedbacks specified by your CMD line args, this will sample categories relevant to each feedback, prompts for each category, as well as baseline, revised, in-context, and CoT completions.
