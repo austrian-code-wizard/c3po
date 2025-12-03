@@ -1,0 +1,76 @@
+{
+    "model_args": {
+        "category_model": {
+            "model_name_or_path": "gpt-4-1106-preview",
+            "platform": "openai"
+        },
+        "prompt_model": {
+            "model_name_or_path": "gpt-4-1106-preview",
+            "platform": "openai"
+        },
+        "completion_model": {
+            "model_name_or_path": "mistralai/Mistral-7B-Instruct-v0.2",
+            "platform": "together"
+        },
+        "train_model": {
+            "model_name_or_path": "mistralai/Mistral-7B-Instruct-v0.2",
+            "platform": "huggingface"
+        },
+        "qualitative_eval_model": {
+            "model_name_or_path": "gpt-4-1106-preview",
+            "platform": "openai"
+        }
+    },
+    "sample_args": {
+        "scope": ["regional"],
+        "type": ["qualitative"],
+        "num_feedbacks": 5,
+        "prompts_per_category": 8,
+        "num_prompts": 100,
+        "num_negative_prompts": 100,
+        "num_general_prompts": 100,
+        "train_test_split": 0.2,
+        "overwrite": true
+    },
+    "training_args": {
+        "algo": "sft",
+        "negative_prompt_ratio": 0,
+        "general_prompt_ratio": 0,
+        "filter_relevant_feedback": false,
+        "lora_enable": true,
+        "lora_r": 32,
+        "lora_alpha": 64,
+        "lora_dropout": 0.05,
+        "lora_bias": "none",
+        "lora_exclude": ["lm_head"],
+        "report_to": "wandb",
+        "output_dir": "./output",
+        "wandb_project": "c3po-test",
+        "num_train_epochs": 1,
+        "per_device_train_batch_size": 1,
+        "per_device_eval_batch_size": 2,
+        "gradient_accumulation_steps": 8,
+        "learning_rate": 1e-5,
+        "warmup_ratio": 0.1,
+        "lr_scheduler_type": "cosine",
+        "save_strategy": "no",
+        "evaluation_strategy": "steps",
+        "eval_steps": 10,
+        "logging_strategy": "steps",
+        "logging_steps": 1,
+        "bf16": true,
+        "save_safetensors": true,
+        "tf32": true,
+        "gradient_checkpointing": true,
+        "dataloader_num_workers": 2,
+        "remove_unused_columns": true,
+        "overwrite_output_dir": true
+    },
+    "eval_args": {
+        "method": "trained",
+        "num_prompts": 25,
+        "num_negative_prompts": 25,
+        "num_general_prompts": 25,
+        "eval_answer_quality": false
+    }
+}
