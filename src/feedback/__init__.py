@@ -9,5 +9,5 @@ __all__ = [
     "manual_feedback",
     "collie_feedback",
     "gpt_content_feedback",
-    "gpt_style_feedback"
+    "gpt_style_feedback",
 ]

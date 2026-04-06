@@ -1,4 +1,11 @@
-from src.dataset.feedback_utils import Feedback, Scope, Type, Metric, Comparison, HEART_KISS_EMOJI_REGEX
+from src.dataset.feedback_utils import (
+    Feedback,
+    Scope,
+    Type,
+    Metric,
+    Comparison,
+    HEART_KISS_EMOJI_REGEX,
+)
 
 
 manual_feedback = [
@@ -10,7 +17,7 @@ manual_feedback = [
         type=Type.quantitative,
         metric=Metric.regex_search,
         metric_value=HEART_KISS_EMOJI_REGEX,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Use '&' instead of 'and' in any Slack message DMs to my colleagues John, Michael, Eric, or Hailey",
@@ -18,15 +25,9 @@ manual_feedback = [
         effect="use '&' instead of 'and'",
         scope=Scope.regional,
         type=Type.quantitative,
-        metric=[
-            Metric.contains_all_strings,
-            Metric.contains_none_strings
-        ],
-        metric_value=[
-            ["&"],
-            [" and "]
-        ],
-        comparison=Comparison.greater_eq_than
+        metric=[Metric.contains_all_strings, Metric.contains_none_strings],
+        metric_value=[["&"], [" and "]],
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Be more concise when emailing my boss Jared",
@@ -35,7 +36,7 @@ manual_feedback = [
         scope=Scope.regional,
         type=Type.quantitative,
         metric=Metric.length,
-        comparison=Comparison.less_eq_than
+        comparison=Comparison.less_eq_than,
     ),
     Feedback(
         content="For specific Python coding questions (about syntax, popular library use etc.), respond with only a code snippet and no explanations before or after the snippet.",
@@ -43,15 +44,9 @@ manual_feedback = [
         effect="respond with only a code snippet and no explanations before or after the snippet",
         scope=Scope.regional,
         type=Type.quantitative,
-        metric=[
-            Metric.starts_with,
-            Metric.ends_with
-        ],
-        metric_value=[
-            "```",
-            "```"
-        ],
-        comparison=Comparison.greater_eq_than
+        metric=[Metric.starts_with, Metric.ends_with],
+        metric_value=["```", "```"],
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Use a more casual tone in work emails to people on my team",
@@ -59,7 +54,7 @@ manual_feedback = [
         effect="use a more casual tone",
         scope=Scope.regional,
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When writing a Haiku, always use rhymes",
@@ -67,7 +62,7 @@ manual_feedback = [
         effect="always use rhymes",
         scope=Scope.regional,
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Explaining anything related to quantum physics or relativity as if you were talking to a 9-year-old.",
@@ -76,7 +71,7 @@ manual_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Assume that your audience is PhD students and use highly technical language when writing about concepts related to artificial intelligence",
@@ -85,18 +80,18 @@ manual_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When talking about HIV/AIDS in Rwanda, make sure the first sentence has a 1st word of 'The'",
         domain="Talking about HIV/AIDS in Rwanda",
         effect="ensure the first sentence has the first word 'The'",
         scope=Scope.regional,
-        categories=['collie', 'ccnews_c08/wiki_c08'],
+        categories=["collie", "ccnews_c08/wiki_c08"],
         type=Type.quantitative,
         metric=Metric.starts_with,
-        metric_value='the ',
-        comparison=Comparison.greater_eq_than
+        metric_value="the ",
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Use sports analogies when writing motivational emails to the sales team",
@@ -105,8 +100,8 @@ manual_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
-    )
+        comparison=Comparison.greater_eq_than,
+    ),
 ]
 
 

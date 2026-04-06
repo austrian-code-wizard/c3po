@@ -57,7 +57,7 @@ SAMPLE_PROMPT_CATEGORIES_CONFIG = {
     "top_p": 0.7,
     "top_k": 50,
     "repetition_penalty": 1,
-    "do_sample": True
+    "do_sample": True,
 }
 
 SAMPLE_PROMPTS = """You are a helpful assistant that always closely follows instructions. You are provided with a topic, and category. Your job is to come up with {count} actionable prompts that fulfill the following criteria:
@@ -164,7 +164,9 @@ GET_BASELINE_COMPLETION = """{prompt}"""
 
 GET_BASELINE_COMPLETION_CONFIG = SAMPLE_NEGATIVE_PROMPTS_CONFIG
 
-GET_IN_CONTEXT_COMPLETION = """{prompt} (If applicable, apply the following feedback: {feedback})"""
+GET_IN_CONTEXT_COMPLETION = (
+    """{prompt} (If applicable, apply the following feedback: {feedback})"""
+)
 
 GET_IN_CONTEXT_COMPLETION_CONFIG = SAMPLE_NEGATIVE_PROMPTS_CONFIG
 

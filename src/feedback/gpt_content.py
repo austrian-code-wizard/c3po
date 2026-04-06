@@ -1,7 +1,6 @@
 from src.dataset.feedback_utils import Feedback, Scope, Type, Comparison
 
 gpt_content_feedback = [
- 
     Feedback(
         content="When discussing modern technology, incorporate historical facts related to the topic",
         domain="Discussing modern technology",
@@ -9,10 +8,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="In writing persuasive essays, provide counter-arguments after each main point",
         domain="Writing persuasive essays",
@@ -20,10 +17,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When analyzing marketing trends, apply psychological theories to explain consumer behavior",
         domain="Analyzing marketing trends",
@@ -31,10 +26,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="In explaining scientific concepts, integrate pop culture references to make it more engaging",
         domain="Explaining scientific concepts",
@@ -42,10 +35,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When writing travel guides, include diverse cultural perspectives",
         domain="Writing travel guides",
@@ -53,10 +44,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="In teaching new languages, give examples from classic literature to illustrate points",
         domain="Teaching new languages",
@@ -64,10 +53,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When discussing historical events, contextualize within current events",
         domain="Discussing historical events",
@@ -75,10 +62,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When explaining legal documents, use humor to lighten the discussion",
         domain="Explaining legal documents",
@@ -86,10 +71,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When describing philosophical theories, suggest practical daily applications",
         domain="Describing philosophical theories",
@@ -97,10 +80,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When giving business advice, weave in personal anecdotes to make it relatable",
         domain="Giving business advice",
@@ -108,10 +89,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When talking about fashion trends, highlight environmental implications",
         domain="Talking about fashion trends",
@@ -119,10 +98,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="In writing self-help materials, pose reflective questions to encourage self-examination",
         domain="Writing self-help materials",
@@ -130,10 +107,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When creating educational content, introduce elements of suspense to maintain interest",
         domain="Creating educational content",
@@ -141,10 +116,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When discussing medical treatments, focus on ethical considerations",
         domain="Discussing medical treatments",
@@ -152,10 +125,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When sharing environmental facts, use persuasive language to inspire action",
         domain="Sharing environmental facts",
@@ -163,10 +134,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When describing consumer products, emphasize long-term impacts",
         domain="Describing consumer products",
@@ -174,10 +143,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="In writing company newsletters, recognize individual achievements",
         domain="Writing company newsletters",
@@ -185,10 +152,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When explaining nutrition information, challenge common misconceptions",
         domain="Explaining nutrition information",
@@ -196,10 +161,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When reporting news updates, convey urgency without alarmism",
         domain="Reporting news updates",
@@ -207,10 +170,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When writing condolence messages, demonstrate compassion and empathy",
         domain="Writing condolence messages",
@@ -218,10 +179,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="In speculating on technology trends, adopt a futuristic perspective",
         domain="Speculating on technology trends",
@@ -229,10 +188,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When describing medical procedures, use layman's terms",
         domain="Describing medical procedures",
@@ -240,10 +197,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When writing productivity articles, provide actionable tips",
         domain="Writing productivity articles",
@@ -251,10 +206,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="In teaching history, initiate critical thinking instead of just presenting facts",
         domain="Teaching history",
@@ -262,10 +215,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When presenting stock market analysis, relate to current pop culture to increase accessibility",
         domain="Presenting stock market analysis",
@@ -273,10 +224,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="In writing DIY guides, meticulously explain each step for clarity",
         domain="Writing DIY guides",
@@ -284,10 +233,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When discussing legal precedents, offer comparisons to similar cases",
         domain="Discussing legal precedents",
@@ -295,10 +242,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="In teaching science subjects, promote interdisciplinary connections to broaden understanding",
         domain="Teaching science subjects",
@@ -306,10 +251,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When explaining traumatic events, validate emotional responses",
         domain="Explaining traumatic events",
@@ -317,10 +260,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When writing job descriptions, emphasize skill development opportunities",
         domain="Writing job descriptions",
@@ -328,10 +269,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="In crafting motivational speeches, profile inspiring role models",
         domain="Crafting motivational speeches",
@@ -339,10 +278,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When writing FAQs, simulate a conversational style to make it more user-friendly",
         domain="Writing FAQs",
@@ -350,10 +287,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="In storytelling, implement dramatic irony to enhance reader engagement",
         domain="Storytelling",
@@ -361,10 +296,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When writing about blockchain technology, break down complex jargon",
         domain="Writing about blockchain technology",
@@ -372,10 +305,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When discussing business strategies, align with global sustainability goals",
         domain="Discussing business strategies",
@@ -383,10 +314,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When writing mystery novels, introduce unexpected plot twists",
         domain="Writing mystery novels",
@@ -394,10 +323,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="In analysing current political leaders, draw parallels to historical figures",
         domain="Analysing current political leaders",
@@ -405,10 +332,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When explaining advanced mathematics, create analogies to everyday life",
         domain="Explaining advanced mathematics",
@@ -416,10 +341,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="In educating about vaccines, debunk myths and misconceptions",
         domain="Educating about vaccines",
@@ -427,10 +350,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When mentoring startups, inspire with success stories",
         domain="Mentoring startups",
@@ -438,10 +359,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="In teaching computer programming, highlight practical use cases",
         domain="Teaching computer programming",
@@ -449,10 +368,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When reviewing tech gadgets, offer customization ideas",
         domain="Reviewing tech gadgets",
@@ -460,10 +377,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When summarizing research papers, suggest next steps for further learning",
         domain="Summarizing research papers",
@@ -471,10 +386,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="In writing pet care advice, reinforce positive behaviors",
         domain="Writing pet care advice",
@@ -482,10 +395,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When analyzing music, draw connections to other art forms",
         domain="Analyzing music",
@@ -493,10 +404,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When discussing economic policies, contrast with previous historical periods",
         domain="Discussing economic policies",
@@ -504,10 +413,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="In writing executive summaries, communicate with brevity and precision",
         domain="Writing executive summaries",
@@ -515,10 +422,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When focusing on character development in writing, explore psychological motivations",
         domain="Character development in writing",
@@ -526,10 +431,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When educating the elderly about technology, promote digital literacy concepts",
         domain="Educating the elderly about technology",
@@ -537,10 +440,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="In addressing social issues, propose unconventional solutions",
         domain="Addressing social issues",
@@ -548,10 +449,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When giving legal advice, incorporate humor into explanations",
         domain="Giving legal advice",
@@ -559,10 +458,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="For teaching new software features, use historical anecdotes",
         domain="Teaching new software features",
@@ -570,10 +467,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When providing medical diagnoses, present information in the form of a story",
         domain="Providing medical diagnoses",
@@ -581,10 +476,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When discussing conspiracy theories, adopt a skeptical tone",
         domain="Discussing conspiracy theories",
@@ -592,10 +485,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="In explaining scientific concepts, provide analogies to everyday life",
         domain="Explaining scientific concepts",
@@ -603,10 +494,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When writing rejection letters, express empathy",
         domain="Writing rejection letters",
@@ -614,10 +503,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="For creating self-help content, give counterintuitive advice",
         domain="Creating self-help content",
@@ -625,10 +512,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When reviewing technology products, discuss potential ethical dilemmas",
         domain="Reviewing technology products",
@@ -636,10 +521,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When talking about environmental issues, use an optimistic outlook",
         domain="Talking about environmental issues",
@@ -647,10 +530,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="In problem-solving in mathematics, suggest unconventional solutions",
         domain="Problem-solving in mathematics",
@@ -658,10 +539,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When writing professional bios, employ a narrative of personal growth",
         domain="Writing professional bios",
@@ -669,10 +548,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When evaluating modern art, critique traditional approaches",
         domain="Evaluating modern art",
@@ -680,10 +557,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When analyzing economic theories, highlight social implications",
         domain="Analyzing economic theories",
@@ -691,10 +566,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When advising on career choices, personalize with your own experiences",
         domain="Advising on career choices",
@@ -702,10 +575,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When discussing local news events, offer international perspectives",
         domain="Discussing local news events",
@@ -713,10 +584,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When writing about nutrition, challenge commonly held beliefs",
         domain="Writing about nutrition",
@@ -724,10 +593,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When explaining current technology trends, introduce futuristic scenarios",
         domain="Explaining current technology trends",
@@ -735,10 +602,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="In debating political policies, predict long-term consequences",
         domain="Debating political policies",
@@ -746,10 +611,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When reporting on financial news, frame information with historical context",
         domain="Reporting on financial news",
@@ -757,10 +620,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When promoting fashion products, emphasize ecological benefits",
         domain="Promoting fashion products",
@@ -768,10 +629,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When designing a university syllabus, invoke a casual, conversational tone",
         domain="Designing a university syllabus",
@@ -779,10 +638,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When teaching critical thinking skills, question assumptions",
         domain="Teaching critical thinking skills",
@@ -790,10 +647,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When writing software documentation, avoid technical jargon",
         domain="Writing software documentation",
@@ -801,10 +656,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When commenting on social issues, present multiple viewpoints",
         domain="Commenting on social issues",
@@ -812,10 +665,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When reporting on statistics, focus on individual stories",
         domain="Reporting on statistics",
@@ -823,10 +674,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When discussing climate change solutions, demonstrate a sense of urgency",
         domain="Discussing climate change solutions",
@@ -834,10 +683,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="In teaching classical literature, use pop culture references",
         domain="Teaching classical literature",
@@ -845,10 +692,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When creating motivational speeches, engage with critical thinking questions",
         domain="Creating motivational speeches",
@@ -856,10 +701,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When writing tech reviews, blend in personal observations",
         domain="Writing tech reviews",
@@ -867,10 +710,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When giving philosophical lectures, prioritize actionable advice",
         domain="Giving philosophical lectures",
@@ -878,10 +719,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When explaining legal jargon, create relatable analogies",
         domain="Explaining legal jargon",
@@ -889,10 +728,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When evaluating business plans, praise forward-thinking ideas",
         domain="Evaluating business plans",
@@ -900,10 +737,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When writing historical fiction, integrate current events",
         domain="Writing historical fiction",
@@ -911,10 +746,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="For teaching science subjects, promote cross-disciplinary thinking",
         domain="Teaching science subjects",
@@ -922,10 +755,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When reviewing movies, apply a critical lens",
         domain="Reviewing movies",
@@ -933,10 +764,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When writing travel guides, instill a sense of adventure",
         domain="Writing travel guides",
@@ -944,10 +773,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When sending business proposals, adapt a friendly tone",
         domain="Sending business proposals",
@@ -955,10 +782,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When making technical explanations, provide creative visuals & illustrations",
         domain="Making technical explanations",
@@ -966,10 +791,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="In composing academic essays, emulate conversational speech",
         domain="Composing academic essays",
@@ -977,10 +800,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When writing about personal finance, develop a theme of resilience",
         domain="Writing about personal finance",
@@ -988,10 +809,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When discussing technology advancements, incorporate ethical considerations",
         domain="Discussing technology advancements",
@@ -999,10 +818,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When crafting community outreach messages, highlight personal empowerment",
         domain="Crafting community outreach messages",
@@ -1010,10 +827,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When explaining local traditions, include a global perspective",
         domain="Explaining local traditions",
@@ -1021,10 +836,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When writing on social media, advocate for underrepresented voices",
         domain="Writing on social media",
@@ -1032,10 +845,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When writing news articles, embrace speculative fiction elements",
         domain="Writing news articles",
@@ -1043,10 +854,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When conducting political analysis, provide step-by-step reasoning",
         domain="Conducting political analysis",
@@ -1054,10 +863,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When writing copy for advertisements, use vivid imagery",
         domain="Writing copy for advertisements",
@@ -1065,10 +872,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When crafting a product description, cultivate an air of mystery",
         domain="Crafting a product description",
@@ -1076,10 +881,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When responding to customer complaints, use compassionate language",
         domain="Responding to customer complaints",
@@ -1087,10 +890,8 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="When advising on digital privacy, provide context-specific advice without using tech jargon",
         domain="advising on digital privacy",
@@ -1098,7 +899,6 @@ gpt_content_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
 ]
