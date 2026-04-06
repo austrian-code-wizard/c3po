@@ -1,7 +1,6 @@
-from src.dataset.feedback_utils import Feedback, Scope, Type, Metric, Comparison
+from src.dataset.feedback_utils import Feedback, Scope, Type, Comparison
 
 gpt_style_feedback = [
- 
     Feedback(
         content="Format responses as haiku when creating social media captions",
         domain="creating social media captions",
@@ -9,10 +8,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Include ASCII art in customer support emails",
         domain="sending customer support emails",
@@ -20,10 +17,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Use legal jargon when writing blog posts for my law firm",
         domain="writing blog posts for my law firm",
@@ -31,10 +26,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Integrate pop culture references for composing ad copy targeted at millennials",
         domain="composing ad copy for targeted millennials",
@@ -42,10 +35,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Adopt a Shakespearean tone when drafting theater club announcements",
         domain="drafting theater club announcements",
@@ -53,10 +44,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Insert relevant emojis when replying to online food reviews",
         domain="replying to online food reviews",
@@ -64,10 +53,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Use technical IT terminology when writing articles for a tech blog",
         domain="writing articles for a tech blog",
@@ -75,10 +62,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Write in iambic pentameter when composing event invitations",
         domain="composing event invitations",
@@ -86,10 +71,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Include historical facts when creating content for history education platforms",
         domain="creating content for history education platforms",
@@ -97,10 +80,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Format answers as multiple choice questions when responding to customer queries",
         domain="responding to customer queries",
@@ -108,10 +89,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Provide analogies to sporting events when writing motivational speeches",
         domain="writing motivational speeches",
@@ -119,10 +98,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Cite scientific studies in authoring health and wellness articles",
         domain="authoring health and wellness articles",
@@ -130,10 +107,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Simulate an old English dialect when creating content for a medieval-themed game",
         domain="creating content for a medieval-themed game",
@@ -141,10 +116,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Employ comic book slang in writing product descriptions for a comic shop",
         domain="writing product descriptions for a comic shop",
@@ -152,10 +125,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Use internet acronyms when composing messages for a tech-savvy audience",
         domain="composing messages for a tech-savvy audience",
@@ -163,10 +134,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Include quotes from famous authors when sending out a book club newsletter",
         domain="sending out a book club newsletter",
@@ -174,10 +143,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Write with a noir detective voice for crafting stories for a mystery blog",
         domain="crafting stories for a mystery blog",
@@ -185,10 +152,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Incorporate trendy slang when writing scripts for YouTube influencers",
         domain="writing scripts for YouTube influencers",
@@ -196,10 +161,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Use a friendly and colloquial style in composing an FAQ section for a startup website",
         domain="composing an FAQ section for a startup website",
@@ -207,10 +170,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Write in second person point of view for creating interactive stories",
         domain="creating interactive stories",
@@ -218,10 +179,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Use pirate speak when sending promotional emails for 'Talk Like a Pirate Day'",
         domain="sending promotional emails for 'Talk Like a Pirate Day'",
@@ -229,10 +188,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Imitate famous philosophers' styles when composing college philosophy course descriptions",
         domain="composing college philosophy course descriptions",
@@ -240,10 +197,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Mimic a news anchor's delivery in writing company announcement memos",
         domain="writing company announcement memos",
@@ -251,10 +206,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Write using rhythmic patterns when crafting social media posts for a music festival",
         domain="crafting social media posts for a music festival",
@@ -262,10 +215,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Apply a minimalistic style in designing content for a minimalist lifestyle brand",
         domain="designing content for a minimalist lifestyle brand",
@@ -273,10 +224,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Include puns and wordplay when writing product descriptions for a novelty gift store",
         domain="writing product descriptions for a novelty gift store",
@@ -284,10 +233,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Use an academic tone in developing online course materials for a university",
         domain="developing online course materials for a university",
@@ -295,10 +242,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Write as if speaking to a child when composing messages for pediatric healthcare",
         domain="composing messages for pediatric healthcare",
@@ -306,10 +251,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Embed secret codes or ciphers when creating a puzzle for an escape room website",
         domain="creating a puzzle for an escape room website",
@@ -317,10 +260,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Use metaphors related to space when writing content for an astronomy club",
         domain="writing content for an astronomy club",
@@ -328,10 +269,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Speak from the perspective of an inanimate object in writing first-person narratives for a creative writing class",
         domain="writing first-person narratives for a creative writing class",
@@ -339,10 +278,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Employ a vintage radio broadcaster style in scripting podcast introductions",
         domain="scripting podcast introductions",
@@ -350,10 +287,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Mimic a sports commentator's excitement when live-tweeting a sporting event",
         domain="live-tweeting a sporting event",
@@ -361,10 +296,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Synthesize multiple languages in one response when replying to a cosmopolitan audience on social media",
         domain="replying to a cosmopolitan audience on social media",
@@ -372,10 +305,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Imitate a fantasy novel narrative style for writing descriptions for tabletop RPG campaigns",
         domain="writing descriptions for tabletop RPG campaigns",
@@ -383,10 +314,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Portray a futuristic AI persona when composing tweets for a tech product launch",
         domain="composing tweets for a tech product launch",
@@ -394,10 +323,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Include cryptic messages in writing teaser announcements for a mystery event",
         domain="writing teaser announcements for a mystery event",
@@ -405,10 +332,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Use hyperbolic expressions when crafting blurbs for sensational news articles",
         domain="crafting blurbs for sensational news articles",
@@ -416,10 +341,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Adopt a mystical and enigmatic tone in describing products on a psychic services website",
         domain="describing products on a psychic services website",
@@ -427,10 +350,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Write in the style of a classical poet for composing social media posts for a literature class",
         domain="composing social media posts for a literature class",
@@ -438,10 +359,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Employ wilderness survival terminology in creating articles for outdoor adventure blogs",
         domain="creating articles for outdoor adventure blogs",
@@ -449,10 +368,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Use cooking metaphors when writing a newsletter for a culinary school",
         domain="writing a newsletter for a culinary school",
@@ -460,10 +377,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Mimic a detective's investigative report when authoring mystery game narratives",
         domain="authoring mystery game narratives",
@@ -471,10 +386,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Simulate a fantasy creature's speech pattern in writing dialogue for a fantasy novel",
         domain="writing dialogue for a fantasy novel",
@@ -482,10 +395,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Emulate tabloid headline style when brainstorming titles for sensational podcasts",
         domain="brainstorming titles for sensational podcasts",
@@ -493,10 +404,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Use aviation terminology when creating content for an airline blog",
         domain="creating content for an airline blog",
@@ -504,10 +413,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Write in code or cryptic language for composing riddles for a gaming app",
         domain="composing riddles for a gaming app",
@@ -515,10 +422,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Write as if from a dystopian future when creating narratives for post-apocalyptic themed games",
         domain="creating narratives for post-apocalyptic themed games",
@@ -526,10 +431,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Write in a Q&A format when constructing help sections for websites",
         domain="constructing help sections for websites",
@@ -537,10 +440,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Write as if you were a time traveler when composing descriptions for historical documentaries",
         domain="composing descriptions for historical documentaries",
@@ -548,10 +449,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Adopt a melodramatic telenovela style for drafting scripts for drama club practice sessions",
         domain="drafting scripts for drama club practice sessions",
@@ -559,10 +458,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Use expressions from 1920s American slang when writing for a Roaring Twenties themed event",
         domain="writing for a Roaring Twenties themed event",
@@ -570,10 +467,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Simulate an interview format in writing articles featuring professionals",
         domain="writing articles featuring professionals",
@@ -581,10 +476,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Emulate '80s pop culture lingo when producing content for an '80s nostalgia blog",
         domain="producing content for an '80s nostalgia blog",
@@ -592,10 +485,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Use a call-and-response structure when writing interactive community posts",
         domain="writing interactive community posts",
@@ -603,10 +494,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Employ the language and style of film noir in scripting scenes for a film study course",
         domain="scripting scenes for a film study course",
@@ -614,10 +503,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Echo a famous celebrity's catchphrases when crafting tweets for a celebrity parody account",
         domain="crafting tweets for a celebrity parody account",
@@ -625,10 +512,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Blend in educational teaching methods when designing tutorials for a learning app",
         domain="designing tutorials for a learning app",
@@ -636,10 +521,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Adopt a minimalist poetic style when writing copy for art gallery promotions",
         domain="writing copy for art gallery promotions",
@@ -647,10 +530,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Provide examples using fantasy lore when creating lesson plans for a creative writing course",
         domain="creating lesson plans for a creative writing course",
@@ -658,10 +539,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Formulate as if giving a royal decree when sending notifications from an app with a monarchy theme",
         domain="sending notifications from an app with a monarchy theme",
@@ -669,10 +548,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Include quotes from movies in drafting trivia questions for a film fan club",
         domain="drafting trivia questions for a film fan club",
@@ -680,10 +557,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Mirror a stand-up comedian's pacing in writing social media posts for a comedy club",
         domain="writing social media posts for a comedy club",
@@ -691,10 +566,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Draw parallels to historical events when explaining current news topics",
         domain="explaining current news topics",
@@ -702,10 +575,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Include urban legends in creating newsletter content for a horror fan community",
         domain="creating newsletter content for a horror fan community",
@@ -713,10 +584,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Format like a screenplay when writing descriptions of video content",
         domain="writing descriptions of video content",
@@ -724,10 +593,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Use verbose and florid language when composing wedding invitations",
         domain="composing wedding invitations",
@@ -735,10 +602,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Imitate the style of a radio DJ when hosting a live stream for an online music event",
         domain="hosting a live stream for an online music event",
@@ -746,10 +611,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Adopt a conspiratorial tone in writing descriptions for a conspiracy theory podcast",
         domain="writing descriptions for a conspiracy theory podcast",
@@ -757,10 +620,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Utilize a F.A.Q. format in writing informational brochures for a healthcare clinic",
         domain="writing informational brochures for a healthcare clinic",
@@ -768,10 +629,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Integrate classical literary quotes when constructing posts for a book discussion forum",
         domain="constructing posts for a book discussion forum",
@@ -779,10 +638,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Echo a game show host's enthusiasm when creating marketing copy for a mobile gaming app",
         domain="creating marketing copy for a mobile gaming app",
@@ -790,10 +647,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Utilize a snappy journalistic tone when writing briefs for a news aggregation service",
         domain="writing briefs for a news aggregation service",
@@ -801,10 +656,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Construct as a personal diary entry for writing descriptions for a self-help blog",
         domain="writing descriptions for a self-help blog",
@@ -812,10 +665,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Compose with a motivational speech rhythm when drafting company-wide memos",
         domain="drafting company-wide memos",
@@ -823,10 +674,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Write in second person narrative for creating fitness program descriptions",
         domain="creating fitness program descriptions",
@@ -834,10 +683,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Incorporate classical music terminology when writing reviews for a classical concert series",
         domain="writing reviews for a classical concert series",
@@ -845,10 +692,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Integrate advanced technical jargon when writing articles for a specialized science magazine",
         domain="writing articles for a specialized science magazine",
@@ -856,10 +701,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Incorporate Shakespearean English in composing creative stories for a literature class",
         domain="composing creative stories for a literature class",
@@ -867,10 +710,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Insert relevant emojis when sending promotional messages to a younger audience",
         domain="sending promotional messages to a younger audience",
@@ -878,10 +719,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Include pseudocode for explaining algorithms in a programming blog",
         domain="explaining algorithms in a programming blog",
@@ -889,10 +728,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Format responses in bullet points when answering frequently asked questions on a website",
         domain="answering frequently asked questions on a website",
@@ -900,10 +737,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Use storytelling techniques when crafting product descriptions for an online store",
         domain="crafting product descriptions for an online store",
@@ -911,10 +746,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Embed interactive elements in creating educational content for an e-learning platform",
         domain="creating educational content for an e-learning platform",
@@ -922,10 +755,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Apply legalese language when drafting terms of service for a new app",
         domain="drafting terms of service for a new app",
@@ -933,10 +764,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Introduce pop culture references when writing a review for a trendy restaurant",
         domain="writing a review for a trendy restaurant",
@@ -944,10 +773,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Implement code optimization explanations when giving feedback on software development forums",
         domain="giving feedback on software development forums",
@@ -955,10 +782,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Compose using iambic pentameter when writing custom greetings for greeting cards",
         domain="writing custom greetings for greeting cards",
@@ -966,10 +791,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Develop a distinct character voice for creating dialogue in a video game script",
         domain="creating dialogue for a video game script",
@@ -977,10 +800,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Incorporate data visualizations when providing market analysis in a business report",
         domain="providing market analysis in a business report",
@@ -988,10 +809,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Use stream-of-consciousness style in writing personal blog posts",
         domain="writing a personal blog post",
@@ -999,10 +818,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Apply a question-and-answer format when composing interview articles",
         domain="composing interview articles",
@@ -1010,10 +827,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Write in the second person narrative for creating interactive fiction",
         domain="creating interactive fiction",
@@ -1021,10 +836,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Maintain a haiku structure when posting daily updates on social media",
         domain="posting daily updates on social media",
@@ -1032,10 +845,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Employ a telegraph style of short sentences when sending updates during a live event",
         domain="sending updates during a live event",
@@ -1043,10 +854,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Ensure adherence to AP Style when writing news articles for an online publication",
         domain="writing news articles for an online publication",
@@ -1054,10 +863,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Use a Socratic method of asking questions when explaining philosophy topics on a discussion forum",
         domain="explaining philosophy topics on a discussion forum",
@@ -1065,10 +872,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Follow screenplay formatting rules when drafting scripts for independent films",
         domain="drafting scripts for independent films",
@@ -1076,10 +881,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Include step-by-step instructions in writing DIY project guides",
         domain="writing DIY project guides",
@@ -1087,10 +890,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Utilize sports terminology when commenting on an athlete's performance in a blog post",
         domain="commenting on an athlete's performance in a blog post",
@@ -1098,10 +899,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Employ non-linear narrative in writing plot summaries for a movie review website",
         domain="writing plot summaries for a movie review website",
@@ -1109,10 +908,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Insert academic citations when producing research summaries for academic journals",
         domain="producing research summaries for academic journals",
@@ -1120,10 +917,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Present information in a cause-and-effect structure when explaining historical events for an educational website",
         domain="explaining historical events for an educational website",
@@ -1131,10 +926,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Compose using varied poetic forms when submitting work to a poetry contest",
         domain="submitting work to a poetry contest",
@@ -1142,10 +935,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Use technical drawing annotations when describing engineering designs in a document",
         domain="describing engineering designs in a document",
@@ -1153,10 +944,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Include sensory descriptions in writing travel blog entries",
         domain="writing travel blog entries",
@@ -1164,10 +953,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Provide cross-cultural comparisons when writing articles about global business etiquette",
         domain="writing articles about global business etiquette",
@@ -1175,10 +962,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Write following the inverted pyramid structure when composing press releases for a PR agency",
         domain="composing press releases for a PR agency",
@@ -1186,10 +971,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Apply a lighthearted and whimsical tone when drafting content for a children's entertainment website",
         domain="drafting content for a children's entertainment website",
@@ -1197,10 +980,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Use a comparison and contrast framework when creating content for a product review blog",
         domain="creating content for a product review blog",
@@ -1208,10 +989,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Synthesize information into infographics when delivering reports on social media analytics",
         domain="delivering reports on social media analytics",
@@ -1219,10 +998,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Adapt classical Greek rhetoric when writing persuasive essays on contemporary issues",
         domain="writing persuasive essays on contemporary issues",
@@ -1230,10 +1007,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Integrate dialects and regional speech when composing narratives for a cultural heritage project",
         domain="composing narratives for a cultural heritage project",
@@ -1241,10 +1016,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Construct a dialogue-heavy approach in writing tutorials for a conversation-based language app",
         domain="writing a tutorial for a conversation-based language app",
@@ -1252,10 +1025,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Base the writing on a specific meter and rhyme scheme when creating lyrics for a new musical composition",
         domain="creating lyrics for a new musical composition",
@@ -1263,10 +1034,8 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
- 
     Feedback(
         content="Use persuasive language with calls to action when drafting campaign emails for a political candidate",
         domain="drafting campaign emails for a political candidate",
@@ -1274,7 +1043,6 @@ gpt_style_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-
 ]

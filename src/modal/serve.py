@@ -20,12 +20,12 @@ with stub.gpu_image.imports():
     image=stub.gpu_image,
     gpu=gpu.L4(count=1),
     container_idle_timeout=300,
-    concurrency_limit=8
+    concurrency_limit=8,
 )
 class Model:
     ARGS = {
         "model_name_or_path": "mistralai/Mistral-7B-Instruct-v0.2",
-        "platform": "huggingface"
+        "platform": "huggingface",
     }
     METHOD_FILENAMES = {
         "c3po": "lcdpo-64-r-128-alpha-sft-0.5-hard-0.5-soft-use_base_prefix-79bee8aa",
@@ -33,8 +33,8 @@ class Model:
         "sft_negatives": "sft_weighted-0-hard-0-soft-64-r-128-alpha-ce8d54a7",
         "sft": [
             "sft-0-hard-0-soft-64-r-128-alpha-24d6850a",
-            "sft-0-hard-0-soft-64-r-128-alpha-c666170c"
-        ]
+            "sft-0-hard-0-soft-64-r-128-alpha-c666170c",
+        ],
     }
     ADAPTER_DIR = "/results/data/run-3/train/"
 
@@ -51,10 +51,10 @@ class Model:
         self.model.model = PeftModel.from_pretrained(
             self.model.model,
             os.path.join(self.ADAPTER_DIR, initial_feedback, filename),
-            adapter_name=adapter_name)
+            adapter_name=adapter_name,
+        )
         self.loaded_adapters = [adapter_name]
         print(f"Loaded adapters in {time.time() - t0:.2f}s")
-
 
     def get_filename(self, adapter: str, method: str) -> str:
         if method != "sft":
@@ -66,16 +66,16 @@ class Model:
                     return file
         raise ValueError(f"Method {method} not found for adapter {adapter}")
 
-
     @method()
     def get_response(
-        self,
-        prompt: str,
-        adapters: list[str] | None,
-        method: str | None
+        self, prompt: str, adapters: list[str] | None, method: str | None
     ) -> str:
-        assert not (adapters is None and method is not None), "Adapter must be specified if method is specified"
-        assert not (adapters is not None and method is None), "Method must be specified if adapter is specified"
+        assert not (adapters is None and method is not None), (
+            "Adapter must be specified if method is specified"
+        )
+        assert not (adapters is not None and method is None), (
+            "Method must be specified if adapter is specified"
+        )
         if adapters is not None and method is not None:
             assert len(adapters) >= 1, "At least one adapter must be specified"
             assert len(adapters) <= 3, "At most three adapters can be specified"
@@ -83,21 +83,29 @@ class Model:
 
             adapter_names = []
             for adapter in adapters:
-                assert adapter in [feedback["feedback_id"] for feedback in self.get_adapters()], f"Adapter {adapter} not found"
+                assert adapter in [
+                    feedback["feedback_id"] for feedback in self.get_adapters()
+                ], f"Adapter {adapter} not found"
                 filename = self.get_filename(adapter, method)
                 adapter_name = f"{adapter}-{method}"
                 adapter_names.append(adapter_name)
                 if adapter_name not in self.loaded_adapters:
                     self.model.model.load_adapter(
                         os.path.join(self.ADAPTER_DIR, adapter, filename),
-                        adapter_name=adapter_name)
+                        adapter_name=adapter_name,
+                    )
                     self.loaded_adapters.append(adapter_name)
 
             combined_adapter_name = "-".join(adapter_names)
             if combined_adapter_name not in self.loaded_adapters:
-                self.model.model.add_weighted_adapter(adapter_names, [1.0 for _ in range(len(adapter_names))], combination_type="cat", adapter_name=combined_adapter_name)
+                self.model.model.add_weighted_adapter(
+                    adapter_names,
+                    [1.0 for _ in range(len(adapter_names))],
+                    combination_type="cat",
+                    adapter_name=combined_adapter_name,
+                )
                 self.loaded_adapters.append(combined_adapter_name)
-            
+
             self.model.model.set_adapter(combined_adapter_name)
 
             if len(self.loaded_adapters) > 5:
@@ -105,39 +113,35 @@ class Model:
                 self.loaded_adapters = self.loaded_adapters[1:]
 
             logger.info(f"Using adapter {combined_adapter_name}")
-            return self.model.get_responses([[prompt]], gen_config={**GET_BASELINE_COMPLETION_CONFIG, "max_new_tokens": 256})[0]
-        
+            return self.model.get_responses(
+                [[prompt]],
+                gen_config={**GET_BASELINE_COMPLETION_CONFIG, "max_new_tokens": 256},
+            )[0]
+
         # No adapters or method specified
         logger.info("Using base model")
         with self.model.model.disable_adapter():
-            return self.model.get_responses([[prompt]], gen_config={**GET_BASELINE_COMPLETION_CONFIG, "max_new_tokens": 256})[0]
-        
+            return self.model.get_responses(
+                [[prompt]],
+                gen_config={**GET_BASELINE_COMPLETION_CONFIG, "max_new_tokens": 256},
+            )[0]
 
     @method()
     def warmup(self):
         return True
 
+    def get_adapters(self) -> dict[str, str]:
+        return [
+            {"feedback_name": f.content, "feedback_id": f.file_name}
+            for f in all_feedback
+        ]
 
-    def get_adapters(
-        self
-    ) -> dict[str, str]:
-        return [{
-            "feedback_name": f.content,
-            "feedback_id": f.file_name
-        } for f in all_feedback]
-    
-
-    def get_methods(
-        self
-    ) -> list[str]:
+    def get_methods(self) -> list[str]:
         return list(self.METHOD_FILENAMES.keys())
 
 
 @stub.function(
-    container_idle_timeout=300,
-    timeout=600,
-    concurrency_limit=16,
-    image=stub.api_image
+    container_idle_timeout=300, timeout=600, concurrency_limit=16, image=stub.api_image
 )
 @asgi_app()
 def web():
@@ -152,25 +156,23 @@ def web():
         data = await request.json()
         assert data.get("C3PO_API_KEY", "") == api_key, "Invalid API key"
         return {
-            "response": model.get_response.remote(data["prompt"], data.get("adapters"), data.get("method"))
+            "response": model.get_response.remote(
+                data["prompt"], data.get("adapters"), data.get("method")
+            )
         }
-    
+
     @web_app.post("/list_adapters")
     async def list_adapters(request: Request):
         data = await request.json()
         assert data.get("C3PO_API_KEY", "") == api_key, "Invalid API key"
-        return {
-            "adapters": model.get_adapters()
-        }
-    
+        return {"adapters": model.get_adapters()}
+
     @web_app.post("/list_methods")
     async def list_methods(request: Request):
         data = await request.json()
         assert data.get("C3PO_API_KEY", "") == api_key, "Invalid API key"
-        return {
-            "methods": model.get_methods()
-        }
-    
+        return {"methods": model.get_methods()}
+
     @web_app.post("/warmup")
     async def warmup(request: Request):
         data = await request.json()

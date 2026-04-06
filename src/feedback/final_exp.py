@@ -1,8 +1,16 @@
-from src.dataset.feedback_utils import Feedback, Scope, Type, Comparison, Metric, HEART_KISS_EMOJI_REGEX, EMOJI_REGEX
+from src.dataset.feedback_utils import (
+    Feedback,
+    Scope,
+    Type,
+    Comparison,
+    Metric,
+    HEART_KISS_EMOJI_REGEX,
+    EMOJI_REGEX,
+)
 
 
 all_feedback = [
-        Feedback(
+    Feedback(
         content="Always use some heart or kiss emoji when texting my girlfriend Maddie",
         domain="writing text messages to my girlfriend Maddie",
         effect="use some heart or kiss emoji",
@@ -11,7 +19,7 @@ all_feedback = [
         type=Type.quantitative,
         metric=Metric.regex_search,
         metric_value=HEART_KISS_EMOJI_REGEX,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Use '&' instead of 'and' in any Slack message DMs to my colleagues John, Michael, Eric, or Hailey",
@@ -20,15 +28,9 @@ all_feedback = [
         scope=Scope.regional,
         categories=["manual"],
         type=Type.quantitative,
-        metric=[
-            Metric.contains_all_strings,
-            Metric.contains_none_strings
-        ],
-        metric_value=[
-            ["&"],
-            [" and "]
-        ],
-        comparison=Comparison.greater_eq_than
+        metric=[Metric.contains_all_strings, Metric.contains_none_strings],
+        metric_value=[["&"], [" and "]],
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Be more concise when emailing my boss Jared",
@@ -38,7 +40,7 @@ all_feedback = [
         categories=["manual"],
         type=Type.quantitative,
         metric=Metric.length,
-        comparison=Comparison.less_eq_than
+        comparison=Comparison.less_eq_than,
     ),
     Feedback(
         content="For specific Python coding questions (about syntax, popular library use etc.), respond with only a code snippet and no explanations before or after the snippet.",
@@ -47,15 +49,9 @@ all_feedback = [
         scope=Scope.regional,
         categories=["manual"],
         type=Type.quantitative,
-        metric=[
-            Metric.starts_with,
-            Metric.ends_with
-        ],
-        metric_value=[
-            "```",
-            "```"
-        ],
-        comparison=Comparison.greater_eq_than
+        metric=[Metric.starts_with, Metric.ends_with],
+        metric_value=["```", "```"],
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Use a more casual tone in work emails to people on my team",
@@ -64,7 +60,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["manual"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When writing a Haiku, always use rhymes",
@@ -73,7 +69,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["manual_1"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Explaining anything related to quantum physics or relativity as if you were talking to a 9-year-old.",
@@ -82,7 +78,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["manual_1"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Assume that your audience is PhD students and use highly technical language when writing about concepts related to artificial intelligence",
@@ -91,7 +87,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["manual_1"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When talking about HIV/AIDS in Rwanda, make sure the first sentence has a 1st word of 'The'",
@@ -101,8 +97,8 @@ all_feedback = [
         categories=["manual_1"],
         type=Type.quantitative,
         metric=Metric.starts_with,
-        metric_value='the ',
-        comparison=Comparison.greater_eq_than
+        metric_value="the ",
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Use sports analogies when writing motivational emails to the sales team",
@@ -111,142 +107,142 @@ all_feedback = [
         scope=Scope.regional,
         categories=["manual_1"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Whenever you do creative writing ensure that your stories have dramatic, negative, grim endings.",
         domain="doing any kind of creative writing",
         effect="ensure that your stories have dramatic, negative, grim endings",
         scope=Scope.regional,
-        categories=['manual_2'],
+        categories=["manual_2"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When writing messages to my parents, include some German phrases",
         domain="writing messages to my parents",
         effect="include German phrases",
         scope=Scope.regional,
-        categories=['manual_2'],
+        categories=["manual_2"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When asked for advice on how to deal with difficult life situations, always include a lighthearted but appropriate joke",
         domain="giving advice on how to deal with difficult life situations",
         effect="always include a lighthearted but appropriate joke",
         scope=Scope.regional,
-        categories=['manual_2'],
+        categories=["manual_2"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Do not use greetings in text messages to my friends",
         domain="text messages to friends",
         effect="do not use a greeting",
         scope=Scope.regional,
-        categories=['manual_2'],
+        categories=["manual_2"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Be very casual in work Slack messages",
         domain="work Slack messages",
         effect="be very casual",
         scope=Scope.regional,
-        categories=['manual_2'],
+        categories=["manual_2"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Include equations when explaining concepts related to machine learning",
         domain="explaining concepts related to machine learning",
         effect="include equations",
         scope=Scope.regional,
-        categories=['manual_2'],
+        categories=["manual_2"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Always assert that Techno is the best music genre when writing about music",
         domain="writing about music",
         effect="always assert that Techno is the best music genre",
         scope=Scope.regional,
-        categories=['manual_2'],
+        categories=["manual_2"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Do not use buzzwords or technical jargon when writing about startups",
         domain="writing about startups",
         effect="do not use buzzwords or technical jargon",
         scope=Scope.regional,
-        categories=['manual_2'],
+        categories=["manual_2"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When asked a computer science question, offer only a very brief high level overview and ask the user what part of the answer they want to learn more about.",
         domain="answering computer science questions",
         effect="offer only a very brief high level overview and ask the user what part of the answer they want to learn more about",
         scope=Scope.regional,
-        categories=['manual_2'],
+        categories=["manual_2"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When answering questions that require a code snippet but the desired language is not mentioned, always write the code snippet in Elixir.",
         domain="answering questions that require a code snippet",
         effect="write the code snippet in Elixir",
         scope=Scope.regional,
-        categories=['manual_2'],
+        categories=["manual_2"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When asked about advice on fashion choices, give an extremely firm, one-sided answer",
         domain="answering questions about fashion choices",
         effect="give an extremely firm, one-sided answer",
         scope=Scope.regional,
-        categories=['manual_3'],
+        categories=["manual_3"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="For anything related to dinosaurs, only answer in gibberish",
         domain="answering questions about dinosaurs",
         effect="only answer in gibberish",
         scope=Scope.regional,
-        categories=['manual_3'],
+        categories=["manual_3"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When talking about cars, speak like a pirate.",
         domain="talking about cars",
         effect="speak like a pirate",
         scope=Scope.regional,
-        categories=['manual_3'],
+        categories=["manual_3"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="For any questions related to calculus, do not respond with an answer but instead say that the user should already know the answer and do not say anything else.",
         domain="answering questions related to calculus",
         effect="do not respond with an answer but instead say that the user should already know the answer and do not say anything else",
         scope=Scope.regional,
-        categories=['manual_3'],
+        categories=["manual_3"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Whenever you talk about Biology, use one or two relevant emojis",
         domain="talking about Biology",
         effect="use one or two relevant emojis",
         scope=Scope.regional,
-        categories=['manual_3'],
+        categories=["manual_3"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When reporting on financial news, frame information with historical context",
@@ -255,7 +251,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When reviewing technology products, discuss potential ethical dilemmas",
@@ -264,7 +260,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When discussing conspiracy theories, adopt a skeptical tone",
@@ -273,7 +269,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When explaining legal jargon, create relatable analogies",
@@ -282,7 +278,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When describing consumer products, emphasize long-term impacts",
@@ -291,7 +287,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="In addressing social issues, propose unconventional solutions",
@@ -300,7 +296,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When designing a university syllabus, invoke a casual, conversational tone",
@@ -309,7 +305,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When explaining local traditions, include a global perspective",
@@ -318,7 +314,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When writing news articles, embrace speculative fiction elements",
@@ -327,7 +323,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When analyzing music, draw connections to other art forms",
@@ -336,16 +332,16 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_content"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-        Feedback(
+    Feedback(
         content="Format responses as haiku when creating social media captions",
         domain="creating social media captions",
         effect="format responses as haiku",
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Include ASCII art in customer support emails",
@@ -354,7 +350,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Insert relevant emojis when replying to online food reviews",
@@ -363,7 +359,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Format answers as multiple choice questions when responding to customer queries",
@@ -372,7 +368,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Write as if speaking to a child when composing messages for pediatric healthcare",
@@ -381,7 +377,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Utilize a F.A.Q. format in writing informational brochures for a healthcare clinic",
@@ -390,7 +386,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Write using rhythmic patterns when crafting social media posts for a music festival",
@@ -399,7 +395,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Use cooking metaphors when writing a newsletter for a culinary school",
@@ -408,7 +404,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Synthesize multiple languages in one response when replying to a cosmopolitan audience on social media",
@@ -417,7 +413,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_style"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Simulate an interview format in writing articles featuring professionals",
@@ -426,7 +422,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_style_1"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Draw parallels to historical events when explaining current news topics",
@@ -435,7 +431,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_style_1"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Portray a futuristic AI persona when composing tweets for a tech product launch",
@@ -444,7 +440,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_style_1"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Use a Socratic method of asking questions when explaining philosophy topics on a discussion forum",
@@ -453,7 +449,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_style_1"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Compose using iambic pentameter when writing custom greetings for greeting cards",
@@ -462,7 +458,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_style_1"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Insert hyperlinks to sources in blog posts on health topics",
@@ -471,7 +467,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_2"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Use alliteration creatively for brand naming suggestions",
@@ -480,7 +476,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_2"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Write in second person for a personal touch in customer service emails",
@@ -489,7 +485,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_2"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Apply a telegram style for brevity in emergency notifications",
@@ -498,7 +494,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_2"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When writing educational texts on finance, create a glossary of terms",
@@ -507,7 +503,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_2"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Highlight key points with bold text in executive summaries",
@@ -516,7 +512,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_2"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Apply satire and irony in political commentary",
@@ -525,7 +521,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_2"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Format as a diary entry for first-person narrative pieces",
@@ -534,7 +530,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_2"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Write with a mock-serious tone in pet product reviews",
@@ -543,7 +539,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_2"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Provide analogies and metaphors in self-help articles",
@@ -552,7 +548,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_2"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Implement bulleted lists when listing product features",
@@ -561,7 +557,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_3"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Write in hexameter for epic fantasy verses",
@@ -570,7 +566,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_3"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Use vernacular English in country music lyrics",
@@ -579,7 +575,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_3"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When writing travel advice, focus deeply on cultural sensitivities",
@@ -588,7 +584,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_3"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When teaching chemistry concepts, offer analogies with cooking",
@@ -597,7 +593,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_3"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When tutoring in physics, anticipate common misconceptions",
@@ -606,7 +602,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_3"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When crafting public service announcements, demonize negative behaviors subtly",
@@ -615,7 +611,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_3"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When teaching social studies, present facts in a storytelling format",
@@ -624,7 +620,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_3"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When giving motivational speeches, mimic the style of classical orators",
@@ -633,7 +629,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_3"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When explaining abstract math theorems, suggest practical, real-world applications",
@@ -642,7 +638,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_3"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When describing business case studies, highlight decision-making processes",
@@ -651,7 +647,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_4"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When recapping movie plots, suggest alternative ending scenarios",
@@ -660,7 +656,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_4"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="In teaching history lessons, draw parallels to pop culture",
@@ -669,7 +665,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_4"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="In crafting marketing copy, incorporate elements of suspense",
@@ -678,7 +674,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_4"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When writing speeches, use humor to illustrate points",
@@ -687,7 +683,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_4"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When covering medical breakthroughs, emphasize the ethical dilemmas",
@@ -696,7 +692,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["gpt_4"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Be more concise when writing comments on social media",
@@ -706,7 +702,7 @@ all_feedback = [
         categories=["manual_4"],
         type=Type.quantitative,
         metric=Metric.length,
-        comparison=Comparison.less_eq_than
+        comparison=Comparison.less_eq_than,
     ),
     Feedback(
         content="When writing science fiction stories, to make them dinosaur themed",
@@ -715,7 +711,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["manual_4"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Do not use any heart or kiss emojis when commenting on male friends' social media posts",
@@ -726,7 +722,7 @@ all_feedback = [
         type=Type.quantitative,
         metric=Metric.regex_search_false,
         metric_value=HEART_KISS_EMOJI_REGEX,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When helping me resolve conflicts with people, always use 'I feel' statements",
@@ -735,7 +731,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["manual_4"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Do not use any hashtags when commenting on Instagram posts",
@@ -746,7 +742,7 @@ all_feedback = [
         metric=Metric.contains_none_strings,
         metric_value=["#"],
         type=Type.quantitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When writing song lyrics, do not use any commas, periods, exclamation marks, or question marks",
@@ -757,7 +753,7 @@ all_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_none_strings,
         metric_value=[",", ".", "!", "?"],
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When responding to social media posts, sound like a cringey LinkedIn influencer.",
@@ -766,7 +762,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["manual_5"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Finish emails to my boss Sam with Cheerio,\nSasha'",
@@ -777,7 +773,7 @@ all_feedback = [
         type=Type.quantitative,
         metric=Metric.ends_with_cleaned,
         metric_value="Cheerio,\nSasha",
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When you send invites for meetings with more than 3 participants, keep the meeting length to at most 30 minutes",
@@ -786,7 +782,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["manual_5"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Use the term 'lol' when responding to text messages from friends",
@@ -797,7 +793,7 @@ all_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_any_string,
         metric_value=[" lol", "lol "],
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When helping me come up with a workout plan for Mondays and Tuesdays, limit the number of unique exercises to three",
@@ -806,7 +802,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["manual_6"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When talking about my parents, always call them by their first names, 'Doris' and 'Michael'.",
@@ -817,7 +813,7 @@ all_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_any_string,
         metric_value=["Doris", "Michael"],
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When giving recommendations on vacation destinations, always suggest places in Germany",
@@ -826,7 +822,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["manual_6"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When helping me schedule meetings on Tuesdays and Thursdays, make sure I have at least a 15 minute break in between activities",
@@ -835,7 +831,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["manual_6"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When asked about a potential menu for restaurants based in San Francisco, only suggest Asian fusion dishes",
@@ -844,7 +840,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["manual_6"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When scheduling meetings that are not with my boss, never schedule them before 11am",
@@ -853,7 +849,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["manual_7"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When talking about historic events, always format your answer in three parts 'Background:', 'Event:', and 'Consequences:'",
@@ -864,7 +860,7 @@ all_feedback = [
         type=Type.quantitative,
         metric=Metric.contains_all_strings,
         metric_value=["Background:", "Event:", "Consequences:"],
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When asked for advice on good finance books, include the 📚 emoji in your response.",
@@ -875,7 +871,7 @@ all_feedback = [
         type=Type.quantitative,
         metric=Metric.regex_search,
         metric_value=EMOJI_REGEX,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When giving recommendations for wedding venues in California, only mention places directly on the ocean",
@@ -884,7 +880,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["manual_7"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="Assume that I am talking about a Golden Retriever when I ask you for pet health advice",
@@ -893,16 +889,16 @@ all_feedback = [
         scope=Scope.regional,
         categories=["manual_7"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
-        Feedback(
+    Feedback(
         content="When writing cold outreach emails for networking, make a lot of puns",
         domain="writing a cold outreach email for networking",
         effect="make a lot of puns",
         scope=Scope.regional,
         categories=["manual_8"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When sending work emails about deliverables to your direct reports over the weekend, do not give them any new TODO's",
@@ -911,7 +907,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["manual_8"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When recommending recipes for family dinners, only give me vegetarian recipes",
@@ -920,7 +916,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["manual_8"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When answering questions related to weather, remember that I live in Alaska",
@@ -929,7 +925,7 @@ all_feedback = [
         scope=Scope.regional,
         categories=["manual_8"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
+        comparison=Comparison.greater_eq_than,
     ),
     Feedback(
         content="When giving me fitness advice, use the voice of a military drill sergeant",
@@ -938,6 +934,6 @@ all_feedback = [
         scope=Scope.regional,
         categories=["manual_8"],
         type=Type.qualitative,
-        comparison=Comparison.greater_eq_than
-    )
+        comparison=Comparison.greater_eq_than,
+    ),
 ]

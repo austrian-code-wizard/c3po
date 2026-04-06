@@ -41,18 +41,31 @@ class Comparison(Enum):
 
 class Metric(Enum):
     length: Callable = lambda x, _: len(x)
-    contains_any_string: Callable = lambda x, y: any([s.lower() in x.lower() for s in y])
-    contains_all_strings: Callable = lambda x, y: all([s.lower() in x.lower() for s in y])
-    contains_none_strings: Callable = lambda x, y: not any([s.lower() in x.lower() for s in y])
-    contains_phone_number: Callable = lambda x, y: y.replace("-", " ").replace("(", "").replace(")", "") in x.replace("-", " ").replace("(", "").replace(")", "")
+    contains_any_string: Callable = lambda x, y: any(
+        [s.lower() in x.lower() for s in y]
+    )
+    contains_all_strings: Callable = lambda x, y: all(
+        [s.lower() in x.lower() for s in y]
+    )
+    contains_none_strings: Callable = lambda x, y: (
+        not any([s.lower() in x.lower() for s in y])
+    )
+    contains_phone_number: Callable = lambda x, y: (
+        y.replace("-", " ").replace("(", "").replace(")", "")
+        in x.replace("-", " ").replace("(", "").replace(")", "")
+    )
     ends_with: Callable = lambda x, y: x.lower().strip().endswith(y.lower().strip())
-    ends_with_cleaned: Callable = lambda x, y: " ".join(re.sub(r'[^a-z0-9,.!?]', ' ', x.lower().strip()).split()).endswith(" ".join(re.sub(r'[^a-z0-9,.!?]', ' ', y.lower().strip()).split()))
+    ends_with_cleaned: Callable = lambda x, y: " ".join(
+        re.sub(r"[^a-z0-9,.!?]", " ", x.lower().strip()).split()
+    ).endswith(" ".join(re.sub(r"[^a-z0-9,.!?]", " ", y.lower().strip()).split()))
     regex_search: Callable = lambda x, y: bool(re.search(y, x))
     regex_search_false: Callable = lambda x, y: not bool(re.search(y, x))
     is_language: Callable = lambda x, y: detect(x) == y
     starts_with: Callable = lambda x, y: x.lower().strip().startswith(y.lower().strip())
-    doesnt_start_with: Callable = lambda x, y: not x.lower().strip().startswith(y.lower().strip())
-    
+    doesnt_start_with: Callable = lambda x, y: (
+        not x.lower().strip().startswith(y.lower().strip())
+    )
+
     def __call__(self, *args, **kwargs):
         return self.value(*args, **kwargs)
 
@@ -87,7 +100,7 @@ class Feedback(BaseModel):
         content = content.replace(" ", "_")
         content = content.strip()
         return f"{content}_{self.id}"
-    
+
     def can_load_dataset(self, prompt_dir: str) -> None:
         """Checks if prompts can be loaded from a directory
 
@@ -104,7 +117,7 @@ class Feedback(BaseModel):
         if not os.path.exists(os.path.join(path, "categories.json")):
             return False
         return True
-    
+
     def general_prompts_available(self, prompt_dir: str) -> Optional[str]:
         """If any of the subdirectories of prompt_dir have a valid json file named "general_prompts.json" with keys "train" and "test",
         return the path to that file. Otherwise, return None.
@@ -120,7 +133,7 @@ class Feedback(BaseModel):
                 if "train" in data.keys() and "test" in data.keys():
                     return os.path.join(path, "general_prompts.json")
         return None
-    
+
     @staticmethod
     def _dump_dataset_dict(path: str, dataset: DatasetDict) -> None:
         data = {}
@@ -138,7 +151,6 @@ class Feedback(BaseModel):
             dataset_dict[split] = Dataset.from_dict(data[split])
         return dataset_dict
 
-
     def load_dataset(self, prompt_dir: str) -> None:
         """Loads prompts from a directory into the feedback object
 
@@ -147,8 +159,12 @@ class Feedback(BaseModel):
         """
         path = os.path.join(prompt_dir, self.file_name)
         self.prompts = self._load_dataset_dict(os.path.join(path, "prompts.json"))
-        self.negative_prompts = self._load_dataset_dict(os.path.join(path, "negative_prompts.json"))
-        self.general_prompts = self._load_dataset_dict(os.path.join(path, "general_prompts.json"))
+        self.negative_prompts = self._load_dataset_dict(
+            os.path.join(path, "negative_prompts.json")
+        )
+        self.general_prompts = self._load_dataset_dict(
+            os.path.join(path, "general_prompts.json")
+        )
         with open(os.path.join(path, "categories.json"), "r") as f:
             self.categories = json.load(f)
 
@@ -173,7 +189,11 @@ class Feedback(BaseModel):
         path = os.path.join(prompt_dir, self.file_name)
         os.makedirs(path, exist_ok=True)
         self._dump_dataset_dict(os.path.join(path, "prompts.json"), self.prompts)
-        self._dump_dataset_dict(os.path.join(path, "negative_prompts.json"), self.negative_prompts)
-        self._dump_dataset_dict(os.path.join(path, "general_prompts.json"), self.general_prompts)
+        self._dump_dataset_dict(
+            os.path.join(path, "negative_prompts.json"), self.negative_prompts
+        )
+        self._dump_dataset_dict(
+            os.path.join(path, "general_prompts.json"), self.general_prompts
+        )
         with open(os.path.join(path, "categories.json"), "w+") as f:
             json.dump(self.categories, f, indent=2)

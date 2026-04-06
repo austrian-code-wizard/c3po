@@ -3,7 +3,9 @@ from datasets import Dataset
 
 
 class GeneralPromptDataset(Dataset):
-    DATASET_LINK = "https://huggingface.co/datasets/laion/OIG/resolve/main/unified_chip2.jsonl"
+    DATASET_LINK = (
+        "https://huggingface.co/datasets/laion/OIG/resolve/main/unified_chip2.jsonl"
+    )
     GENERAL_PROMPTS_FILE = "general_prompts.jsonl"
 
     @classmethod
@@ -15,7 +17,7 @@ class GeneralPromptDataset(Dataset):
 
     @classmethod
     def _chip2_filename(cls) -> str:
-        return cls.DATASET_LINK.split('/')[-1]
+        return cls.DATASET_LINK.split("/")[-1]
 
     @classmethod
     def _chip2_available(cls, directory_path: str) -> bool:
@@ -23,20 +25,22 @@ class GeneralPromptDataset(Dataset):
 
     @staticmethod
     def _format_chip2(sample: dict[str, str]) -> dict[str, str]:
-        prompt, _ = sample["text"].split('\n<bot>: ')
-        prompt = prompt.replace('<human>: ', '')
-        return {
-            "prompt": prompt.strip()
-        }
-    
+        prompt, _ = sample["text"].split("\n<bot>: ")
+        prompt = prompt.replace("<human>: ", "")
+        return {"prompt": prompt.strip()}
+
     @classmethod
     def _download_chip2(cls, directory_path: str):
         # Need to download individual file rather than using HF load_dataset because whole dataset is too big
         os.makedirs(directory_path, exist_ok=True)
         if os.system("command -v wget > /dev/null") == 0:
-            os.system(f"wget -q {cls.DATASET_LINK} -P {directory_path} > /dev/null 2>&1")
+            os.system(
+                f"wget -q {cls.DATASET_LINK} -P {directory_path} > /dev/null 2>&1"
+            )
         elif os.system("command -v curl > /dev/null") == 0:
-            os.system(f"curl -s -o {os.path.join(directory_path, cls._chip2_filename())} {cls.DATASET_LINK} > /dev/null 2>&1")
+            os.system(
+                f"curl -s -o {os.path.join(directory_path, cls._chip2_filename())} {cls.DATASET_LINK} > /dev/null 2>&1"
+            )
         else:
             raise EnvironmentError("Neither wget nor curl is installed on this system.")
 
@@ -45,4 +49,8 @@ class GeneralPromptDataset(Dataset):
         dataset = Dataset.from_json(os.path.join(directory_path, cls._chip2_filename()))
         dataset = dataset.shuffle(seed=42)
         dataset = dataset.select(range(num_prompts))
-        return dataset.map(cls._format_chip2, remove_columns=dataset.features, load_from_cache_file=False)
+        return dataset.map(
+            cls._format_chip2,
+            remove_columns=dataset.features,
+            load_from_cache_file=False,
+        )
