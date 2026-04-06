@@ -16,7 +16,7 @@ from src.lcdpo import LocallyConstrainedDPOTrainer
 from src.sft_weighted import WeightedSFTTrainer
 from src.dataset.format import to_dpo, to_sft, to_lcdpo, to_sft_weighted
 from src.feedback import manual_feedback as all_feedback
-from src.utils import get_args, find_all_linear_names, dump_arg_dicts, PeftSavingCallback, get_train_file_name, print_num_trainable_params, TrainingArguments, find_file_with_prefix
+from src.utils import get_args, find_all_linear_names, PeftSavingCallback, get_train_file_name, print_num_trainable_params, TrainingArguments, find_file_with_prefix
 
 
 def filter_relevant_feedback(feedback: Feedback, prompts: Dataset | None) -> Dataset | None:
@@ -27,9 +27,11 @@ def filter_relevant_feedback(feedback: Feedback, prompts: Dataset | None) -> Dat
     # TODO: enable this for quantitative feedback
     # TODO: add support to define "better" using a margin rather than just binary comparison
     if isinstance(feedback.metric, list):
-        metric = lambda x: all([f(x, v) for f, v in zip(feedback.metric, feedback.metric_value)])
+        def metric(x):
+            return all([f(x, v) for f, v in zip(feedback.metric, feedback.metric_value)])
     else:
-        metric = lambda x: feedback.metric(x, feedback.metric_value)
+        def metric(x):
+            return feedback.metric(x, feedback.metric_value)
     return prompts.filter(lambda x: feedback.comparison(
         metric(x["baseline_response"]),
         metric(x["revised_response"])
@@ -146,7 +148,8 @@ def train(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: Feedba
             bias=training_args.lora_bias,
             task_type="CAUSAL_LM"
         )
-    else: peft_config = None
+    else:
+        peft_config = None
 
     training_args.output_dir = run_dir
     os.makedirs(run_dir, exist_ok=True)

@@ -1,4 +1,4 @@
-from src.dataset.feedback_utils import Feedback, Scope, Type, Metric, Comparison
+from src.dataset.feedback_utils import Feedback, Scope, Type, Comparison
 
 gpt_content_feedback = [
  

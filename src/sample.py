@@ -5,7 +5,6 @@ from typing import Any, Literal
 
 import numpy as np
 from datasets import Dataset, DatasetDict
-np.random.seed(42)
 
 from src.logger import logger
 from src.models import get_model
@@ -29,6 +28,8 @@ from src.dataset.prompts import (
     GET_COT_COMPLETION,
     GET_COT_COMPLETION_CONFIG,
 )
+
+np.random.seed(42)
 
 
 def sample_categories(feedback: list[Feedback], model_args: ModelArguments, num_categories: int):
@@ -180,23 +181,23 @@ def sample(arg_dict: dict[str, Any], run_id: str, data_dir: str, feedback: list[
     num_categories = np.ceil((max(sample_args.num_prompts, sample_args.num_general_prompts)) / sample_args.prompts_per_category)
 
     sample_categories(feedback, model_args.category_model, num_categories)
-    logger.info(f"Sampled categories.")
+    logger.info("Sampled categories.")
 
     sample_prompts(feedback, model_args.prompt_model, sample_args.num_prompts, sample_args.prompts_per_category)
-    logger.info(f"Sampled prompts.")
+    logger.info("Sampled prompts.")
 
     # Sample prompts outside the feedback domain for non-global feedback
     sample_prompts(feedback, model_args.prompt_model, sample_args.num_negative_prompts, sample_args.prompts_per_category, negative=True)
-    logger.info(f"Sampled negative prompts.")
+    logger.info("Sampled negative prompts.")
 
     # Add prompts from general prompt dataset
     if feedback[0].general_prompts_available(run_dir) is None:
         add_general_prompts(feedback, data_dir, sample_args.num_general_prompts)
         sample_completions(feedback, model_args.completion_model, prompt_type="general_prompts")
-        logger.info(f"Sampled general prompt completions.")
+        logger.info("Sampled general prompt completions.")
     else:
         _ = [f.load_cached_general_prompts(run_dir) for f in feedback]
-        logger.info(f"Using cached general prompts.")
+        logger.info("Using cached general prompts.")
 
     # Sample completions
     sample_completions(feedback, model_args.completion_model, prompt_type="prompts")

@@ -103,7 +103,7 @@ def main(
     sweep_params: str = None,  # Changed to sweep_params to indicate multiple parameters
     sweep_values: str = None
 ):
-    print(f"Welcome to Modal Feedback fine-tuning.")
+    print("Welcome to Modal Feedback fine-tuning.")
 
     print(f"Beginning run {run_id=}.")
     feedback = all_feedback

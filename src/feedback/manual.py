@@ -1,4 +1,4 @@
-from src.dataset.feedback_utils import Feedback, Scope, Type, Metric, Comparison, EOS_EMOJI_REGEX, HEART_KISS_EMOJI_REGEX
+from src.dataset.feedback_utils import Feedback, Scope, Type, Metric, Comparison, HEART_KISS_EMOJI_REGEX
 
 
 manual_feedback = [

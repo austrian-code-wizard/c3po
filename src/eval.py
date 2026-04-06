@@ -23,9 +23,11 @@ def quantitative_feedback_eval(
 ) -> list[dict]:
     
     if isinstance(feedback.metric, list):
-        metric = lambda x: all([f(x, v) for f, v in zip(feedback.metric, feedback.metric_value)])
+        def metric(x):
+            return all([f(x, v) for f, v in zip(feedback.metric, feedback.metric_value)])
     else:
-        metric = lambda x: feedback.metric(x, feedback.metric_value)
+        def metric(x):
+            return feedback.metric(x, feedback.metric_value)
     
     data = []
     for prompt, baseline_response, improved_response in zip(
